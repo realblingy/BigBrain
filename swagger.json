@@ -1,0 +1,371 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "BigBrain CRUD Server",
+        "description": "Server that powers the BigBrain frontend",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "tags": [
+        {
+            "name": "Admin",
+            "description": "API for users in the system"
+        },
+        {
+            "name": "Player",
+            "description": "API for users in the system"
+        }
+    ],
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/admin/auth/login": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                	{
+                		"name": "email",
+                		"in": "body",
+                		"description": "Email address of the admin attempting to login"
+                	},
+                	{
+                		"name": "password",
+                		"in": "body",
+                		"description": "Password of the admin attempting to login"
+                	}
+                ],
+                "summary": "Given correct admin credentials, return an authorised access token to make subsequent admin calls",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/admin/auth/logout": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                	{
+                		"name": "token",
+                		"in": "header",
+                		"description": "The authorisation token of the admin"
+                	}
+                ],
+                "summary": "Invalid a particular authorised token",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/admin/auth/register": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                	{
+                		"name": "email",
+                		"in": "body",
+                		"description": "TODO"
+                	},
+                	{
+                		"name": "password",
+                		"in": "body",
+                		"description": "TODO"
+                	},
+                	{
+                		"name": "name",
+                		"in": "body",
+                		"description": "TODO"
+                	}
+                ],
+                "summary": "Send registration request for someone to join BigBrain as an admin",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/admin/quiz": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                	{
+                		"name": "token",
+                		"in": "header",
+                		"description": "The authorisation token of the admin"
+                	}
+                ],
+                "summary": "Get a list of the meta-data for all BigBrain quizzes",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/admin/quiz/new": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                	{
+                		"name": "token",
+                		"in": "header",
+                		"description": "The authorisation token of the admin"
+                	},
+                	{
+                		"name": "name",
+                		"in": "body",
+                		"description": "Name of the new big brain quiz"
+                	}
+                ],
+                "summary": "Create a new empty BigBrain quiz",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/admin/quiz/{quizid}": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                	{
+                		"name": "token",
+                		"in": "header",
+                		"description": "The authorisation token of the admin"
+                	},
+                	{
+                		"name": "quizid",
+                		"in": "body",
+                		"description": "The ID of the quiz"
+                	}
+                ],
+                "summary": "Collect all of the data pertaining to a particular quiz of BigBrain",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                	{
+                		"name": "token",
+                		"in": "header",
+                		"description": "The authorisation token of the admin"
+                	},
+                	{
+                		"name": "quizid",
+                		"in": "body",
+                		"description": "The ID of the quiz"
+                	},
+                	{
+                		"name": "payload",
+                		"in": "body",
+                		"description": "A large data stucture (TBD) containing all the information about all questions for a given quiz"
+                	}
+                ],
+                "summary": "Update all of the details of a particular quiz of BigBrain",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/admin/quiz/{quizid}/start": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                	{
+                		"name": "token",
+                		"in": "header",
+                		"description": "The authorisation token of the admin"
+                	},
+                	{
+                		"name": "quizid",
+                		"in": "body",
+                		"description": "The ID of the quiz"
+                	}
+                ],
+                "summary": "Start a new session for a quiz",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/admin/quiz/{quizid}/end": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                	{
+                		"name": "token",
+                		"in": "header",
+                		"description": "The authorisation token of the admin"
+                	},
+                	{
+                		"name": "quizid",
+                		"in": "body",
+                		"description": "The ID of the quiz"
+                	}
+                ],
+                "summary": "End the active session of a quiz",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/admin/results/{sessionid}": {
+            "get": {
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                	{
+                		"name": "token",
+                		"in": "header",
+                		"description": "The authorisation token of the admin"
+                	},
+                	{
+                		"name": "sessionid",
+                		"in": "body",
+                		"description": "The ID of the current session (instance of a quiz that players can join)"
+                	}
+                ],
+                "summary": "Get the results for a session and what people's scores were",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/play/join/{sessionid}": {
+            "post": {
+                "tags": [
+                    "Player"
+                ],
+                "parameters": [
+                	{
+                		"name": "sessionid",
+                		"in": "path",
+                		"description": "The ID of the current session (instance of a quiz that players can join)"
+                	}
+                ],
+                "summary": "",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/play/question/{playerid}": {
+            "get": {
+                "tags": [
+                    "Player"
+                ],
+                "parameters": [
+                	{
+                		"name": "playerid",
+                		"in": "path",
+                        "description": "ID associated with the particular player playing the current quiz. The player does not refer to an individual person, but an instance of a person playing."
+                	}
+                ],
+                "summary": "For the current question that session is up to, this gets the details of the question",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/play/answer/{playerid}": {
+            "put": {
+                "tags": [
+                    "Player"
+                ],
+                "parameters": [
+                	{
+                		"name": "playerid",
+                		"in": "path",
+                		"description": "ID associated with the particular player playing the current quiz. The player does not refer to an individual person, but an instance of a person playing."
+                	},
+                	{
+                		"name": "question",
+                		"in": "body",
+                		"description": "The ID of the question that the player is answering"
+                	},
+                	{
+                		"name": "response",
+                		"in": "body",
+                		"description": "The ID of the answer that the player chose for this question"
+                	}
+                ],
+                "summary": "For the current question that the session is up to, this allows the player to submit their answer",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/play/results/{playerid}": {
+            "get": {
+                "tags": [
+                    "Player"
+                ],
+                "parameters": [
+                	{
+                		"name": "playerid",
+                		"in": "path",
+                        "description": "ID associated with the particular player playing the current quiz. The player does not refer to an individual person, but an instance of a person playing."
+                	}
+                ],
+                "summary": "Once a session has ended, this allows players to collect the results of their performance, benchmarked against others",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    }
+}
