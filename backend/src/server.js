@@ -2,11 +2,13 @@ const fs = require('fs');
 const express = require("express");
 const swaggerUi = require('swagger-ui-express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const swaggerDocument = require('../../swagger.json');
 
 const app = express();
 
+app.use(cors())
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json())
 app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
