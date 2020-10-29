@@ -228,7 +228,7 @@
                 		"name": "quizid",
                 		"in": "query",
                         "schema": {
-                            "type": "integer",
+                            "type": "string",
                             "example": "12345"
                         },
                         "required": true,
@@ -261,7 +261,7 @@
                         "name": "quizid",
                         "in": "query",
                         "schema": {
-                            "type": "integer",
+                            "type": "string",
                             "example": "12345"
                         },
                         "required": true,

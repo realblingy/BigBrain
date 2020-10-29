@@ -64,7 +64,7 @@ const generateId = currentList => {
   while (R in currentList) {
     R = randNum();
   }
-  return R;
+  return R.toString();
 };
 
 /***************************************************************
