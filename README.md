@@ -145,6 +145,7 @@ The port that the backend runs on (and that the frontend can use) is specified i
 
  * You must implement this assignment in ReactJS. You cannot use other declarative frameworks, such as AngularJS, or VueJS.
  * You must use ReactJS solutions wherever possible, and avoid doing any direct DOM manipulation unless completely avoidable.
+ * You can use any CSS libraries that you would like, such as bootstrap or material-ui.
  * You should ensure that your programs have been tested on one of the following two browsers:
    * Locally, Google Chrome (various operating systems) version 85.XX
    * On CSE machines, Chromium version 83.XX
