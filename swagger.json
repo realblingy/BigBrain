@@ -28,7 +28,61 @@
     "produces": [
         "application/json"
     ],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+              "type": "http",
+              "scheme": "bearer",
+              "bearerFormat": "JWT"
+            }
+        }
+    },
     "paths": {
+        "/admin/auth/register": {
+            "post": {
+                "tags": [
+                    "Admin"
+                ],
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "hayden@unsw.edu.au"
+                        },
+                        "required": true,
+                        "description": "Email address of the admin attempting to login"
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "adummypassword"
+                        },
+                        "required": true,
+                        "description": "Password of the admin attempting to login"
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "Harry Jenkins"
+                        },
+                        "required": true,
+                        "description": "Name (single or full name) of the admin registering"
+                    }
+                ],
+                "summary": "Send registration request for someone to join BigBrain as an admin",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/admin/auth/login": {
             "post": {
                 "tags": [
@@ -37,12 +91,22 @@
                 "parameters": [
                 	{
                 		"name": "email",
-                		"in": "body",
+                		"in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "hayden@unsw.edu.au"
+                        },
+                        "required": true,
                 		"description": "Email address of the admin attempting to login"
                 	},
                 	{
                 		"name": "password",
-                		"in": "body",
+                		"in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "adummypassword"
+                        },
+                        "required": true,
                 		"description": "Password of the admin attempting to login"
                 	}
                 ],
@@ -56,47 +120,26 @@
         },
         "/admin/auth/logout": {
             "post": {
+                "security": [{
+                    "bearerAuth": []
+                }],
                 "tags": [
                     "Admin"
                 ],
                 "parameters": [
                 	{
-                		"name": "token",
+                		"name": "Authorization",
                 		"in": "header",
-                		"description": "The authorisation token of the admin"
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhheWRlbkB1bnN3LmVkdS5hdSIsImlhdCI6MTYwMzk0MzIzMH0.b37PfwlcH_cue6yhgvDt2IiNvhRACf79hTNtacYB94Q"
+                        },
+                        "required": true,
+                        "required": true,
+                		"description": "Bearer [token]"
                 	}
                 ],
                 "summary": "Invalid a particular authorised token",
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            }
-        },
-        "/admin/auth/register": {
-            "post": {
-                "tags": [
-                    "Admin"
-                ],
-                "parameters": [
-                	{
-                		"name": "email",
-                		"in": "body",
-                		"description": "TODO"
-                	},
-                	{
-                		"name": "password",
-                		"in": "body",
-                		"description": "TODO"
-                	},
-                	{
-                		"name": "name",
-                		"in": "body",
-                		"description": "TODO"
-                	}
-                ],
-                "summary": "Send registration request for someone to join BigBrain as an admin",
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -111,9 +154,15 @@
                 ],
                 "parameters": [
                 	{
-                		"name": "token",
+                		"name": "Authorization",
                 		"in": "header",
-                		"description": "The authorisation token of the admin"
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhheWRlbkB1bnN3LmVkdS5hdSIsImlhdCI6MTYwMzk0MzIzMH0.b37PfwlcH_cue6yhgvDt2IiNvhRACf79hTNtacYB94Q"
+                        },
+                        "required": true,
+                        "required": true,
+                		"description": "Bearer [token]"
                 	}
                 ],
                 "summary": "Get a list of the meta-data for all BigBrain quizzes",
@@ -131,13 +180,23 @@
                 ],
                 "parameters": [
                 	{
-                		"name": "token",
+                		"name": "Authorization",
                 		"in": "header",
-                		"description": "The authorisation token of the admin"
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhheWRlbkB1bnN3LmVkdS5hdSIsImlhdCI6MTYwMzk0MzIzMH0.b37PfwlcH_cue6yhgvDt2IiNvhRACf79hTNtacYB94Q"
+                        },
+                        "required": true,
+                		"description": "Bearer [token]"
                 	},
                 	{
                 		"name": "name",
-                		"in": "body",
+                		"in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "My Quiz"
+                        },
+                        "required": true,
                 		"description": "Name of the new big brain quiz"
                 	}
                 ],
@@ -156,13 +215,23 @@
                 ],
                 "parameters": [
                 	{
-                		"name": "token",
+                		"name": "Authorization",
                 		"in": "header",
-                		"description": "The authorisation token of the admin"
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhheWRlbkB1bnN3LmVkdS5hdSIsImlhdCI6MTYwMzk0MzIzMH0.b37PfwlcH_cue6yhgvDt2IiNvhRACf79hTNtacYB94Q"
+                        },
+                        "required": true,
+                		"description": "Bearer [token]"
                 	},
                 	{
                 		"name": "quizid",
-                		"in": "body",
+                		"in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "12345"
+                        },
+                        "required": true,
                 		"description": "The ID of the quiz"
                 	}
                 ],
@@ -179,19 +248,34 @@
                 ],
                 "parameters": [
                 	{
-                		"name": "token",
+                		"name": "Authorization",
                 		"in": "header",
-                		"description": "The authorisation token of the admin"
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhheWRlbkB1bnN3LmVkdS5hdSIsImlhdCI6MTYwMzk0MzIzMH0.b37PfwlcH_cue6yhgvDt2IiNvhRACf79hTNtacYB94Q"
+                        },
+                        "required": true,
+                		"description": "Bearer [token]"
                 	},
                 	{
-                		"name": "quizid",
-                		"in": "body",
-                		"description": "The ID of the quiz"
-                	},
+                        "name": "quizid",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "12345"
+                        },
+                        "required": true,
+                        "description": "The ID of the quiz"
+                    },
                 	{
-                		"name": "payload",
-                		"in": "body",
-                		"description": "A large data stucture (TBD) containing all the information about all questions for a given quiz"
+                		"name": "questions",
+                		"in": "query",
+                        "schema": {
+                            "type": "array",
+                            "example": "[]"
+                        },
+                        "required": true,
+                		"description": "A large data stucture (TBD) containing all the information about all questions for a given quiz. Structure is a list."
                 	}
                 ],
                 "summary": "Update all of the details of a particular quiz of BigBrain",
@@ -209,17 +293,22 @@
                 ],
                 "parameters": [
                 	{
-                		"name": "token",
+                		"name": "Authorization",
                 		"in": "header",
-                		"description": "The authorisation token of the admin"
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhheWRlbkB1bnN3LmVkdS5hdSIsImlhdCI6MTYwMzk0MzIzMH0.b37PfwlcH_cue6yhgvDt2IiNvhRACf79hTNtacYB94Q"
+                        },
+                        "required": true,
+                		"description": "Bearer [token]"
                 	},
                 	{
                 		"name": "quizid",
-                		"in": "body",
+                		"in": "query",
                 		"description": "The ID of the quiz"
                 	}
                 ],
-                "summary": "Start a new session for a quiz",
+                "summary": "INCOMPLETE - Start a new session for a quiz",
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -234,17 +323,22 @@
                 ],
                 "parameters": [
                 	{
-                		"name": "token",
+                		"name": "Authorization",
                 		"in": "header",
-                		"description": "The authorisation token of the admin"
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhheWRlbkB1bnN3LmVkdS5hdSIsImlhdCI6MTYwMzk0MzIzMH0.b37PfwlcH_cue6yhgvDt2IiNvhRACf79hTNtacYB94Q"
+                        },
+                        "required": true,
+                		"description": "Bearer [token]"
                 	},
                 	{
                 		"name": "quizid",
-                		"in": "body",
+                		"in": "query",
                 		"description": "The ID of the quiz"
                 	}
                 ],
-                "summary": "End the active session of a quiz",
+                "summary": "INCOMPLETE - End the active session of a quiz",
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -259,17 +353,22 @@
                 ],
                 "parameters": [
                 	{
-                		"name": "token",
+                		"name": "Authorization",
                 		"in": "header",
-                		"description": "The authorisation token of the admin"
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhheWRlbkB1bnN3LmVkdS5hdSIsImlhdCI6MTYwMzk0MzIzMH0.b37PfwlcH_cue6yhgvDt2IiNvhRACf79hTNtacYB94Q"
+                        },
+                        "required": true,
+                		"description": "Bearer [token]"
                 	},
                 	{
                 		"name": "sessionid",
-                		"in": "body",
+                		"in": "query",
                 		"description": "The ID of the current session (instance of a quiz that players can join)"
                 	}
                 ],
-                "summary": "Get the results for a session and what people's scores were",
+                "summary": "INCOMPLETE - Get the results for a session and what people's scores were",
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -289,7 +388,7 @@
                 		"description": "The ID of the current session (instance of a quiz that players can join)"
                 	}
                 ],
-                "summary": "",
+                "summary": "INCOMPLETE",
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -309,7 +408,7 @@
                         "description": "ID associated with the particular player playing the current quiz. The player does not refer to an individual person, but an instance of a person playing."
                 	}
                 ],
-                "summary": "For the current question that session is up to, this gets the details of the question",
+                "summary": "INCOMPLETE - For the current question that session is up to, this gets the details of the question",
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -330,16 +429,16 @@
                 	},
                 	{
                 		"name": "question",
-                		"in": "body",
+                		"in": "query",
                 		"description": "The ID of the question that the player is answering"
                 	},
                 	{
                 		"name": "response",
-                		"in": "body",
+                		"in": "query",
                 		"description": "The ID of the answer that the player chose for this question"
                 	}
                 ],
-                "summary": "For the current question that the session is up to, this allows the player to submit their answer",
+                "summary": "INCOMPLETE - For the current question that the session is up to, this allows the player to submit their answer",
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -359,7 +458,7 @@
                         "description": "ID associated with the particular player playing the current quiz. The player does not refer to an individual person, but an instance of a person playing."
                 	}
                 ],
-                "summary": "Once a session has ended, this allows players to collect the results of their performance, benchmarked against others",
+                "summary": "INCOMPLETE - Once a session has ended, this allows players to collect the results of their performance, benchmarked against others",
                 "responses": {
                     "200": {
                         "description": "OK"
