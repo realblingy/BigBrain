@@ -1,4 +1,4 @@
-# DRAFT: Assessment 3 - ReactJS: BigBrain
+# Assessment 3 - ReactJS: BigBrain
 
 1. Background & Motivation
 2. The Task (Frontend)
@@ -13,7 +13,7 @@
 
 ## 0. Change Log
 
-Changes while in DRAFT mode (prior to Thursday 6pm 29th October) won't be listed here, but will be available in git history.
+* Coming Soon
 
 ## 1. Background & Motivation
 
@@ -143,6 +143,8 @@ Once the backend has started, you can view the API documentation by navigating t
 
 The port that the backend runs on (and that the frontend can use) is specified in `frontend/config.json`.
 
+An insomnia config can be found, and will be updated, [here](http://www.cse.unsw.edu.au/~cs6080/20T3/assignments/ass3/insomnia.json).
+
 ## 4. Constraints & Assumptions
 
  * You must implement this assignment in ReactJS. You cannot use other declarative frameworks, such as AngularJS, or VueJS.
@@ -161,11 +163,19 @@ This assignment may be completed in a team of two (pair). However, you are also 
  * There is no lowered expectations for students working on their own - you will be assessed the same as the pairs
  * You are able to pair with any student in the course, they aren't required to be in your tutorial slot
 
-**If you are looking for a team member**, you are welcome to use [this piazza post](https://piazza.com/class/kdxbnhfpob74y0) to find yourself a team member. If you already have a team member then that's fine, too.
+**If you are looking for a team member**, you are welcome to use [this piazza post](https://piazza.com/class/kdxbnhfpob74y0) to find yourself a team member. If you already have a team member then that's fine, too. If you need to find a team member but can't find them, and the forum isn't working for you, email cs6080@cse.unsw.edu.au.
 
 **Once you have chosen your team member**:
  * Have one of you add the other person to your ass3 gitlab repository. You can do this by going to Settings > Members and then adding them there. You will both continue to work on one repository, and the other repository will just stay untouched.
  * [complete this form so that we know who is paired, so we can mark you correctly.](https://forms.office.com/Pages/ResponsePage.aspx?id=pM_2PxXn20i44Qhnufn7o_RvPhdrUs1DpZ0MlMs_Bf1UMUQ1ODJSVDRLUElZUVJEMElPWTZVWlhYNi4u)
+
+Your team must be selected by *5pm Monday the 2nd of November*. If you are not in a pair by then, you will be unable to be in one for the duration.
+
+Once you form a team, you will be unable to leave your team. You will be assessed together for the assignment.
+
+If your contributions to the assignment are not approximately equal, then the teaching staff may make discretionary calls based on your gitlab history to award different marks to each student.
+
+If you share code with any COMP6080 student outside of your registered team member above, it constitutes plagiarism and will result in a 0 for the assignment.
 
 ## 6. Marking Criteria
 
@@ -268,7 +278,7 @@ knowledge.
 
 ## 8. Submission
 
-This assignment is due *Sunday (Coming Soon), 19:59:59*.
+This assignment is due *Sunday 22nd November, 19:59:59*.
 
 Our systems automatically record the most recent push you make to your `master` branch. Therefore,
 to "submit" your code you simply need to make sure that your `master` branch (on the gitlab website)
