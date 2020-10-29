@@ -127,7 +127,7 @@ Tests must be run from inside the `frontend` folder by running `yarn test`.
  * Any routes you create must be intelligently and justifiably named.
 
 ### 2.9. Other notes
- * The port you can use to `fetch` data from the backend is defined in `config.json`
+ * The port you can use to `fetch` data from the backend is defined in `frontend/config.json`
 
 ## 3. The Back-end (Provided - no work required)
 
@@ -135,11 +135,13 @@ The backend server exists in your individual repository. After you clone this re
 
 To run the backend server, simply run `npm run backend` in the project directory. This will start the backend.
 
+Your backend is persistent in terms of data storage. That means the data will remain even after your express server process stops running. If you want to reset the data in the backend, you can run `npm run reset`. If you want to make a copy of the backend data (e.g. for a backup) then simply copy `database.json`.
+
 Once the backend has started, you can view the API documentation by navigating to `http://localhost:[port]` in a web browser.
 
 **The backend is only stubbed for the time being. The routes function, though return 200 with no payload. This will change by the end of the first week**
 
-The port that the backend runs on (and that the frontend can use) is specified in `config.json`.
+The port that the backend runs on (and that the frontend can use) is specified in `frontend/config.json`.
 
 ## 4. Constraints & Assumptions
 
