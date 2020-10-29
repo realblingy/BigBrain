@@ -150,6 +150,7 @@ The port that the backend runs on (and that the frontend can use) is specified i
    * On CSE machines, Chromium version 83.XX
  * You may use small amounts (&lt; 10 lines) of general purpose code (not specific to the assignment) obtained from a site such as Stack Overflow or other publically available resources. You should attribute clearly the source of this code in a comment with it. You can not otherwise use code written by another person.
  * The specification is intentionally vague to allow you to build frontend components however you think are visually appropriate. Their size, positioning, colour, layout, is in virtually all cases completely up to you. We require some basic criteria, but it's mainly dictating elements and behaviour.
+ * Besides those described to avoid, you may use any other packages available on npm/yarn.
 
 ## 5. Teamwork
 
@@ -174,20 +175,13 @@ Your assignment will be hand-marked by tutor(s) in the course according to the c
 		<th>Description</th>
 	</tr>
 	<tr>
-		<td>Functionality of the Feature Set</td>
-		<td>40%</td>
+		<td>Functionality of the Feature Set + Mobile Responsiveness</td>
+		<td>60%</td>
 		<td>
 			<ul>
 				<li>Features implemented that satisfy requirements as outlined in `2.1`, `2.2`, `2.3`, `2.4`, and `2.5`.</li>
-			</ul>
-		</td>
-	</tr>
-	<tr>
-		<td>Mobile Responsiveness of the Feature Set</td>
-		<td>20%</td>
-		<td>
-			<ul>
 				<li>Features implemented in a mobile responsive way that work on screens as small as 400px wide, 700px high</li>
+				<li>Responsive design will contribute up to one quarter of the marks of this section</li>
 			</ul>
 		</td>
 	</tr>
