@@ -149,7 +149,7 @@ app.put('/play/results/:playerid', (req, res) => {
 
 app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-const configData = JSON.parse(fs.readFileSync('./frontend/config.json'));
+const configData = JSON.parse(fs.readFileSync('./frontend/src/config.json'));
 const port = 'BACKEND_PORT' in configData ? configData['BACKEND_PORT'] : 5000;
 app.listen(port, () => {
   console.log(`Backend is now listening on port ${port}!`);
