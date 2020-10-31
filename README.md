@@ -14,6 +14,7 @@
 ## 0. Change Log
 
 * 31/10: Clarity on how to yarn install added to top of section 2. Clarity on how bonus marks bleed.
+* 31/10: Moving `config.json` from `frontend` to `frontend/src`
 
 ## 1. Background & Motivation
 
@@ -131,7 +132,7 @@ Tests must be run from inside the `frontend` folder by running `yarn test`.
  * Any routes you create must be intelligently and justifiably named.
 
 ### 2.9. Other notes
- * The port you can use to `fetch` data from the backend is defined in `frontend/config.json`
+ * The port you can use to `fetch` data from the backend is defined in `frontend/src/config.json`
 
 ## 3. The Back-end (Provided - no work required)
 
@@ -145,7 +146,7 @@ Once the backend has started, you can view the API documentation by navigating t
 
 **The backend is only stubbed for the time being. The routes function, though return 200 with no payload. This will change by the end of the first week**
 
-The port that the backend runs on (and that the frontend can use) is specified in `frontend/config.json`.
+The port that the backend runs on (and that the frontend can use) is specified in `frontend/src/config.json`.
 
 An insomnia config can be found, and will be updated, [here](http://www.cse.unsw.edu.au/~cs6080/20T3/assignments/ass3/insomnia.json).
 
