@@ -46,7 +46,7 @@
                 "parameters": [
                     {
                         "name": "email",
-                        "in": "query",
+                        "in": "body",
                         "schema": {
                             "type": "string",
                             "example": "hayden@unsw.edu.au"
@@ -56,7 +56,7 @@
                     },
                     {
                         "name": "password",
-                        "in": "query",
+                        "in": "body",
                         "schema": {
                             "type": "string",
                             "example": "adummypassword"
@@ -66,7 +66,7 @@
                     },
                     {
                         "name": "name",
-                        "in": "query",
+                        "in": "body",
                         "schema": {
                             "type": "string",
                             "example": "Harry Jenkins"
@@ -91,7 +91,7 @@
                 "parameters": [
                 	{
                 		"name": "email",
-                		"in": "query",
+                		"in": "body",
                         "schema": {
                             "type": "string",
                             "example": "hayden@unsw.edu.au"
@@ -101,7 +101,7 @@
                 	},
                 	{
                 		"name": "password",
-                		"in": "query",
+                		"in": "body",
                         "schema": {
                             "type": "string",
                             "example": "adummypassword"
@@ -191,7 +191,7 @@
                 	},
                 	{
                 		"name": "name",
-                		"in": "query",
+                		"in": "body",
                         "schema": {
                             "type": "string",
                             "example": "My Quiz"
@@ -226,7 +226,7 @@
                 	},
                 	{
                 		"name": "quizid",
-                		"in": "query",
+                		"in": "path",
                         "schema": {
                             "type": "string",
                             "example": "12345"
@@ -259,7 +259,7 @@
                 	},
                 	{
                         "name": "quizid",
-                        "in": "query",
+                        "in": "path",
                         "schema": {
                             "type": "string",
                             "example": "12345"
@@ -269,7 +269,7 @@
                     },
                 	{
                 		"name": "questions",
-                		"in": "query",
+                		"in": "body",
                         "schema": {
                             "type": "array",
                             "example": "[]"
@@ -304,7 +304,7 @@
                 	},
                 	{
                 		"name": "quizid",
-                		"in": "query",
+                		"in": "path",
                 		"description": "The ID of the quiz"
                 	}
                 ],
@@ -334,7 +334,7 @@
                 	},
                 	{
                 		"name": "quizid",
-                		"in": "query",
+                		"in": "path",
                 		"description": "The ID of the quiz"
                 	}
                 ],
@@ -364,7 +364,7 @@
                 	},
                 	{
                 		"name": "sessionid",
-                		"in": "query",
+                		"in": "path",
                 		"description": "The ID of the current session (instance of a quiz that players can join)"
                 	}
                 ],
@@ -429,12 +429,12 @@
                 	},
                 	{
                 		"name": "question",
-                		"in": "query",
+                		"in": "body",
                 		"description": "The ID of the question that the player is answering"
                 	},
                 	{
                 		"name": "response",
-                		"in": "query",
+                		"in": "body",
                 		"description": "The ID of the answer that the player chose for this question"
                 	}
                 ],
