@@ -1,7 +1,8 @@
 {
     "env": {
         "browser": true,
-        "es2021": true
+        "es2021": true,
+        "jest": true
     },
     "extends": [
         "plugin:react/recommended",
@@ -12,7 +13,9 @@
             "jsx": true
         },
         "ecmaVersion": 12,
-        "sourceType": "module"
+        "sourceType": "module",
+        "linebreak-style": 0,
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
     },
     "plugins": [
         "react"
