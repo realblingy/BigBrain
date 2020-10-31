@@ -13,13 +13,13 @@
             "jsx": true
         },
         "ecmaVersion": 12,
-        "sourceType": "module",
-        "linebreak-style": 0,
-        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
+        "sourceType": "module"
     },
     "plugins": [
         "react"
     ],
     "rules": {
+        "linebreak-style": 0,
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
     }
 }
