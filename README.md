@@ -15,6 +15,8 @@
 
 * 31/10: Clarity on how to yarn install added to top of section 2. Clarity on how bonus marks bleed.
 * 31/10: Moving `config.json` from `frontend` to `frontend/src`
+* 01/11: Swagger doc complete and many routes fixed. Final items implemented. Interface on previously incomplete routes changed slightly (Admin deleting a quiz; admin "advancing" to next question; player joining has a name)
+* 01/11: Addition of information on `backend/src/customer.js` as a means to wrapping your custom data structure. Explained in `2.9`.
 
 ## 1. Background & Motivation
 
@@ -133,6 +135,7 @@ Tests must be run from inside the `frontend` folder by running `yarn test`.
 
 ### 2.9. Other notes
  * The port you can use to `fetch` data from the backend is defined in `frontend/src/config.json`
+ * The data structure of a "question" is open ended - it's not defined explicitly in the backend. Because of this, the backend has 3 wrapper functions defined in `backend/src/custom.js` that it uses to extract meaning from your custom data structure. You will have to implement these as you build out your frontend.
 
 ## 3. The Back-end (Provided - no work required)
 
