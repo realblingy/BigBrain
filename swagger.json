@@ -72,6 +72,11 @@
                 "description": "Name of the quiz",
                 "example": "My first quiz"
             },
+            "QuizThumbnail": {
+                "type": "string",
+                "description": "Thumbnail image of the quiz - stored as base64. You will get out what you put in.",
+                "example": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+            },
             "QuizId": {
                 "type": "number",
                 "description": "ID of the quiz",
@@ -141,11 +146,6 @@
                 "type": "boolean",
                 "description": "Whether or not the player got this answer correct",
                 "example": false
-            },
-            "AnswerTime": {
-                "type": "string",
-                "description": "ISO timestamp of when the question was last answered",
-                "example": "2020-10-31T14:45:21.077Z"
             }
         },
         "parameters": {
@@ -241,6 +241,12 @@
                     "properties": {
                         "questions": {
                             "$ref": "#/components/fields/QuizQuestions"
+                        },
+                        "name": {
+                            "$ref": "#/components/fields/QuizName"
+                        },
+                        "thumbnail": {
+                            "$ref": "#/components/fields/QuizThumbnail"
                         }
                     }
                 }
@@ -326,6 +332,9 @@
                                         "name": {
                                             "$ref": "#/components/fields/QuizName"
                                         },
+                                        "thumbnail": {
+                                            "$ref": "#/components/fields/QuizThumbnail"
+                                        },
                                         "owner": {
                                             "$ref": "#/components/fields/QuizOwner"
                                         },
@@ -365,6 +374,9 @@
                             "name": {
                                 "$ref": "#/components/fields/QuizName"
                             },
+                            "thumbnail": {
+                                "$ref": "#/components/fields/QuizThumbnail"
+                            },
                             "owner": {
                                 "$ref": "#/components/fields/QuizOwner"
                             },
@@ -392,9 +404,6 @@
                                             },
                                             "correct": {
                                                 "$ref": "#/components/fields/AnswerCorrect"
-                                            },
-                                            "answeredAt": {
-                                                "$ref": "#/components/fields/AnswerTime"
                                             }
                                         }
                                     }
@@ -414,9 +423,6 @@
                                 },
                                 "correct": {
                                     "$ref": "#/components/fields/AnswerCorrect"
-                                },
-                                "answeredAt": {
-                                    "$ref": "#/components/fields/AnswerTime"
                                 }
                             }
                         }

@@ -99,9 +99,9 @@ app.get('/admin/quiz/:quizid', catchErrors(authed(async (req, res, email) => {
 
 app.put('/admin/quiz/:quizid', catchErrors(authed(async (req, res, email) => {
   const { quizid, } = req.params;
-  const { questions, } = req.body;
+  const { questions, name, thumbnail, } = req.body;
   await assertOwnsQuiz(email, quizid);
-  await updateQuiz(quizid, questions);
+  await updateQuiz(quizid, questions, name, thumbnail);
   return res.status(200).send({});
 })));
 

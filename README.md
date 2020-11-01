@@ -17,6 +17,7 @@
 * 31/10: Moving `config.json` from `frontend` to `frontend/src`
 * 01/11: Swagger doc complete and many routes fixed. Final items implemented. Interface on previously incomplete routes changed slightly (Admin deleting a quiz; admin "advancing" to next question; player joining has a name)
 * 01/11: Addition of information on `backend/src/customer.js` as a means to wrapping your custom data structure. Explained in `2.9`.
+* 01/11: Addition of `thumbnail` and `name` to `PUT /admin/quiz/:quizid`. Addition of `thumbnail` to `GET /admin/quiz` and `GET /admin/quiz/:quidid`.
 
 ## 1. Background & Motivation
 
