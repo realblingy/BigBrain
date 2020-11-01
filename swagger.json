@@ -161,7 +161,7 @@
                             "$ref": "#/components/fields/Password"
                         },
                         "name": {
-                            "$ref": "#/components/fields/AdminName"
+                            "$ref": "#/components/fields/Admin"
                         }
                     }
                 }
