@@ -15,6 +15,8 @@
 
 * 31/10: Clarity on how to yarn install added to top of section 2. Clarity on how bonus marks bleed.
 * 31/10: Moving `config.json` from `frontend` to `frontend/src`
+* 01/11: Swagger doc complete and many routes fixed. Final items implemented. Interface on previously incomplete routes changed slightly (Admin deleting a quiz; admin "advancing" to next question; player joining has a name)
+* 01/11: Addition of information on `backend/src/customer.js` as a means to wrapping your custom data structure. Explained in `2.9`.
 
 ## 1. Background & Motivation
 
@@ -61,6 +63,7 @@ A series of features below need to be implemented in your ReactJS app to operate
  * A dashboard of all games is displayed, where each game shows the title, number of questions, a thumbnail, and a total time to complete (sum of all individual question times)
  * Each game listed should have a clickable element relating to it that takes you to the screen to edit that particular game
  * A button exists on this screen that allows you to create a new game, provided a name for the game. Clicking it creates a new game on the server and adds another visible game to the dashboard.
+ ** A button exists on this screen that allows you to delete a particular game.
 
 #### 2.2.2. Edit BigBrain Game
  * A unique route must exist for this screen that is parameterised on the game ID
@@ -94,12 +97,13 @@ A series of features below need to be implemented in your ReactJS app to operate
    * Table of up to top 5 users and their score
    * Bar/Line chart showing a breakdown of what percentage of people (Y axis) got certain questions (X axis) correct
    * Some chart showing the average response/answer time for each question
+   * Any other interesting information you see fit
 
 ### 2.4. Feature 4. Player able to join and play game (10%)
 
 #### 2.4.1. Play Join
  * A unique route must exist for this screen
- * A user is able to enter a session ID and attempt to join the session. If succesful, they're taken to `2.4.2`.
+ * A user is able to enter a session ID and their own name to attempt to join the session. If succesful, they're taken to `2.4.2`.
 
 #### 2.4.2. Play Game
  * On this screen the user is given the current question being asked. This consists of:
@@ -108,11 +112,12 @@ A series of features below need to be implemented in your ReactJS app to operate
    * A countdown with how many seconds remain until you can't answer anymore.
    * A selection of either single or multiple answers, that are clickable.
  * The answer shall be sent to the server the moment the user starts making selections. If further selections are modified, more requests are sent
- * When the timer hits 0, a new question is requested
+ * When the timer hits 0, the answer/results of that particular question are displayed
+ * The answer screen remains visible until the admin advances the quiz question onto the next question.
 
 #### 2.4.3. Game Results
- * When the final question is answered, a page is displayed showing the key results:
-   * The player's rank compared to other players
+ * After the final question is answered, a page is displayed showing the key results:
+   * The player's performance in each question
    * The time it took them to complete each question
 
 ### 2.5. Advanced Features (10%)
@@ -120,19 +125,20 @@ A series of features below need to be implemented in your ReactJS app to operate
 
 ### 2.6. Linting
 
-Linting must be run from inside the `frontend` folder by running `yarn lint`.
+* Linting must be run from inside the `frontend` folder by running `yarn lint`.
 
 ### 2.7. Testing
 
-More information about testing will appear here as required.
-
-Tests must be run from inside the `frontend` folder by running `yarn test`.
+* More information about testing will appear here throughout week 8.
+* Tests must be run from inside the `frontend` folder by running `yarn test`.
 
 ### 2.8. General Requirements
  * Any routes you create must be intelligently and justifiably named.
 
 ### 2.9. Other notes
  * The port you can use to `fetch` data from the backend is defined in `frontend/src/config.json`
+ * The data structure of a "question" is open ended - it's not defined explicitly in the backend. Because of this, the backend has 3 wrapper functions defined in `backend/src/custom.js` that it uses to extract meaning from your custom data structure. You will have to implement these as you build out your frontend.
+* For users of typescript, there is an alternatively `.eslintrc` file [being collaborated here](https://hackmd.io/sy1urGgxRpGwOJ0nOkNlUw?both). Do not change it unless given approval on forum.
 
 ## 3. The Back-end (Provided - no work required)
 
