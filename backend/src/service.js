@@ -21,7 +21,6 @@ const DATABASE_FILE = './database.json';
 let admins = {};
 let quizzes = {};
 let sessions = {};
-let players = {};
 
 const update = (admins, quizzes, sessions) =>
   new Promise((resolve, reject) => {
@@ -31,7 +30,6 @@ const update = (admins, quizzes, sessions) =>
           admins,
           quizzes,
           sessions,
-          players,
         }));
         resolve();
       } catch {
@@ -40,7 +38,7 @@ const update = (admins, quizzes, sessions) =>
     });
   });
 
-export const save = () => update(admins, quizzes, sessions, players);
+export const save = () => update(admins, quizzes, sessions);
 export const reset = () => {
   update({}, {}, {});
   admins = {};
@@ -53,7 +51,6 @@ try {
   admins = data.admins;
   quizzes = data.quizzes;
   sessions = data.sessions;
-  players = data.players;
 } catch {
   console.log('WARNING: No database found, create a new one');
   save();
@@ -65,7 +62,7 @@ try {
 
 const newSessionId = _ => generateId(Object.keys(sessions), 999999);
 const newQuizId = _ => generateId(Object.keys(quizzes));
-const newPlayerId = _ => generateId(Object.keys(players));
+const newPlayerId = _ => generateId(Object.keys(sessions).map(s => Object.keys(sessions[s].players)));
 
 export const userLock = callback => new Promise((resolve, reject) => {
   lock.acquire('userAuthLock', callback(resolve, reject));
@@ -142,6 +139,7 @@ const newQuizPayload = (name, owner) => ({
   name,
   owner,
   questions: [],
+  thumbnail: null,
   active: false,
   createdAt: new Date().toISOString(),
 });
@@ -155,6 +153,7 @@ export const getQuizzesFromAdmin = email => quizLock((resolve, reject) => {
     id: key,
     createdAt: quizzes[key].createdAt,
     name: quizzes[key].name,
+    thumbnail: quizzes[key].thumbnail,
     owner: quizzes[key].owner,
     active: Object.keys(sessions).filter(s => s.quizId === key && s.active).length > 0,
   })));
@@ -170,8 +169,10 @@ export const getQuiz = quizId => quizLock((resolve, reject) => {
   resolve(quizzes[quizId]);
 });
 
-export const updateQuiz = (quizId, questions) => quizLock((resolve, reject) => {
-  quizzes[quizId].questions = questions;
+export const updateQuiz = (quizId, questions, name, thumbnail) => quizLock((resolve, reject) => {
+  if (questions) { quizzes[quizId].questions = questions; }
+  if (name) { quizzes[quizId].name = name; }
+  if (thumbnail) { quizzes[quizId].thumbnail = thumbnail; }
   resolve();
 });
 
@@ -201,7 +202,7 @@ export const advanceQuiz = quizId => quizLock((resolve, reject) => {
   clearTimeout(session.advanceTimeout);
   session.advanceTimeout = setTimeout(() => {
     session.answerAvailable = true;
-  }, questionDuration * 1000);
+  }, questionDuration);
   resolve(session.position);
 });
 
@@ -268,7 +269,7 @@ export const sessionResults = sessionId => sessionLock((resolve, reject) => {
   if (session.active) {
     throw new InputError('Cannot get results for active session');
   }
-  resolve(Object.keys(session.players).map(player => session.players[player]));
+  resolve(Object.keys(session.players).map(pid => session.players[pid]));
 });
 
 export const playerJoin = (name, sessionId) => sessionLock((resolve, reject) => {
@@ -295,10 +296,9 @@ export const getAnswer = playerId => sessionLock((resolve, reject) => {
 
 export const submitAnswer = (playerId, answerId) => sessionLock((resolve, reject) => {
   const session = getActiveSession(sessionIdFromPlayerId(playerId));
-  session.players[playerId][session.position] = {
+  session.players[playerId].answers[session.position] = {
     answer: answerId,
     correct: quizQuestionGetAnswer(session.questions[session.position]) === answerId,
-    answeredAt: new Date().toISOString(),
   };
 });
 
