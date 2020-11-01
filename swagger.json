@@ -141,6 +141,11 @@
                 "type": "boolean",
                 "description": "Whether or not the player got this answer correct",
                 "example": false
+            },
+            "AnswerTime": {
+                "type": "string",
+                "description": "ISO timestamp of when the question was last answered",
+                "example": "2020-10-31T14:45:21.077Z"
             }
         },
         "parameters": {
@@ -387,6 +392,9 @@
                                             },
                                             "correct": {
                                                 "$ref": "#/components/fields/AnswerCorrect"
+                                            },
+                                            "answeredAt": {
+                                                "$ref": "#/components/fields/AnswerTime"
                                             }
                                         }
                                     }
@@ -406,6 +414,9 @@
                                 },
                                 "correct": {
                                     "$ref": "#/components/fields/AnswerCorrect"
+                                },
+                                "answeredAt": {
+                                    "$ref": "#/components/fields/AnswerTime"
                                 }
                             }
                         }

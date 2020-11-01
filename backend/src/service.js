@@ -268,7 +268,7 @@ export const sessionResults = sessionId => sessionLock((resolve, reject) => {
   if (session.active) {
     throw new InputError('Cannot get results for active session');
   }
-  resolve(session.players);
+  resolve(Object.keys(session.players).map(player => session.players[player]));
 });
 
 export const playerJoin = (name, sessionId) => sessionLock((resolve, reject) => {
@@ -298,6 +298,7 @@ export const submitAnswer = (playerId, answerId) => sessionLock((resolve, reject
   session.players[playerId][session.position] = {
     answer: answerId,
     correct: quizQuestionGetAnswer(session.questions[session.position]) === answerId,
+    answeredAt: new Date().toISOString(),
   };
 });
 
