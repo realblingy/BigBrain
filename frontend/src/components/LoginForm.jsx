@@ -52,6 +52,10 @@ function LoginForm() {
     }
   };
 
+  const goToRegister = () => {
+    history.push('/register');
+  };
+
   React.useEffect(() => {
     document.addEventListener('keydown', EnterLogin);
     return () => {
@@ -71,7 +75,8 @@ function LoginForm() {
           Password
           <input type="password" onChange={(event) => setPassword(event.target.value)} />
         </label>
-        <button type="button" id="submit-login" onClick={() => { submitLogin(email, password); }}>Submit</button>
+        <button type="button" id="submit-login" onClick={() => { submitLogin(email, password); }}>Log On</button>
+        <button type="button" onClick={goToRegister}>Register</button>
       </div>
     </>
   );
