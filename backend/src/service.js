@@ -155,7 +155,7 @@ export const getQuizzesFromAdmin = email => quizLock((resolve, reject) => {
     name: quizzes[key].name,
     thumbnail: quizzes[key].thumbnail,
     owner: quizzes[key].owner,
-    active: Object.keys(sessions).filter(s => s.quizId === key && s.active).length > 0,
+    active: Object.keys(sessions).filter(s => sessions[s].quizId === key && sessions[s].active).length > 0,
   })));
 });
 
@@ -185,6 +185,7 @@ export const startQuiz = quizId => quizLock((resolve, reject) => {
   if (quizHasSession()) {
     throw new InputError('Quiz already has active session');
   }
+  quizzes[id].active = true;
   const id = newSessionId();
   sessions[id] = newSessionPayload(quizId);
   resolve(id);
@@ -209,6 +210,7 @@ export const advanceQuiz = quizId => quizLock((resolve, reject) => {
 export const endQuiz = quizId => quizLock((resolve, reject) => {
   const session = getActiveSession(quizId);
   session.active = false;
+  quizzes[id].active = false;
   resolve();
 });
 
@@ -216,13 +218,13 @@ export const endQuiz = quizId => quizLock((resolve, reject) => {
                        Session Functions
 ***************************************************************/
 
-const quizHasSession = quizId => Object.keys(sessions).filter(s => s.quizId === quizId).length === 1;
+const quizHasSession = quizId => Object.keys(sessions).filter(s => sessions[s].quizId === quizId).length === 1;
 
 const getActiveSession = quizId => {
   if (!quizHasSession(quizId)) {
     throw new InputError('Quiz has no active session');
   }
-  return sessions[Object.keys(sessions).filter(s => s.quizId === quizId)[0]];
+  return sessions[Object.keys(sessions).filter(s => sessions[s].quizId === quizId)[0]];
 };
 
 const sessionIdFromPlayerId = playerId => {
