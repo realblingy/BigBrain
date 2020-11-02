@@ -89,8 +89,8 @@
             },
             "QuizOwner": {
                 "type": "string",
-                "description": "Javascript ISO string of when it was created",
-                "example": "2020-10-31T14:45:21.077Z"
+                "example": "shrey@unsw.edu.au",
+                "description": "Email address of the owner of the quiz"
             },
             "QuizActive": {
                 "type": "boolean",
@@ -542,8 +542,7 @@
                 "security": [{ "bearerAuth": [] }],
                 "tags": [ "Admin Quiz Management" ],
                 "parameters": [
-                    { "$ref": "#/components/parameters/Authorization" },
-                    { "$ref": "#/components/parameters/AdminQuizGetAll" }
+                    { "$ref": "#/components/parameters/Authorization" }
                 ],
                 "responses": {
                     "200": { "$ref": "#/components/responses/200/AdminQuizGetAll" },
