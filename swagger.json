@@ -542,8 +542,7 @@
                 "security": [{ "bearerAuth": [] }],
                 "tags": [ "Admin Quiz Management" ],
                 "parameters": [
-                    { "$ref": "#/components/parameters/Authorization" },
-                    { "$ref": "#/components/parameters/AdminQuizGetAll" }
+                    { "$ref": "#/components/parameters/Authorization" }
                 ],
                 "responses": {
                     "200": { "$ref": "#/components/responses/200/AdminQuizGetAll" },
