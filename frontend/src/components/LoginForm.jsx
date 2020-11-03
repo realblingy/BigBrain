@@ -24,6 +24,7 @@ function LoginForm() {
 
   React.useEffect(() => {
     // save to local storage
+    localStorage.setItem('token', token);
   }, [token]);
 
   const submitLogin = async (inputEmail, inputPassword) => {

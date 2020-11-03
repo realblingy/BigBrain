@@ -9,11 +9,11 @@
   border-radius: 0.5rem;
 }
 
-label {
+.login-form label {
   display: flex;
   flex-direction: column;
 }
 
-input {
+.login-form input {
   display: inline-block;
 }

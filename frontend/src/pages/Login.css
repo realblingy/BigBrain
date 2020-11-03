@@ -11,7 +11,3 @@
   height: 100vh;
   justify-content: center;
 }
-
-.login-wrapper {
-  transform: translateY(-15%);
-}
