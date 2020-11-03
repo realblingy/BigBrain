@@ -28,7 +28,7 @@ import {
   sessionResults,
   advanceQuiz,
   getQuestion,
-  getAnswer,
+  getAnswers,
 } from './service';
 
 const app = express();
@@ -163,7 +163,7 @@ app.get('/play/:playerid/question', catchErrors(async (req, res) => {
 
 app.get('/play/:playerid/answer', catchErrors(async (req, res) => {
   const { playerid, } = req.params;
-  return res.status(200).send({ question: getAnswer(playerid), });
+  return res.status(200).send({ question: getAnswers(playerid), });
 }));
 
 app.put('/play/:playerid/answer', catchErrors(async (req, res) => {
@@ -182,7 +182,9 @@ app.put('/play/:playerid/results', catchErrors(async (req, res) => {
                        Running Server
 ***************************************************************/
 
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.get('/', (req, res) => res.redirect('/docs'));
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const configData = JSON.parse(fs.readFileSync('./frontend/src/config.json'));
 const port = 'BACKEND_PORT' in configData ? configData.BACKEND_PORT : 5000;
