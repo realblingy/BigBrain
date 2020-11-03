@@ -5,13 +5,27 @@ import {
   Switch,
   Route,
 } from 'react-router-dom';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Register from './pages/Register';
 
+const theme = createMuiTheme({
+  typography: {
+    h2: {
+      fontSize: '3rem',
+    },
+  },
+  palette: {
+    primary: {
+      main: '#fefb92',
+    },
+  },
+});
+
 function App() {
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <Router>
         <Switch>
           <Route exact path="/">
@@ -25,7 +39,7 @@ function App() {
           </Route>
         </Switch>
       </Router>
-    </>
+    </ThemeProvider>
   );
 }
 

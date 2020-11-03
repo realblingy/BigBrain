@@ -3,17 +3,8 @@
   flex-direction: column;
   width: 400px;
   height: 400px;
-  background-color: rgb(247, 179, 247);
+  border: 1px solid black;
   align-items: center;
   justify-content: center;
   border-radius: 0.5rem;
-}
-
-.login-form label {
-  display: flex;
-  flex-direction: column;
-}
-
-.login-form input {
-  display: inline-block;
 }

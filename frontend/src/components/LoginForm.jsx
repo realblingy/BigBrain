@@ -1,13 +1,45 @@
 import React from 'react';
 import './LoginForm.css';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import port from '../api';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    margin: '15px 0px',
+  },
+  button: {
+    margin: '20px 0px',
+    background: 'transparent',
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+    },
+  },
+  icon: {
+    fontSize: '3rem',
+  },
+  loginTitle: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  error: {
+    minHeight: '24px',
+    color: 'red',
+  },
+}));
+
 function LoginForm() {
+  const classes = useStyles();
   const history = useHistory();
   const [email, _setEmail] = React.useState('');
   const [password, _setPassword] = React.useState('');
   const [token, setToken] = React.useState('');
+  const [errorMsg, setErrorMsg] = React.useState('');
 
   const emailRef = React.useRef(email); // used within eventListener
   const passwordRef = React.useRef(password);
@@ -43,7 +75,8 @@ function LoginForm() {
       setToken(responseData.token);
       history.push('/dashboard');
     } else {
-      console.log(responseData.error);
+      console.log(responseData);
+      setErrorMsg(responseData.error);
     }
   };
 
@@ -67,17 +100,35 @@ function LoginForm() {
   return (
     <>
       <div className="login-form">
-        <h1 className="login-title">LOGIN</h1>
-        <label htmlFor="email">
-          Email
-          <input type="text" onChange={(event) => setEmail(event.target.value)} />
-        </label>
-        <label htmlFor="password">
-          Password
-          <input type="password" onChange={(event) => setPassword(event.target.value)} />
-        </label>
-        <button type="button" id="submit-login" onClick={() => { submitLogin(email, password); }}>Log On</button>
-        <button type="button" onClick={goToRegister}>Register</button>
+        <Typography variant="h2" className={classes.loginTitle}>
+          <PersonOutlineIcon className={classes.icon} />
+          LOGIN
+        </Typography>
+        <TextField
+          className={classes.root}
+          placeholder="Email"
+          inputProps={{
+            'aria-label': 'email input',
+          }}
+          variant="outlined"
+          onChange={(event) => setEmail(event.target.value)}
+          onClick={() => setErrorMsg('')}
+        />
+        <TextField
+          placeholder="Password"
+          inputProps={{
+            'aria-label': 'password input',
+          }}
+          variant="outlined"
+          type="password"
+          onChange={(event) => setPassword(event.target.value)}
+          onClick={() => setErrorMsg('')}
+        />
+        <ButtonGroup aria-label="contained button group">
+          <Button className={classes.button} variant="contained" type="button" id="submit-login" onClick={() => { submitLogin(email, password); }}>Log On</Button>
+          <Button className={classes.button} variant="contained" type="button" onClick={goToRegister}>Register</Button>
+        </ButtonGroup>
+        <Typography className={classes.error}>{errorMsg}</Typography>
       </div>
     </>
   );

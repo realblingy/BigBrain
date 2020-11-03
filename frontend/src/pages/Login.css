@@ -1,5 +1,5 @@
 .welcome-message {
-  color: purple;
+  color: black;
   width: 400px;
 }
 
@@ -10,4 +10,5 @@
   width: 100vw;
   height: 100vh;
   justify-content: center;
+  background-color: #fefb92;
 }
