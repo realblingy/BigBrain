@@ -93,8 +93,9 @@
                 "description": "Email address of the owner of the quiz"
             },
             "QuizActive": {
-                "type": "boolean",
-                "description": "Whether of not the quiz is actively being played",
+                "type": "number",
+                "description": "The ID of the active session for this quiz. If no ID is present, it's null",
+                "nullable": true,
                 "example": false
             },
             "QuizQuestions": {
