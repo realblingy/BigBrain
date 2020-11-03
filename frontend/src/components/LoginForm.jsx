@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
   error: {
     minHeight: '24px',
-    color: 'red',
+    color: theme.palette.error.main,
   },
 }));
 

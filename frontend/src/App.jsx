@@ -20,6 +20,9 @@ const theme = createMuiTheme({
     primary: {
       main: '#fefb92',
     },
+    error: {
+      main: '#FF0000',
+    },
   },
 });
 
