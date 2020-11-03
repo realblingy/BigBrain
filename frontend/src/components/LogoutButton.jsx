@@ -6,6 +6,7 @@ function LogoutButton() {
   const logOut = () => {
     localStorage.removeItem('token');
     history.push('/');
+    // maybe use useContext for token? and remove it 
   };
 
   return (
