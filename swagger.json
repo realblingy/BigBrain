@@ -151,6 +151,7 @@
         },
         "parameters": {
             "AuthRegisterBody": {
+                "name": "Register info",
                 "in": "body",
                 "schema": {
                     "type": "object",
@@ -168,6 +169,7 @@
                 }
             },
             "AuthLoginBody": {
+                "name": "Login info",
                 "in": "body",
                 "schema": {
                     "type": "object",
@@ -189,6 +191,7 @@
                 }
             },
             "AdminQuizNew": {
+                "name": "Quiz info",
                 "in": "body",
                 "schema": {
                     "type": "object",
