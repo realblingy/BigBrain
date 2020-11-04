@@ -310,7 +310,7 @@ export const playerJoin = (name, sessionId) => sessionLock((resolve, reject) => 
   }
   const id = newPlayerId();
   session.players[id] = newPlayerPayload(name);
-  resolve();
+  resolve(id);
 });
 
 export const getQuestion = playerId => sessionLock((resolve, reject) => {
