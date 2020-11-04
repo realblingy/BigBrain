@@ -57,9 +57,9 @@ const catchErrors = fn => async (req, res) => {
                        Auth Functions
 ***************************************************************/
 
-const authed = fn => (req, res) => {
+const authed = fn => async (req, res) => {
   const email = getEmailFromAuthorization(req.header('Authorization'));
-  fn(req, res, email);
+  await fn(req, res, email);
 };
 
 app.post('/admin/auth/login', catchErrors(async (req, res) => {
