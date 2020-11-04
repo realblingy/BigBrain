@@ -152,8 +152,8 @@ app.get('/admin/session/:sessionid/results', catchErrors(authed(async (req, res,
 app.post('/play/join/:sessionid', catchErrors(async (req, res) => {
   const { sessionid, } = req.params;
   const { name, } = req.body;
-  await playerJoin(name, sessionid);
-  return res.status(200).send({});
+  const playerId = await playerJoin(name, sessionid);
+  return res.status(200).send({ playerId, });
 }));
 
 app.get('/play/:playerid/question', catchErrors(async (req, res) => {

@@ -298,7 +298,7 @@ export const assertOwnsSession = (email, sessionId) => {
 export const sessionResults = sessionId => sessionLock((resolve, reject) => {
   const session = sessions[sessionId];
   if (session.active) {
-    throw new InputError('Cannot get results for active session');
+    reject(new InputError('Cannot get results for active session'));
   }
   resolve(Object.keys(session.players).map(pid => session.players[pid]));
 });
@@ -306,23 +306,24 @@ export const sessionResults = sessionId => sessionLock((resolve, reject) => {
 export const playerJoin = (name, sessionId) => sessionLock((resolve, reject) => {
   const session = getActiveSessionFromSessionId(sessionId);
   if (session.position > 0) {
-    throw new InputError('Session has already begun');
+    reject(new InputError('Session has already begun'));
   }
   const id = newPlayerId();
   session.players[id] = newPlayerPayload(name);
+  resolve(id);
 });
 
 export const getQuestion = playerId => sessionLock((resolve, reject) => {
   const session = getActiveSessionFromSessionId(sessionIdFromPlayerId(playerId));
-  return quizQuestionPublicReturn(session.questions[session.position]);
+  resolve(quizQuestionPublicReturn(session.questions[session.position]));
 });
 
 export const getAnswers = playerId => sessionLock((resolve, reject) => {
   const session = getActiveSessionFromSessionId(sessionIdFromPlayerId(playerId));
   if (!session.answerAvailable) {
-    throw new InputError('Question time has not been completed');
+    reject(new InputError('Question time has not been completed'));
   }
-  return quizQuestionGetAnswers(session.questions[session.position]);
+  resolve(quizQuestionGetAnswers(session.questions[session.position]));
 });
 
 export const submitAnswer = (playerId, answerId) => sessionLock((resolve, reject) => {
@@ -331,9 +332,10 @@ export const submitAnswer = (playerId, answerId) => sessionLock((resolve, reject
     answer: answerId,
     correct: quizQuestionGetCorrectAnswers(session.questions[session.position]).includes(answerId),
   };
+  resolve();
 });
 
 export const getResults = playerId => sessionLock((resolve, reject) => {
   const session = sessions[sessionIdFromPlayerId(playerId)];
-  return session.players[playerId];
+  resolve(session.players[playerId]);
 });
