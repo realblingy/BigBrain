@@ -17,10 +17,9 @@
 * 31/10: Moving `config.json` from `frontend` to `frontend/src`
 * 01/11: Swagger doc complete and many routes fixed. Final items implemented. Interface on previously incomplete routes changed slightly (Admin deleting a quiz; admin "advancing" to next question; player joining has a name)
 * 01/11: Addition of information on `backend/src/customer.js` as a means to wrapping your custom data structure. Explained in `2.9`.
-* 01/11: Addition of `thumbnail` and `name` to `PUT /admin/quiz/:quizid`. Addition of `thumbnail` to `GET /admin/quiz` and `GET /admin/quiz/:quidid`.
-* 03/11: Changed the "active" field of the quiz object to be either the Session ID of an active session, or null if no section is active. Previously it was a boolean which wasn't very useful.
-* 03/11: Invalid routes now return HTTP 404
-* 03/11: Correction on how multiple answers are dealt with in custom.js
+* 01/11: (Backend adjustments) Addition of `thumbnail` and `name` to `PUT /admin/quiz/:quizid`. Addition of `thumbnail` to `GET /admin/quiz` and `GET /admin/quiz/:quidid`.
+* 03/11: (Backend adjustments) Changed the "active" field of the quiz object to be either the Session ID of an active session, or null if no section is active. Previously it was a boolean which wasn't very useful.
+* 03/11: (Backend adjustments) Invalid routes now return HTTP 404; Correction on how multiple answers are dealt with in custom.js; assertOwnsQuiz correctly working.
 
 ## 1. Background & Motivation
 

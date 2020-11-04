@@ -81,7 +81,7 @@ const copy = x => JSON.parse(JSON.stringify(x));
 const randNum = max => Math.round(Math.random() * (max - Math.floor(max / 10)) + Math.floor(max / 10));
 const generateId = (currentList, max = 999999999) => {
   let R = randNum(max);
-  while (R in currentList) {
+  while (currentList.includes(R)) {
     R = randNum(max);
   }
   return R.toString();
@@ -149,7 +149,10 @@ export const assertOwnsQuiz = (email, quizId) => quizLock((resolve, reject) => {
   if (!(quizId in quizzes)) {
     reject(new InputError('Invalid quiz ID'));
   }
-  resolve(quizzes[quizId].owner === email);
+  if (quizzes[quizId].owner !== email) {
+    reject(new InputError('Admin does not own this Quiz'));
+  }
+  resolve();
 });
 
 export const getQuizzesFromAdmin = email => quizLock((resolve, reject) => {
@@ -159,7 +162,7 @@ export const getQuizzesFromAdmin = email => quizLock((resolve, reject) => {
     name: quizzes[key].name,
     thumbnail: quizzes[key].thumbnail,
     owner: quizzes[key].owner,
-    active: getActiveSessionFromQuizId(key),
+    active: getActiveSessionIdFromQuizId(key),
   })));
 });
 
@@ -172,7 +175,7 @@ export const addQuiz = (name, email) => quizLock((resolve, reject) => {
 export const getQuiz = quizId => quizLock((resolve, reject) => {
   resolve({
     ...quizzes[quizId],
-    active: getActiveSessionFromQuizId(quizId),
+    active: getActiveSessionIdFromQuizId(quizId),
   });
 });
 
@@ -229,13 +232,17 @@ const getActiveSessionFromQuizIdThrow = quizId => {
   if (!quizHasActiveSession(quizId)) {
     throw new InputError('Quiz has no active session');
   }
-  return getActiveSessionFromQuizId(quizId);
+  const sessionId = getActiveSessionIdFromQuizId(quizId);
+  if (sessionId !== null) {
+    return sessions[sessionId];
+  }
+  return null;
 };
 
-const getActiveSessionFromQuizId = quizId => {
+const getActiveSessionIdFromQuizId = quizId => {
   const activeSessions = Object.keys(sessions).filter(s => sessions[s].quizId === quizId && sessions[s].active);
   if (activeSessions.length === 1) {
-    return sessions[activeSessions[0]];
+    return activeSessions[0];
   }
   return null;
 };
@@ -322,7 +329,7 @@ export const submitAnswer = (playerId, answerId) => sessionLock((resolve, reject
   const session = getActiveSessionFromSessionId(sessionIdFromPlayerId(playerId));
   session.players[playerId].answers[session.position] = {
     answer: answerId,
-    correct: answerId in quizQuestionGetCorrectAnswers(session.questions[session.position]),
+    correct: quizQuestionGetCorrectAnswers(session.questions[session.position]).includes(answerId),
   };
 });
 
