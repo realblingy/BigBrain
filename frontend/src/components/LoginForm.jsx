@@ -3,10 +3,11 @@ import './LoginForm.css';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
+import PersonIcon from '@material-ui/icons/Person';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import port from '../api';
 
 const useStyles = makeStyles((theme) => ({
@@ -33,12 +34,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function LoginForm() {
+function LoginForm(props) {
+  const { setToken } = props;
   const classes = useStyles();
   const history = useHistory();
   const [email, _setEmail] = React.useState('');
   const [password, _setPassword] = React.useState('');
-  const [token, setToken] = React.useState('');
+  // const [token, setToken] = React.useState('');
   const [errorMsg, setErrorMsg] = React.useState('');
 
   const emailRef = React.useRef(email); // used within eventListener
@@ -53,11 +55,6 @@ function LoginForm() {
     passwordRef.current = data;
     _setPassword(data);
   };
-
-  React.useEffect(() => {
-    // save to local storage
-    localStorage.setItem('token', token);
-  }, [token]);
 
   const submitLogin = async (inputEmail, inputPassword) => {
     const response = await fetch(`${port}/admin/auth/login`, {
@@ -101,7 +98,7 @@ function LoginForm() {
     <>
       <div className="login-form">
         <Typography variant="h2" className={classes.loginTitle}>
-          <PersonOutlineIcon className={classes.icon} />
+          <PersonIcon className={classes.icon} />
           LOGIN
         </Typography>
         <TextField
@@ -133,5 +130,9 @@ function LoginForm() {
     </>
   );
 }
+
+LoginForm.propTypes = {
+  setToken: PropTypes.func.isRequired,
+};
 
 export default LoginForm;

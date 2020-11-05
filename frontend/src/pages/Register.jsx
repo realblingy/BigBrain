@@ -1,14 +1,15 @@
 import React from 'react';
 import './Register.css';
 import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import port from '../api';
 
-function Register() {
+function Register(props) {
+  const { setToken } = props;
   const history = useHistory();
   const [email, _setEmail] = React.useState('');
   const [password, _setPassword] = React.useState('');
   const [name, _setName] = React.useState('');
-  const [token, setToken] = React.useState(null);
 
   const emailRef = React.useRef(email);
   const passwordRef = React.useRef(password);
@@ -64,11 +65,6 @@ function Register() {
     };
   }, []);
 
-  React.useEffect(() => {
-    // save to local storage
-    localStorage.setItem('token', token);
-  }, [token]);
-
   return (
     <div className="register">
       <h1>Please register your details</h1>
@@ -88,5 +84,9 @@ function Register() {
     </div>
   );
 }
+
+Register.propTypes = {
+  setToken: PropTypes.func.isRequired,
+};
 
 export default Register;

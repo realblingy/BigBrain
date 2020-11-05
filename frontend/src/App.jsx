@@ -27,18 +27,25 @@ const theme = createMuiTheme({
 });
 
 function App() {
+  const storedToken = localStorage.getItem('token');
+  const [token, setToken] = React.useState(storedToken !== null ? storedToken : '');
+
+  React.useEffect(() => {
+    localStorage.setItem('token', token);
+  }, [token]);
+
   return (
     <ThemeProvider theme={theme}>
       <Router>
         <Switch>
           <Route exact path="/">
-            <Login />
+            <Login setToken={setToken} token={token} />
           </Route>
           <Route exact path="/dashboard">
-            <Dashboard />
+            <Dashboard setToken={setToken} token={token} />
           </Route>
           <Route exact path="/register">
-            <Register />
+            <Register setToken={setToken} />
           </Route>
         </Switch>
       </Router>
