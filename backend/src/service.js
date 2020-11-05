@@ -5,7 +5,6 @@ import { InputError, AccessError, } from './error';
 
 import {
   quizQuestionPublicReturn,
-  quizQuestionGetAnswers,
   quizQuestionGetCorrectAnswers,
   quizQuestionGetDuration,
 } from './custom';
@@ -330,14 +329,14 @@ export const getAnswers = playerId => sessionLock((resolve, reject) => {
   if (!session.answerAvailable) {
     reject(new InputError('Question time has not been completed'));
   }
-  resolve(quizQuestionGetAnswers(session.questions[session.position]));
+  resolve(quizQuestionGetCorrectAnswers(session.questions[session.position]));
 });
 
 export const submitAnswer = (playerId, answerList) => sessionLock((resolve, reject) => {
   const session = getActiveSessionFromSessionId(sessionIdFromPlayerId(playerId));
   session.players[playerId].answers[session.position] = {
     answerIds: answerList,
-    correct: JSON.strinify(quizQuestionGetCorrectAnswers(session.questions[session.position]).sort()) === JSON.stringify(answerList.sort()),
+    correct: JSON.stringify(quizQuestionGetCorrectAnswers(session.questions[session.position]).sort()) === JSON.stringify(answerList.sort()),
   };
   resolve();
 });
