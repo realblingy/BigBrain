@@ -287,7 +287,7 @@
                 "schema": {
                     "type": "object",
                     "properties": {
-                        "answerId": {
+                        "answerIds": {
                             "$ref": "#/components/fields/PlayerAnswer"
                         }
                     }
@@ -403,7 +403,7 @@
                                     "type": "array",
                                     "items": {
                                         "properties": {
-                                            "answer": {
+                                            "answerIds": {
                                                 "$ref": "#/components/fields/AnswerId"
                                             },
                                             "correct": {
@@ -422,7 +422,7 @@
                         "type": "array",
                         "items": {
                             "properties": {
-                                "answer": {
+                                "answerIsa": {
                                     "$ref": "#/components/fields/AnswerId"
                                 },
                                 "correct": {

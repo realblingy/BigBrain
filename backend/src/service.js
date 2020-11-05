@@ -333,11 +333,11 @@ export const getAnswers = playerId => sessionLock((resolve, reject) => {
   resolve(quizQuestionGetAnswers(session.questions[session.position]));
 });
 
-export const submitAnswer = (playerId, answerId) => sessionLock((resolve, reject) => {
+export const submitAnswer = (playerId, answerList) => sessionLock((resolve, reject) => {
   const session = getActiveSessionFromSessionId(sessionIdFromPlayerId(playerId));
   session.players[playerId].answers[session.position] = {
-    answer: answerId,
-    correct: quizQuestionGetCorrectAnswers(session.questions[session.position]).includes(answerId),
+    answerIds: answerList,
+    correct: JSON.strinify(quizQuestionGetCorrectAnswers(session.questions[session.position]).sort()) === JSON.stringify(answerList.sort()),
   };
   resolve();
 });
