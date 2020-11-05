@@ -9,11 +9,25 @@ export const quizQuestionPublicReturn = question => {
 };
 
 /*
- For a given data structure of a question, get the ID of
- the correct answer.
+ For a given data structure of a question, get the IDs of
+ the correct answers (minimum 1).
 */
-export const quizQuestionGetAnswer = question => {
-  return 'Stub';
+export const quizQuestionGetCorrectAnswers = question => {
+  return [
+    123,
+  ]; // For a single answer
+};
+
+/*
+ For a given data structure of a question, get the IDs of
+ all of the answers, correct or incorrect.
+*/
+export const quizQuestionGetAnswers = question => {
+  return [
+    123,
+    456,
+    678,
+  ]; // For a single answer
 };
 
 /*
