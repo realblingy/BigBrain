@@ -35,7 +35,7 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true, }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb', }));
 
 const catchErrors = fn => async (req, res) => {
   try {
@@ -158,12 +158,12 @@ app.post('/play/join/:sessionid', catchErrors(async (req, res) => {
 
 app.get('/play/:playerid/question', catchErrors(async (req, res) => {
   const { playerid, } = req.params;
-  return res.status(200).send({ question: getQuestion(playerid), });
+  return res.status(200).send({ question: await getQuestion(playerid), });
 }));
 
 app.get('/play/:playerid/answer', catchErrors(async (req, res) => {
   const { playerid, } = req.params;
-  return res.status(200).send({ question: getAnswers(playerid), });
+  return res.status(200).send({ question: await getAnswers(playerid), });
 }));
 
 app.put('/play/:playerid/answer', catchErrors(async (req, res) => {
@@ -175,7 +175,7 @@ app.put('/play/:playerid/answer', catchErrors(async (req, res) => {
 
 app.put('/play/:playerid/results', catchErrors(async (req, res) => {
   const { playerid, } = req.params;
-  return res.status(200).send({ results: getResults(playerid), });
+  return res.status(200).send({ results: await getResults(playerid), });
 }));
 
 /***************************************************************
