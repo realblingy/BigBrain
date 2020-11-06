@@ -5,7 +5,6 @@ import { InputError, AccessError, } from './error';
 
 import {
   quizQuestionPublicReturn,
-  quizQuestionGetAnswers,
   quizQuestionGetCorrectAnswers,
   quizQuestionGetDuration,
 } from './custom';
@@ -23,6 +22,8 @@ let admins = {};
 let quizzes = {};
 let sessions = {};
 
+const sessionTimeouts = {};
+
 const update = (admins, quizzes, sessions) =>
   new Promise((resolve, reject) => {
     lock.acquire('saveData', () => {
@@ -31,7 +32,7 @@ const update = (admins, quizzes, sessions) =>
           admins,
           quizzes,
           sessions,
-        }));
+        }, null, 2));
         resolve();
       } catch {
         reject(new Error('Writing to database failed'));
@@ -157,7 +158,7 @@ export const assertOwnsQuiz = (email, quizId) => quizLock((resolve, reject) => {
 
 export const getQuizzesFromAdmin = email => quizLock((resolve, reject) => {
   resolve(Object.keys(quizzes).filter(key => quizzes[key].owner === email).map(key => ({
-    id: key,
+    id: parseInt(key, 10),
     createdAt: quizzes[key].createdAt,
     name: quizzes[key].name,
     thumbnail: quizzes[key].thumbnail,
@@ -192,8 +193,8 @@ export const removeQuiz = quizId => quizLock((resolve, reject) => {
 });
 
 export const startQuiz = quizId => quizLock((resolve, reject) => {
-  if (quizHasActiveSession()) {
-    throw new InputError('Quiz already has active session');
+  if (quizHasActiveSession(quizId)) {
+    reject(new InputError('Quiz already has active session'));
   }
   const id = newSessionId();
   sessions[id] = newSessionPayload(quizId);
@@ -202,17 +203,23 @@ export const startQuiz = quizId => quizLock((resolve, reject) => {
 
 export const advanceQuiz = quizId => quizLock((resolve, reject) => {
   const session = getActiveSessionFromQuizIdThrow(quizId);
+  if (!session.active) {
+    reject(new InputError('Cannot advance a quiz that is not active'));
+  }
   const totalQuestions = session.questions.length;
   session.position += 1;
   session.answerAvailable = false;
-  if (session > totalQuestions) {
+  if (session.position >= totalQuestions) {
     endQuiz(quizId);
+  } else {
+    const questionDuration = quizQuestionGetDuration(session.questions[session.position]);
+    if (sessionTimeouts[session.id]) {
+      clearTimeout(sessionTimeouts[session.id]);
+    }
+    sessionTimeouts[session.id] = setTimeout(() => {
+      session.answerAvailable = true;
+    }, questionDuration);
   }
-  const questionDuration = quizQuestionGetDuration(session.questions[session.position]);
-  clearTimeout(session.advanceTimeout);
-  session.advanceTimeout = setTimeout(() => {
-    session.answerAvailable = true;
-  }, questionDuration);
   resolve(session.position);
 });
 
@@ -257,7 +264,7 @@ const getActiveSessionFromSessionId = sessionId => {
 };
 
 const sessionIdFromPlayerId = playerId => {
-  for (const sessionId in Object.keys(sessions)) {
+  for (const sessionId of Object.keys(sessions)) {
     if (Object.keys(sessions[sessionId].players).filter(p => p === playerId).length > 0) {
       return sessionId;
     }
@@ -272,7 +279,6 @@ const newSessionPayload = quizId => ({
   questions: copy(quizzes[quizId].questions),
   active: true,
   answerAvailable: false,
-  advanceTimeout: null,
 });
 
 const newPlayerPayload = (name, numQuestions) => ({
@@ -323,14 +329,14 @@ export const getAnswers = playerId => sessionLock((resolve, reject) => {
   if (!session.answerAvailable) {
     reject(new InputError('Question time has not been completed'));
   }
-  resolve(quizQuestionGetAnswers(session.questions[session.position]));
+  resolve(quizQuestionGetCorrectAnswers(session.questions[session.position]));
 });
 
-export const submitAnswer = (playerId, answerId) => sessionLock((resolve, reject) => {
+export const submitAnswer = (playerId, answerList) => sessionLock((resolve, reject) => {
   const session = getActiveSessionFromSessionId(sessionIdFromPlayerId(playerId));
   session.players[playerId].answers[session.position] = {
-    answer: answerId,
-    correct: quizQuestionGetCorrectAnswers(session.questions[session.position]).includes(answerId),
+    answerIds: answerList,
+    correct: JSON.stringify(quizQuestionGetCorrectAnswers(session.questions[session.position]).sort()) === JSON.stringify(answerList.sort()),
   };
   resolve();
 });

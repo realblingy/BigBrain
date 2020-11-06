@@ -20,6 +20,7 @@
 * 01/11: (Backend adjustments) Addition of `thumbnail` and `name` to `PUT /admin/quiz/:quizid`. Addition of `thumbnail` to `GET /admin/quiz` and `GET /admin/quiz/:quidid`.
 * 03/11: (Backend adjustments) Changed the "active" field of the quiz object to be either the Session ID of an active session, or null if no section is active. Previously it was a boolean which wasn't very useful.
 * 03/11: (Backend adjustments) Invalid routes now return HTTP 404; Correction on how multiple answers are dealt with in custom.js; assertOwnsQuiz correctly working.
+* 05/11: Added "This login button, when clicked, returns you to the login screen." to `2.1.3`. Removed "The time it took them to complete each question" from `2.4.3`
 
 ## 1. Background & Motivation
 
@@ -58,6 +59,7 @@ A series of features below need to be implemented in your ReactJS app to operate
 
 #### 2.1.3. Logout Button
  * On all screens that require an authorised user, a logout button exists.
+ * This logout button, when clicked, returns you to the login screen.
 
 ### 2.2. Feature 2. Admin Creating & Editing a Game (20%)
 
@@ -121,7 +123,6 @@ A series of features below need to be implemented in your ReactJS app to operate
 #### 2.4.3. Game Results
  * After the final question is answered, a page is displayed showing the key results:
    * The player's performance in each question
-   * The time it took them to complete each question
 
 ### 2.5. Advanced Features (10%)
  * For `2.2.1`, when a new game is created, the user can optionally upload a .csv or .json (you choose) file containing the full data for a game. The data structure is validated on the frontend before being passed to the backend normally. You should provide a copy of an example data file in your project repo.

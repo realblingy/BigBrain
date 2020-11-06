@@ -110,10 +110,12 @@
                 "description": "Name of the player",
                 "example": "Hayden Smith"
             },
-            "PlayerAnswer": {
-                "type": "number",
-                "description": "ID of a particular answer",
-                "example": 56513315
+            "PlayerAnswers": {
+                "type": "array",
+                "description": "IDs of the particular answer",
+                "items": {
+                    "type": "integer"
+                }
             },
             "SessionActive": {
                 "type": "boolean",
@@ -151,6 +153,7 @@
         },
         "parameters": {
             "AuthRegisterBody": {
+                "name": "Register info",
                 "in": "body",
                 "schema": {
                     "type": "object",
@@ -168,6 +171,7 @@
                 }
             },
             "AuthLoginBody": {
+                "name": "Login info",
                 "in": "body",
                 "schema": {
                     "type": "object",
@@ -189,6 +193,7 @@
                 }
             },
             "AdminQuizNew": {
+                "name": "Quiz info",
                 "in": "body",
                 "schema": {
                     "type": "object",
@@ -277,15 +282,15 @@
                 "example": 312894,
                 "description": "ID of the player in the current quiz session"
             },
-            "PlayerAnswer": {
+            "PlayerAnswers": {
                 "name": "Answer ID",
-                "description": "Answer ID for a particular question",
+                "description": "Player chosen answer IDs for a particular question",
                 "in": "body",
                 "schema": {
                     "type": "object",
                     "properties": {
-                        "answerId": {
-                            "$ref": "#/components/fields/PlayerAnswer"
+                        "answerIds": {
+                            "$ref": "#/components/fields/PlayerAnswers"
                         }
                     }
                 }  
@@ -400,7 +405,7 @@
                                     "type": "array",
                                     "items": {
                                         "properties": {
-                                            "answer": {
+                                            "answerIds": {
                                                 "$ref": "#/components/fields/AnswerId"
                                             },
                                             "correct": {
@@ -419,7 +424,7 @@
                         "type": "array",
                         "items": {
                             "properties": {
-                                "answer": {
+                                "answerIds": {
                                     "$ref": "#/components/fields/AnswerId"
                                 },
                                 "correct": {
@@ -466,10 +471,21 @@
                     }
                 },
                 "PlayerQuestion": {
-                    "description": "OK - Customer Object",
+                    "description": "OK - Custom Object - You decide!",
                     "schema": {
                         "type": "object",
                         "properties": {
+                        }
+                    }
+                },
+                "PlayerAnswers": {
+                    "description": "Correct answer IDs for a particular question",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "answerIds": {
+                                "$ref": "#/components/fields/PlayerAnswers"
+                            }
                         }
                     }
                 }
@@ -730,7 +746,7 @@
                     { "$ref": "#/components/parameters/PlayerIdQuery" }
                 ],
                 "responses": {
-                    "200": { "$ref": "#/components/responses/200/PlayerAnswer" },
+                    "200": { "$ref": "#/components/responses/200/PlayerAnswers" },
                     "400": { "$ref": "#/components/responses/400" }
                 }
             },
@@ -740,7 +756,7 @@
                 "parameters": [
                     { "$ref": "#/components/parameters/Authorization" },
                     { "$ref": "#/components/parameters/PlayerIdQuery" },
-                    { "$ref": "#/components/parameters/PlayerAnswer" }
+                    { "$ref": "#/components/parameters/PlayerAnswers" }
                 ],
                 "responses": {
                     "200": { "$ref": "#/components/responses/200/Empty" },
