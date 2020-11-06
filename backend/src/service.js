@@ -332,7 +332,7 @@ export const getAnswers = playerId => sessionLock((resolve, reject) => {
   resolve(quizQuestionGetCorrectAnswers(session.questions[session.position]));
 });
 
-export const submitAnswer = (playerId, answerList) => sessionLock((resolve, reject) => {
+export const submitAnswers = (playerId, answerList) => sessionLock((resolve, reject) => {
   const session = getActiveSessionFromSessionId(sessionIdFromPlayerId(playerId));
   session.players[playerId].answers[session.position] = {
     answerIds: answerList,
