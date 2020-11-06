@@ -5,7 +5,6 @@ import { InputError, AccessError, } from './error';
 
 import {
   quizQuestionPublicReturn,
-  quizQuestionGetAnswers,
   quizQuestionGetCorrectAnswers,
   quizQuestionGetDuration,
 } from './custom';
@@ -33,7 +32,7 @@ const update = (admins, quizzes, sessions) =>
           admins,
           quizzes,
           sessions,
-        }));
+        }, null, 2));
         resolve();
       } catch {
         reject(new Error('Writing to database failed'));
@@ -330,14 +329,14 @@ export const getAnswers = playerId => sessionLock((resolve, reject) => {
   if (!session.answerAvailable) {
     reject(new InputError('Question time has not been completed'));
   }
-  resolve(quizQuestionGetAnswers(session.questions[session.position]));
+  resolve(quizQuestionGetCorrectAnswers(session.questions[session.position]));
 });
 
-export const submitAnswer = (playerId, answerId) => sessionLock((resolve, reject) => {
+export const submitAnswer = (playerId, answerList) => sessionLock((resolve, reject) => {
   const session = getActiveSessionFromSessionId(sessionIdFromPlayerId(playerId));
   session.players[playerId].answers[session.position] = {
-    answer: answerId,
-    correct: quizQuestionGetCorrectAnswers(session.questions[session.position]).includes(answerId),
+    answerIds: answerList,
+    correct: JSON.stringify(quizQuestionGetCorrectAnswers(session.questions[session.position]).sort()) === JSON.stringify(answerList.sort()),
   };
   resolve();
 });

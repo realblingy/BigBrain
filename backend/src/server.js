@@ -16,7 +16,7 @@ import {
   addQuiz,
   startQuiz,
   endQuiz,
-  submitAnswer,
+  submitAnswers,
   getResults,
   assertOwnsQuiz,
   getQuiz,
@@ -168,8 +168,8 @@ app.get('/play/:playerid/answer', catchErrors(async (req, res) => {
 
 app.put('/play/:playerid/answer', catchErrors(async (req, res) => {
   const { playerid, } = req.params;
-  const { answerid, } = req.body;
-  await submitAnswer(playerid, answerid);
+  const { answerList, } = req.body;
+  await submitAnswers(playerid, answerList);
   return res.status(200).send({});
 }));
 
