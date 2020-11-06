@@ -173,7 +173,7 @@ app.put('/play/:playerid/answer', catchErrors(async (req, res) => {
   return res.status(200).send({});
 }));
 
-app.put('/play/:playerid/results', catchErrors(async (req, res) => {
+app.get('/play/:playerid/results', catchErrors(async (req, res) => {
   const { playerid, } = req.params;
   return res.status(200).send({ results: await getResults(playerid), });
 }));
