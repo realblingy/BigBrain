@@ -149,11 +149,11 @@ const newQuizPayload = (name, owner) => ({
 export const assertOwnsQuiz = (email, quizId) => quizLock((resolve, reject) => {
   if (!(quizId in quizzes)) {
     reject(new InputError('Invalid quiz ID'));
-  }
-  if (quizzes[quizId].owner !== email) {
+  } else if (quizzes[quizId].owner !== email) {
     reject(new InputError('Admin does not own this Quiz'));
+  } else {
+    resolve();
   }
-  resolve();
 });
 
 export const getQuizzesFromAdmin = email => quizLock((resolve, reject) => {
@@ -164,6 +164,7 @@ export const getQuizzesFromAdmin = email => quizLock((resolve, reject) => {
     thumbnail: quizzes[key].thumbnail,
     owner: quizzes[key].owner,
     active: getActiveSessionIdFromQuizId(key),
+    oldSessions: getInactiveSessionsIdFromQuizId(key),
   })));
 });
 
@@ -181,6 +182,7 @@ export const getQuiz = quizId => quizLock((resolve, reject) => {
   resolve({
     ...quizzes[quizId],
     active: getActiveSessionIdFromQuizId(quizId),
+    oldSessions: getInactiveSessionsIdFromQuizId(quizId),
   });
 });
 
@@ -199,32 +201,34 @@ export const removeQuiz = quizId => quizLock((resolve, reject) => {
 export const startQuiz = quizId => quizLock((resolve, reject) => {
   if (quizHasActiveSession(quizId)) {
     reject(new InputError('Quiz already has active session'));
+  } else {
+    const id = newSessionId();
+    sessions[id] = newSessionPayload(quizId);
+    resolve(id);
   }
-  const id = newSessionId();
-  sessions[id] = newSessionPayload(quizId);
-  resolve(id);
 });
 
 export const advanceQuiz = quizId => quizLock((resolve, reject) => {
   const session = getActiveSessionFromQuizIdThrow(quizId);
   if (!session.active) {
     reject(new InputError('Cannot advance a quiz that is not active'));
-  }
-  const totalQuestions = session.questions.length;
-  session.position += 1;
-  session.answerAvailable = false;
-  if (session.position >= totalQuestions) {
-    endQuiz(quizId);
   } else {
-    const questionDuration = quizQuestionGetDuration(session.questions[session.position]);
-    if (sessionTimeouts[session.id]) {
-      clearTimeout(sessionTimeouts[session.id]);
+    const totalQuestions = session.questions.length;
+    session.position += 1;
+    session.answerAvailable = false;
+    if (session.position >= totalQuestions) {
+      endQuiz(quizId);
+    } else {
+      const questionDuration = quizQuestionGetDuration(session.questions[session.position]);
+      if (sessionTimeouts[session.id]) {
+        clearTimeout(sessionTimeouts[session.id]);
+      }
+      sessionTimeouts[session.id] = setTimeout(() => {
+        session.answerAvailable = true;
+      }, questionDuration * 1000);
     }
-    sessionTimeouts[session.id] = setTimeout(() => {
-      session.answerAvailable = true;
-    }, questionDuration * 1000);
+    resolve(session.position);
   }
-  resolve(session.position);
 });
 
 export const endQuiz = quizId => quizLock((resolve, reject) => {
@@ -257,6 +261,9 @@ const getActiveSessionIdFromQuizId = quizId => {
   }
   return null;
 };
+
+const getInactiveSessionsIdFromQuizId = quizId =>
+  Object.keys(sessions).filter(sid => sessions[sid].quizId === quizId && !sessions[sid].active).map(s => parseInt(s, 10));
 
 const getActiveSessionFromSessionId = sessionId => {
   if (sessionId in sessions) {
@@ -296,7 +303,7 @@ export const sessionStatus = sessionId => {
     active: session.active,
     answerAvailable: session.answerAvailable,
     position: session.position,
-    numQuestions: session.questions.length,
+    questions: session.questions,
     players: Object.keys(session.players).map(player => session.players[player].name),
   };
 };
@@ -309,43 +316,70 @@ export const sessionResults = sessionId => sessionLock((resolve, reject) => {
   const session = sessions[sessionId];
   if (session.active) {
     reject(new InputError('Cannot get results for active session'));
+  } else {
+    resolve(Object.keys(session.players).map(pid => session.players[pid]));
   }
-  resolve(Object.keys(session.players).map(pid => session.players[pid]));
 });
 
 export const playerJoin = (name, sessionId) => sessionLock((resolve, reject) => {
-  const session = getActiveSessionFromSessionId(sessionId);
-  if (session.position > 0) {
-    reject(new InputError('Session has already begun'));
+  if (name === undefined) {
+    reject(new InputError('Name must be supplied'));
+  } else {
+    const session = getActiveSessionFromSessionId(sessionId);
+    if (session.position > 0) {
+      reject(new InputError('Session has already begun'));
+    } else {
+      const id = newPlayerId();
+      session.players[id] = newPlayerPayload(name);
+      resolve(parseInt(id, 10));
+    }
   }
-  const id = newPlayerId();
-  session.players[id] = newPlayerPayload(name);
-  resolve(id);
 });
 
 export const getQuestion = playerId => sessionLock((resolve, reject) => {
   const session = getActiveSessionFromSessionId(sessionIdFromPlayerId(playerId));
-  resolve(quizQuestionPublicReturn(session.questions[session.position]));
+  if (session.position === -1) {
+    reject(new InputError('Session has not started yet'));
+  } else {
+    resolve(quizQuestionPublicReturn(session.questions[session.position]));
+  }
 });
 
 export const getAnswers = playerId => sessionLock((resolve, reject) => {
   const session = getActiveSessionFromSessionId(sessionIdFromPlayerId(playerId));
-  if (!session.answerAvailable) {
+  if (session.position === -1) {
+    reject(new InputError('Session has not started yet'));
+  } else if (!session.answerAvailable) {
     reject(new InputError('Question time has not been completed'));
+  } else {
+    resolve(quizQuestionGetCorrectAnswers(session.questions[session.position]));
   }
-  resolve(quizQuestionGetCorrectAnswers(session.questions[session.position]));
 });
 
 export const submitAnswers = (playerId, answerList) => sessionLock((resolve, reject) => {
-  const session = getActiveSessionFromSessionId(sessionIdFromPlayerId(playerId));
-  session.players[playerId].answers[session.position] = {
-    answerIds: answerList,
-    correct: JSON.stringify(quizQuestionGetCorrectAnswers(session.questions[session.position]).sort()) === JSON.stringify(answerList.sort()),
-  };
-  resolve();
+  if (answerList === undefined || answerList.length === 0) {
+    reject(new InputError('Answers must be provided'));
+  } else {
+    const session = getActiveSessionFromSessionId(sessionIdFromPlayerId(playerId));
+    if (session.position === -1) {
+      reject(new InputError('Session has not started yet'));
+    } else {
+      session.players[playerId].answers[session.position] = {
+        answerIds: answerList,
+        correct: JSON.stringify(quizQuestionGetCorrectAnswers(session.questions[session.position]).sort()) === JSON.stringify(answerList.sort()),
+      };
+      resolve();
+    }
+  }
 });
 
 export const getResults = playerId => sessionLock((resolve, reject) => {
   const session = sessions[sessionIdFromPlayerId(playerId)];
-  resolve(session.players[playerId]);
+  if (session.active) {
+    reject(new InputError('Session is ongoing, cannot get results yet'));
+  } else if (session.position === -1) {
+    reject(new InputError('Session has not started yet'));
+  } else {
+    resolve(session.players[playerId].answers);
+  }
 });
