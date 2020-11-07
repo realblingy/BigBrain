@@ -92,7 +92,7 @@ function LoginForm(props) {
     return () => {
       document.removeEventListener('keydown', EnterLogin);
     };
-  }, []);
+  });
 
   return (
     <>

@@ -63,7 +63,7 @@ function Register(props) {
     return () => {
       document.removeEventListener('keydown', EnterRegister);
     };
-  }, []);
+  });
 
   return (
     <div className="register">
