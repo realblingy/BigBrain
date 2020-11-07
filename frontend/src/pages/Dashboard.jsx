@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 // import { Redirect } from 'react-router-dom';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress, Grid } from '@material-ui/core';
 import Logout from '../components/LogoutButton';
 import Navbar from '../components/Navbar';
 import port from '../api';
+import QuizButton from '../components/QuizButton';
 
 function Dashboard(props) {
   const { setToken, token } = props;
@@ -16,6 +17,22 @@ function Dashboard(props) {
   // }
 
   React.useEffect(() => {
+    const getQuizData = async (quizid) => {
+      const response = await fetch(`${port}/admin/quiz/${quizid}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 200) {
+        const responseData = await response.json();
+        return responseData;
+      }
+      throw new Error(`Could not load quiz: ${quizid}`);
+    };
+
     const getQuizzes = async () => {
       const response = await fetch(`${port}/admin/quiz`, {
         method: 'GET',
@@ -24,9 +41,16 @@ function Dashboard(props) {
           Authorization: `Bearer ${token}`,
         },
       });
+
       if (response.status === 200) {
         const responseData = await response.json();
-        return responseData.quizzes;
+        const responseQuizzes = await responseData.quizzes.map(async (quiz) => {
+          const { id } = quiz;
+          const newQuiz = await getQuizData(id);
+          console.log(newQuiz);
+          return newQuiz;
+        });
+        return Promise.all(responseQuizzes);
       }
       throw new Error('Could not load quizzes.');
     };
@@ -48,7 +72,12 @@ function Dashboard(props) {
   return (
     <div>
       <Navbar />
-      {loading ? <CircularProgress color="primary" /> : <h1>{quizzes}</h1>}
+      {loading ? <CircularProgress color="primary" /> : (
+        <Grid>
+          {JSON.parse(quizzes)
+            .map((q) => <QuizButton name={q.name} numberOfQuestions={q.questions.length} />)}
+        </Grid>
+      )}
       <Logout setToken={setToken} token={token} />
     </div>
   );
