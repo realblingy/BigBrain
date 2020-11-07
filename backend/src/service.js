@@ -168,9 +168,13 @@ export const getQuizzesFromAdmin = email => quizLock((resolve, reject) => {
 });
 
 export const addQuiz = (name, email) => quizLock((resolve, reject) => {
-  const newId = newQuizId();
-  quizzes[newId] = newQuizPayload(name, email);
-  resolve(newId);
+  if (name === undefined) {
+    reject(new InputError('Must provide a name for new quiz'));
+  } else {
+    const newId = newQuizId();
+    quizzes[newId] = newQuizPayload(name, email);
+    resolve(newId);
+  }
 });
 
 export const getQuiz = quizId => quizLock((resolve, reject) => {
@@ -218,7 +222,7 @@ export const advanceQuiz = quizId => quizLock((resolve, reject) => {
     }
     sessionTimeouts[session.id] = setTimeout(() => {
       session.answerAvailable = true;
-    }, questionDuration);
+    }, questionDuration * 1000);
   }
   resolve(session.position);
 });
@@ -249,7 +253,7 @@ const getActiveSessionFromQuizIdThrow = quizId => {
 const getActiveSessionIdFromQuizId = quizId => {
   const activeSessions = Object.keys(sessions).filter(s => sessions[s].quizId === quizId && sessions[s].active);
   if (activeSessions.length === 1) {
-    return activeSessions[0];
+    return parseInt(activeSessions[0], 10);
   }
   return null;
 };

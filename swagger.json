@@ -96,7 +96,7 @@
                 "type": "number",
                 "description": "The ID of the active session for this quiz. If no ID is present, it's null",
                 "nullable": true,
-                "example": false
+                "example": null
             },
             "QuizQuestions": {
                 "type": "array",
@@ -358,11 +358,6 @@
                     "schema": {
                         "type": "object",
                         "properties": {
-                            "quizId": {
-                                "type": "integer",
-                                "example": 28903489234,
-                                "description": "ID of the quiz that has been generated"
-                            }
                         }
                     }
                 },                
