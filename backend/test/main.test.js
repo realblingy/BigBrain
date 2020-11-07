@@ -3,6 +3,19 @@ import server from '../src/server';
 import { reset } from '../src/service';
 
 const THUMBNAIL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
+const QUESTIONS = [
+  {
+
+  },
+  {
+
+  },
+  {
+
+  },
+];
+const PLAYERS = ['HAYDEN1','HAYDEN2','HAYDEN3','HAYDEN4','HAYDEN5'];
+const PLAYER_IDS = [];
 
 const postTry = async (path, status, payload, token) => sendTry('post', path, status, payload, token);
 const getTry = async (path, status, payload, token) => sendTry('get', path, status, payload, token);
@@ -40,6 +53,18 @@ const singleQuizId = async () => {
   const { quizzes } = await getTry('/admin/quiz', 200, {}, await validToken());
   const quizid = quizzes[0].id;
   return quizid;
+};
+
+const singleSessionStatus = async () => {
+  const { quizzes } = await getTry('/admin/quiz', 200, {}, await validToken());
+  const sessionid = quizzes[0].active;
+  const body = await getTry(`/admin/session/${sessionid}/status`, 200, {}, await validToken());
+  return body.results;
+};
+
+const singleSessionId = async () => {
+  const { quizzes } = await getTry('/admin/quiz', 200, {}, await validToken());
+  return quizzes[0].active;
 };
 
 describe('Test the root path', () => {
@@ -138,6 +163,7 @@ describe('Test the root path', () => {
     expect(body.quizzes[0].owner).toBe('hayden.smith@unsw.edu.au');
     expect(body.quizzes[0].active).toBe(null);
     expect(body.quizzes[0].thumbnail).toBe(null);
+    expect(body.quizzes[0].oldSessions).toMatchObject([]);
   });
 
   test('Create a second quiz', async () => {
@@ -173,19 +199,20 @@ describe('Test the root path', () => {
   });
 
   test('Update quiz thumbnail and name', async () => {
-    const { quizzes } = await getTry('/admin/quiz', 200, {}, await validToken());
-    const quizid = quizzes[0].id;
+    const quizid = await singleQuizId();
     const body = await putTry(`/admin/quiz/${quizid}`, 200, {
       name: 'QUIZDIFF',
       thumbnail: THUMBNAIL,
+      questions: QUESTIONS,
     }, await validToken());
   });
 
   test('Check that thumbnail and name updated', async () => {
-    const { quizzes } = await getTry('/admin/quiz', 200, {}, await validToken());
-    const quiz = quizzes[0];
+    const quizid = await singleQuizId();
+    const quiz = await getTry(`/admin/quiz/${quizid}`, 200, {}, await validToken());
     expect(quiz.name).toBe('QUIZDIFF');
     expect(quiz.thumbnail).toBe(THUMBNAIL);
+    expect(quiz.questions).toMatchObject(QUESTIONS);
   });
 
   /***************************************************************
@@ -237,10 +264,150 @@ describe('Test the root path', () => {
     expect(typeof body.active).toBe('number');
   });
 
+  test('A has right initial props', async () => {
+    const status = await singleSessionStatus();
+    expect(status.active).toBe(true);
+    expect(status.answerAvailable).toBe(false);
+    expect(status.position).toBe(-1);
+    expect(status.questions).toMatchObject(QUESTIONS);
+    expect(status.players).toMatchObject([]);
+  });
 
   /***************************************************************
-                       Auth Tests
+                       Try Playing
   ***************************************************************/
 
+  test('Test player can\'t join without a name', async () => {
+    const sessionId = await singleSessionId();
+    await postTry(`/play/join/${sessionId}`, 400, {});
+  });
+
+  test('Test player can\'t join without a valid session ID', async () => {
+    await postTry(`/play/join/${9999999999999}`, 400, {
+      name: 'HAYDEN',
+    });
+  });
+
+  for (const player of PLAYERS) {
+    test(`Player ${player} Joins`, async () => {
+      const sessionId = await singleSessionId();
+      const payload = {
+        name: player,
+      };
+      const body = await postTry(`/play/join/${sessionId}`, 200, payload);
+      expect(typeof body.playerId).toBe('number');
+      PLAYER_IDS.push(body.playerId);
+    });
+  }
+
+  test('All players are in the session status', async () => {
+    const status = await singleSessionStatus();
+    expect(status.players.sort()).toMatchObject(PLAYERS.sort());
+  });
+
+  test('Players cant get questions when session hasnt started', async () => {
+    for (const playerId of PLAYER_IDS) {
+      await getTry(`/play/${playerId}/question`, 400, {});
+    }
+  });
+
+  test('Players cant get questions answers when session hasnt started', async () => {
+    for (const playerId of PLAYER_IDS) {
+      await getTry(`/play/${playerId}/answer`, 400, {});
+    }
+  });
+
+  test('Players cant answer questions when session hasnt started', async () => {
+    for (const playerId of PLAYER_IDS) {
+      await putTry(`/play/${playerId}/answer`, 400, {});
+    }
+  });
+
+  test('Players cant get results when session hasnt started', async () => {
+    for (const playerId of PLAYER_IDS) {
+      await getTry(`/play/${playerId}/results`, 400, {});
+    }
+  });
+
+  for (const questionPosition in QUESTIONS) {
+    test('Try to advance the quiz', async () => {
+      const quizid = await singleQuizId();
+      await postTry(`/admin/quiz/${quizid}/advance`, 200, {}, await validToken());
+    });
+
+    test('Session position has increased', async () => {
+      const status = await singleSessionStatus();
+      expect(status.position).toBe(parseInt(questionPosition, 10));
+      expect(status.active).toBe(true);
+      expect(status.answerAvailable).toBe(false);
+    });
+
+    test(`Players fail to submit no answers`, async () => {
+      for (const playerId of PLAYER_IDS) {
+        await putTry(`/play/${playerId}/answer`, 400, { answerIds: [], });
+        await putTry(`/play/${playerId}/answer`, 400, {});
+      }
+    });
+
+    test(`Players attempt to submit answer`, async () => {
+      for (const playerId of PLAYER_IDS) {
+        const payload = {
+          answerIds: [ 0, 1, 2 ],
+        };
+        const body = await putTry(`/play/${playerId}/answer`, 200, payload);
+        expect(body).toMatchObject({});
+      }
+    });
+
+    test('Should be unable to start the quiz', async () => {
+      const quizid = await singleQuizId();
+      await postTry(`/admin/quiz/${quizid}/start`, 400, {}, await validToken());
+    });
+
+    test(`Players should not be able to get their results`, async () => {
+      for (const playerId of PLAYER_IDS) {
+        const body = await getTry(`/play/${playerId}/results`, 400);
+      }
+    });
+  }
+
+  test('Try to advance the quiz. ensure session has ended', async () => {
+    const sessionId = await singleSessionId();
+    const quizid = await singleQuizId();
+    await postTry(`/admin/quiz/${quizid}/advance`, 200, {}, await validToken());
+    const { results } = await getTry(`/admin/session/${sessionId}/status`, 200, {}, await validToken());
+    expect(results.position).toBe(QUESTIONS.length);
+    expect(results.active).toBe(false);
+    expect(results.answerAvailable).toBe(false);
+  });
+
+  test('Ensure that the session appears in old sessions', async () => {
+    const quizid = await singleQuizId();
+    const { oldSessions } = await getTry(`/admin/quiz/${quizid}`, 200, {}, await validToken());
+    expect(oldSessions).toHaveLength(1);
+  });
+
+  test('Should be unable to advance the quiz', async () => {
+    const quizid = await singleQuizId();
+    await postTry(`/admin/quiz/${quizid}/advance`, 400, {}, await validToken());
+  });
+
+  test('Should be unable to end the quiz', async () => {
+    const quizid = await singleQuizId();
+    await postTry(`/admin/quiz/${quizid}/end`, 400, {}, await validToken());
+  });
+
+  test(`Players should be able to get their results`, async () => {
+    for (const playerId of PLAYER_IDS) {
+      const body = await getTry(`/play/${playerId}/results`, 200);
+      expect(body).toMatchObject(QUESTIONS.map(q => ({ answerIds: [ 0, 1, 2 ], correct: false })));
+    }
+  });
+
+  test('Admins can get the session results', async () => {
+    const quizid = await singleQuizId();
+    const { oldSessions } = await getTry(`/admin/quiz/${quizid}`, 200, {}, await validToken());
+    const body = await getTry(`/admin/session/${oldSessions[0]}/results`, 200, {}, await validToken());
+  });
 
 });
