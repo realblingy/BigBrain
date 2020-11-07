@@ -168,14 +168,14 @@ app.get('/play/:playerid/answer', catchErrors(async (req, res) => {
 
 app.put('/play/:playerid/answer', catchErrors(async (req, res) => {
   const { playerid, } = req.params;
-  const { answerList, } = req.body;
-  await submitAnswers(playerid, answerList);
+  const { answerIds, } = req.body;
+  await submitAnswers(playerid, answerIds);
   return res.status(200).send({});
 }));
 
 app.get('/play/:playerid/results', catchErrors(async (req, res) => {
   const { playerid, } = req.params;
-  return res.status(200).send({ results: await getResults(playerid), });
+  return res.status(200).send(await getResults(playerid));
 }));
 
 /***************************************************************
