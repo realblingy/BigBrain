@@ -294,7 +294,7 @@
                 "description": "ID of the player in the current quiz session"
             },
             "PlayerAnswers": {
-                "name": "Answer ID",
+                "name": "Answer IDs",
                 "description": "Player chosen answer IDs for a particular question",
                 "in": "body",
                 "schema": {
@@ -500,6 +500,17 @@
                 },
                 "PlayerAnswers": {
                     "description": "Correct answer IDs for a particular question",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "answerIds": {
+                                "$ref": "#/components/fields/PlayerAnswers"
+                            }
+                        }
+                    }
+                },
+                "PlayerAnswersAll": {
+                    "description": "All answer IDs for a particular question",
                     "schema": {
                         "type": "object",
                         "properties": {
@@ -763,7 +774,7 @@
                     { "$ref": "#/components/parameters/PlayerIdQuery" }
                 ],
                 "responses": {
-                    "200": { "$ref": "#/components/responses/200/PlayerAnswers" },
+                    "200": { "$ref": "#/components/responses/200/PlayerAnswersAll" },
                     "400": { "$ref": "#/components/responses/400" }
                 }
             },
