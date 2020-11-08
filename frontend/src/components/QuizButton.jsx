@@ -24,7 +24,9 @@ const useStyles = makeStyles(() => ({
 
 function QuizButton(props) {
   const classes = useStyles();
-  const { color, name, numberOfQuestions } = props;
+  const {
+    color, name, numberOfQuestions, redirect, id,
+  } = props;
 
   return (
     <ButtonBase
@@ -32,6 +34,8 @@ function QuizButton(props) {
       className={classes.root}
       variant="contained"
       style={{ backgroundColor: color }}
+      id={id}
+      onClick={redirect}
     >
       <h1 className={classes.name}>
         { name }
@@ -57,10 +61,12 @@ QuizButton.propTypes = {
   color: PropTypes.string,
   name: PropTypes.string.isRequired,
   numberOfQuestions: PropTypes.number.isRequired,
+  redirect: PropTypes.func.isRequired,
+  id: PropTypes.number.isRequired,
 };
 
 QuizButton.defaultProps = {
-  color: 'orange',
+  color: '#EE732E',
 };
 
 export default QuizButton;

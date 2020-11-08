@@ -6,7 +6,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 const useStyles = makeStyles({
   root: {
-    backgroundColor: '#1C204B',
+    backgroundColor: '#124661',
     color: 'white',
     flexGrow: 1,
   },

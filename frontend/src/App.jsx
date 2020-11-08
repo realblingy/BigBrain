@@ -9,6 +9,7 @@ import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Register from './pages/Register';
+import EditGame from './pages/EditGame';
 
 const theme = createMuiTheme({
   typography: {
@@ -47,6 +48,14 @@ function App() {
           <Route exact path="/register">
             <Register setToken={setToken} />
           </Route>
+          <Route
+            exact
+            path="/edit/:id"
+            render={(props) => {
+              const { match } = props;
+              return (<EditGame token={token} id={Number(match.params.id)} />);
+            }}
+          />
         </Switch>
       </Router>
     </ThemeProvider>
