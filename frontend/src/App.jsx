@@ -10,6 +10,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Register from './pages/Register';
 import EditGame from './pages/EditGame';
+import Navbar from './components/Navbar';
 
 const theme = createMuiTheme({
   typography: {
@@ -19,8 +20,12 @@ const theme = createMuiTheme({
   },
   palette: {
     primary: {
-      main: '#fefb92',
+      main: '#212032',
     },
+    secondary: {
+      main: '#E53026',
+    },
+    background: 'black',
     error: {
       main: '#FF0000',
     },
@@ -37,6 +42,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      {token && <Navbar />}
       <Router>
         <Switch>
           <Route exact path="/">

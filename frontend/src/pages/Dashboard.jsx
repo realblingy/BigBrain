@@ -4,20 +4,16 @@ import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/styles';
 import { CircularProgress, Grid } from '@material-ui/core';
 // import Logout from '../components/LogoutButton';
-import Navbar from '../components/Navbar';
 import { getQuizzes } from '../api';
 import QuizButton from '../components/QuizButton';
 import NewQuizButton from '../components/NewQuizButton';
 
-const useStyles = makeStyles({
-  root: {
-    backgroundColor: 'black',
-  },
+const useStyles = makeStyles(() => ({
   quizGrid: {
     gridGap: '2rem',
     padding: '2rem',
   },
-});
+}));
 
 function Dashboard(props) {
   const { token } = props;
@@ -41,13 +37,12 @@ function Dashboard(props) {
     fetchData();
   }, [token]);
 
-  const handleQuizBtnClick = (e) => {
-    history.push(`/edit/${e.target.id}`);
+  const handleQuizBtnClick = (id) => {
+    history.push(`/edit/${id}`);
   };
 
   return (
-    <div>
-      <Navbar />
+    <div className={classes.root}>
       {(loading) ? <CircularProgress color="primary" /> : (
         <Grid className={classes.quizGrid} container spacing={2}>
           {(quizzes.length > 0) && JSON.parse(quizzes)
@@ -57,7 +52,7 @@ function Dashboard(props) {
                 name={q.name}
                 numberOfQuestions={q.questions.length}
                 id={q.id}
-                redirect={handleQuizBtnClick}
+                redirect={() => handleQuizBtnClick(q.id)}
               />
             ))}
           <NewQuizButton

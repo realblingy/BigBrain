@@ -66,7 +66,7 @@ QuizButton.propTypes = {
 };
 
 QuizButton.defaultProps = {
-  color: '#EE732E',
+  color: '#E53026',
 };
 
 export default QuizButton;
