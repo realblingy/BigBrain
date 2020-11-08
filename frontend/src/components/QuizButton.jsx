@@ -55,8 +55,8 @@ function QuizButton(props) {
 
 QuizButton.propTypes = {
   color: PropTypes.string,
-  name: PropTypes.func.isRequired,
-  numberOfQuestions: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  numberOfQuestions: PropTypes.number.isRequired,
 };
 
 QuizButton.defaultProps = {

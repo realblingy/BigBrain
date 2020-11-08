@@ -12,10 +12,6 @@ function Dashboard(props) {
   const [quizzes, setQuizzes] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
-  // if (token === '') {
-  //   return <Redirect to="/" />;
-  // }
-
   React.useEffect(() => {
     const getQuizData = async (quizid) => {
       const response = await fetch(`${port}/admin/quiz/${quizid}`, {
@@ -47,7 +43,6 @@ function Dashboard(props) {
         const responseQuizzes = await responseData.quizzes.map(async (quiz) => {
           const { id } = quiz;
           const newQuiz = await getQuizData(id);
-          console.log(newQuiz);
           return newQuiz;
         });
         return Promise.all(responseQuizzes);
@@ -72,10 +67,16 @@ function Dashboard(props) {
   return (
     <div>
       <Navbar />
-      {loading ? <CircularProgress color="primary" /> : (
+      {(loading) ? <CircularProgress color="primary" /> : (
         <Grid>
-          {JSON.parse(quizzes)
-            .map((q) => <QuizButton name={q.name} numberOfQuestions={q.questions.length} />)}
+          {(quizzes.length > 0) && JSON.parse(quizzes)
+            .map((q) => (
+              <QuizButton
+                key={q.name}
+                name={q.name}
+                numberOfQuestions={q.questions.length}
+              />
+            ))}
         </Grid>
       )}
       <Logout setToken={setToken} token={token} />

@@ -5,7 +5,6 @@ import port from '../api';
 
 function LogoutButton(props) {
   const { setToken, token } = props;
-  console.log(token);
   const history = useHistory();
   const logOut = async () => {
     const response = await fetch(`${port}/admin/auth/logout`, {
