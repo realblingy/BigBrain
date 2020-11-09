@@ -24,6 +24,7 @@
 * 07/11: "QuizId.Active" now correctly returns an integer (instead of string). "quizId" on `GET /admin/quiz/{quizid}/start` removed from swagger docs to be consistent with implementation; fixed bug where timeout was not working correctly with seconds; session status endpoint swagger doc updated to reflect return type; returning questions instead of numQuestions (as you can get length from it); Removing authorisation from play routes; Correct return for `GET /play/:playerid/results` provided; Added `oldSessions` property to quiz object return.
 * 08/11: Correctly named response object for `GET /play/{sessionid}/answer` to `answerIds`
 * 09/11: Section on "Testing" criteria updated.
+* 10/11: Reminder that `2.5` is NOT bonus features; Non-null return type when user hasn't answered anything
 
 ## 1. Background & Motivation
 
@@ -127,7 +128,7 @@ A series of features below need to be implemented in your ReactJS app to operate
  * After the final question is answered, a page is displayed showing the key results:
    * The player's performance in each question
 
-### 2.5. Advanced Features (10%)
+### 2.5. Advanced Features (10%) (THIS IS NOT BONUS FEATURES)
  * For `2.2.1`, when a new game is created, the user can optionally upload a .csv or .json (you choose) file containing the full data for a game. The data structure is validated on the frontend before being passed to the backend normally. You should provide a copy of an example data file in your project repo.
 
 ### 2.6. Linting
