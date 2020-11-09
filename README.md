@@ -23,6 +23,7 @@
 * 05/11: Added "This login button, when clicked, returns you to the login screen." to `2.1.3`. Removed "The time it took them to complete each question" from `2.4.3`
 * 07/11: "QuizId.Active" now correctly returns an integer (instead of string). "quizId" on `GET /admin/quiz/{quizid}/start` removed from swagger docs to be consistent with implementation; fixed bug where timeout was not working correctly with seconds; session status endpoint swagger doc updated to reflect return type; returning questions instead of numQuestions (as you can get length from it); Removing authorisation from play routes; Correct return for `GET /play/:playerid/results` provided; Added `oldSessions` property to quiz object return.
 * 08/11: Correctly named response object for `GET /play/{sessionid}/answer` to `answerIds`
+* 09/11: Section on "Testing" criteria updated.
 
 ## 1. Background & Motivation
 
@@ -135,8 +136,27 @@ A series of features below need to be implemented in your ReactJS app to operate
 
 ### 2.7. Testing
 
-* More information about testing will appear here throughout week 8.
-* Tests must be run from inside the `frontend` folder by running `yarn test`.
+As part of this assignment you are required to write some tests for your components (component testing), and for your application as a whole (ui testing).
+
+For **component testing**, you must:
+ * Write tests for at least 3 different components
+ * For each of the 4 components, they mustn't have more than 50% similarity (e.g. you can't test a "Card" component and a "BigCard" component, that are virtually the same)
+ * Ensure your tests have excellent **coverage** (look at all different use cases and edge cases)
+ * Ensure your tests have excellent **clarity** (well commented and code isn't overly complex)
+ * Ensure your tests are **designed** well (logical ordering of tests, avoid any tests that aren't necessary or don't add any meaningful value)
+
+For **ui testing**, you must:
+ * Write a single test for the "happy path" of an admin that is described as:
+   1. Registers successfully
+   2. Creates a new game successfully
+   3. Updates the thumbnail and name of the game successfully (yes, it will have no questions)
+   4. Starts a game successfully
+   5. Ends a game successfully (yes, no one will have played it)
+   6. Loads the results page successfully
+   7. Logs out of the application successfully
+   8. Logs back into the application successfully
+
+Tests must be run from inside the `frontend` folder by running `yarn test`.
 
 ### 2.8. General Requirements
  * Any routes you create must be intelligently and justifiably named.
@@ -239,7 +259,8 @@ Your assignment will be hand-marked by tutor(s) in the course according to the c
 		<td>15%</td>
 		<td>
 			<ul>
-				<li>Your project has front-end tests for all capabilities that have been written.</li>
+				<li>Two thirds (10%) of the marks received from complying with requirements in section `2.7` in relation to **component testing**</li>
+				<li>One third (5%) of the marks received from complying with requirements in section `2.7` in relation to **ui testing**</li>
 			</ul>
 		</td>
 	</tr>
