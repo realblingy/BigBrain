@@ -294,7 +294,10 @@ const newSessionPayload = quizId => ({
 
 const newPlayerPayload = (name, numQuestions) => ({
   name: name,
-  answers: Array(numQuestions).fill(null),
+  answers: Array(numQuestions).fill({
+    answerIds: [],
+    correct: false,
+  }),
 });
 
 export const sessionStatus = sessionId => {
