@@ -216,6 +216,7 @@ export const advanceQuiz = quizId => quizLock((resolve, reject) => {
     const totalQuestions = session.questions.length;
     session.position += 1;
     session.answerAvailable = false;
+    session.isoTimeLastQuestionStarted = new Date().toISOString();
     if (session.position >= totalQuestions) {
       endQuiz(quizId);
     } else {
@@ -286,6 +287,7 @@ const sessionIdFromPlayerId = playerId => {
 const newSessionPayload = quizId => ({
   quizId,
   position: -1,
+  isoTimeLastQuestionStarted: null,
   players: {},
   questions: copy(quizzes[quizId].questions),
   active: true,
@@ -305,14 +307,15 @@ export const sessionStatus = sessionId => {
   return {
     active: session.active,
     answerAvailable: session.answerAvailable,
+    isoTimeLastQuestionStarted: session.isoTimeLastQuestionStarted,
     position: session.position,
     questions: session.questions,
     players: Object.keys(session.players).map(player => session.players[player].name),
   };
 };
 
-export const assertOwnsSession = (email, sessionId) => {
-  assertOwnsQuiz(email, sessions[sessionId].quizId);
+export const assertOwnsSession = async (email, sessionId) => {
+  await assertOwnsQuiz(email, sessions[sessionId].quizId);
 };
 
 export const sessionResults = sessionId => sessionLock((resolve, reject) => {
@@ -344,7 +347,10 @@ export const getQuestion = playerId => sessionLock((resolve, reject) => {
   if (session.position === -1) {
     reject(new InputError('Session has not started yet'));
   } else {
-    resolve(quizQuestionPublicReturn(session.questions[session.position]));
+    resolve({
+      ...quizQuestionPublicReturn(session.questions[session.position]),
+      isoTimeLastQuestionStarted: session.isoTimeLastQuestionStarted,
+    });
   }
 });
 

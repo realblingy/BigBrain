@@ -87,6 +87,11 @@
                 "description": "Javascript ISO string of when it was created",
                 "example": "2020-10-31T14:45:21.077Z"
             },
+            "SessionIsoTimeLastQuestionStarted": {
+                "type": "string",
+                "description": "Javascript ISO string of when the most recent question timer was started",
+                "example": "2020-10-31T14:45:21.077Z"
+            },
             "QuizOwner": {
                 "type": "string",
                 "example": "shrey@unsw.edu.au",
@@ -460,6 +465,9 @@
                                     "answerAvailable": {
                                         "$ref": "#/components/fields/SessionAnswerAvailable" 
                                     },
+                                    "isoTimeLastQuestionStarted": {
+                                        "$ref": "#/components/fields/SessionIsoTimeLastQuestionStarted" 
+                                    },
                                     "position": {
                                         "$ref": "#/components/fields/SessionPosition"
                                     },
@@ -491,10 +499,13 @@
                     }
                 },
                 "PlayerQuestion": {
-                    "description": "OK - Custom Object - You decide!",
+                    "description": "OK - results of your customer.js 'quizQuestionPublicReturn', along with time that the question started!",
                     "schema": {
                         "type": "object",
                         "properties": {
+                            "isoTimeLastQuestionStarted": {
+                                "$ref": "#/components/fields/SessionIsoTimeLastQuestionStarted" 
+                            }
                         }
                     }
                 },
