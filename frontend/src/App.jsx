@@ -42,8 +42,8 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      {token && <Navbar />}
       <Router>
+        {token && <Navbar setToken={setToken} token={token} />}
         <Switch>
           <Route exact path="/">
             <Login setToken={setToken} token={token} />
@@ -52,7 +52,7 @@ function App() {
             <Dashboard setToken={setToken} token={token} />
           </Route>
           <Route exact path="/register">
-            <Register setToken={setToken} />
+            <Register setToken={setToken} token={token} />
           </Route>
           <Route
             exact

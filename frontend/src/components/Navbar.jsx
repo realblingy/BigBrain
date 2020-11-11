@@ -3,6 +3,8 @@ import {
   AppBar, Toolbar, Typography, Button, IconButton, makeStyles,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import PropTypes from 'prop-types';
+import LogoutButton from './LogoutButton';
 
 const useStyles = makeStyles({
   root: {
@@ -15,7 +17,8 @@ const useStyles = makeStyles({
   },
 });
 
-function Navbar() {
+function Navbar(props) {
+  const { setToken, token } = props;
   const classes = useStyles();
   return (
     <AppBar className={classes.root} position="static">
@@ -27,9 +30,15 @@ function Navbar() {
           Dashboard
         </Typography>
         <Button color="inherit">Login</Button>
+        <LogoutButton setToken={setToken} token={token} />
       </Toolbar>
     </AppBar>
   );
 }
+
+Navbar.propTypes = {
+  setToken: PropTypes.func.isRequired,
+  token: PropTypes.string.isRequired,
+};
 
 export default Navbar;

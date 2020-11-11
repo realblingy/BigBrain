@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     margin: '20px 0px',
     background: 'transparent',
     '&:hover': {
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: '#fefb92',
     },
   },
   icon: {
@@ -38,61 +38,36 @@ function LoginForm(props) {
   const { setToken } = props;
   const classes = useStyles();
   const history = useHistory();
-  const [email, _setEmail] = React.useState('');
-  const [password, _setPassword] = React.useState('');
-  // const [token, setToken] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const [errorMsg, setErrorMsg] = React.useState('');
 
-  const emailRef = React.useRef(email); // used within eventListener
-  const passwordRef = React.useRef(password);
-
-  const setEmail = (data) => {
-    emailRef.current = data;
-    _setEmail(data);
-  };
-
-  const setPassword = (data) => {
-    passwordRef.current = data;
-    _setPassword(data);
-  };
-
-  const submitLogin = async (inputEmail, inputPassword) => {
-    const response = await fetch(`${port}/admin/auth/login`, {
-      method: 'POST',
-      body: JSON.stringify({
-        email: inputEmail,
-        password: inputPassword,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const responseData = await response.json();
-    if (response.status === 200) {
-      setToken(responseData.token);
-      history.push('/dashboard');
-    } else {
-      console.log(responseData);
-      setErrorMsg(responseData.error);
-    }
-  };
-
-  const EnterLogin = (event) => {
-    if (event.key === 'Enter') {
-      submitLogin(emailRef.current, passwordRef.current);
-    }
-  };
+  const submitLogin = React.useCallback(
+    async (inputEmail, inputPassword) => {
+      const response = await fetch(`${port}/admin/auth/login`, {
+        method: 'POST',
+        body: JSON.stringify({
+          email: inputEmail,
+          password: inputPassword,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const responseData = await response.json();
+      if (response.status === 200) {
+        setToken(responseData.token);
+        history.push('/dashboard');
+      } else {
+        setErrorMsg(responseData.error);
+      }
+    },
+    [history, setToken],
+  );
 
   const goToRegister = () => {
     history.push('/register');
   };
-
-  React.useEffect(() => {
-    document.addEventListener('keydown', EnterLogin);
-    return () => {
-      document.removeEventListener('keydown', EnterLogin);
-    };
-  });
 
   return (
     <>
