@@ -22,9 +22,10 @@
 * 03/11: (Backend adjustments) Invalid routes now return HTTP 404; Correction on how multiple answers are dealt with in custom.js; assertOwnsQuiz correctly working.
 * 05/11: Added "This login button, when clicked, returns you to the login screen." to `2.1.3`. Removed "The time it took them to complete each question" from `2.4.3`
 * 07/11: "QuizId.Active" now correctly returns an integer (instead of string). "quizId" on `GET /admin/quiz/{quizid}/start` removed from swagger docs to be consistent with implementation; fixed bug where timeout was not working correctly with seconds; session status endpoint swagger doc updated to reflect return type; returning questions instead of numQuestions (as you can get length from it); Removing authorisation from play routes; Correct return for `GET /play/:playerid/results` provided; Added `oldSessions` property to quiz object return.
-* 08/11: Correctly named response object for `GET /play/{sessionid}/answer` to `answerIds`
+* 08/11: Correctly named response object for `GET /play/{playerid}/answer` to `answerIds`
 * 09/11: Section on "Testing" criteria updated.
 * 10/11: Reminder that `2.5` is NOT bonus features; Non-null return type when user hasn't answered anything
+* 11/11: Upon request, added 'isoTimeLastQuestionStarted' property to `GET /play/{playerid}/question` so that you can display a countdown / remaining timer on the frontend.
 
 ## 1. Background & Motivation
 
