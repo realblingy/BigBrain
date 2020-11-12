@@ -297,6 +297,7 @@ const newSessionPayload = quizId => ({
 const newPlayerPayload = (name, numQuestions) => ({
   name: name,
   answers: Array(numQuestions).fill({
+    answeredAt: null,
     answerIds: [],
     correct: false,
   }),
@@ -336,7 +337,7 @@ export const playerJoin = (name, sessionId) => sessionLock((resolve, reject) => 
       reject(new InputError('Session has already begun'));
     } else {
       const id = newPlayerId();
-      session.players[id] = newPlayerPayload(name);
+      session.players[id] = newPlayerPayload(name, session.questions.length);
       resolve(parseInt(id, 10));
     }
   }
@@ -372,8 +373,11 @@ export const submitAnswers = (playerId, answerList) => sessionLock((resolve, rej
     const session = getActiveSessionFromSessionId(sessionIdFromPlayerId(playerId));
     if (session.position === -1) {
       reject(new InputError('Session has not started yet'));
+    } else if (session.answerAvailable) {
+      reject(new InputError('Can\'t answer question once answer is available'));
     } else {
       session.players[playerId].answers[session.position] = {
+        answeredAt: new Date().toISOString(),
         answerIds: answerList,
         correct: JSON.stringify(quizQuestionGetCorrectAnswers(session.questions[session.position]).sort()) === JSON.stringify(answerList.sort()),
       };

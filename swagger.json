@@ -88,6 +88,7 @@
                 "example": "2020-10-31T14:45:21.077Z"
             },
             "SessionIsoTimeLastQuestionStarted": {
+                "nullable": true,
                 "type": "string",
                 "description": "Javascript ISO string of when the most recent question timer was started",
                 "example": "2020-10-31T14:45:21.077Z"
@@ -165,6 +166,12 @@
                 "type": "boolean",
                 "description": "Whether or not the player got this answer correct",
                 "example": false
+            },
+            "AnsweredAt": {
+                "nullable": true,
+                "type": "string",
+                "description": "Javascript ISO string of when the question was most recently answered",
+                "example": "2020-10-31T14:45:21.077Z"
             }
         },
         "parameters": {
@@ -427,6 +434,9 @@
                                             },
                                             "correct": {
                                                 "$ref": "#/components/fields/AnswerCorrect"
+                                            },
+                                            "answeredAt": {
+                                                "$ref": "#/components/fields/AnsweredAt"  
                                             }
                                         }
                                     }
@@ -446,6 +456,9 @@
                                 },
                                 "correct": {
                                     "$ref": "#/components/fields/AnswerCorrect"
+                                },
+                                "answeredAt": {
+                                    "$ref": "#/components/fields/AnsweredAt"  
                                 }
                             }
                         }
