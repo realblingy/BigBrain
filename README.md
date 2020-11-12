@@ -26,7 +26,7 @@
 * 09/11: Section on "Testing" criteria updated.
 * 10/11: Reminder that `2.5` is NOT bonus features; Non-null return type when user hasn't answered anything
 * 11/11: Upon request, added 'isoTimeLastQuestionStarted' property to `GET /play/{playerid}/question` so that you can display a countdown / remaining timer on the frontend
-* 12/11: Added `answeredAt` property to results, to complete various sections.
+* 12/11: Added `answeredAt` property to results, to complete various sections; Clarity that only 3 components need to be tested; We encourage you to only use shallow component rendering
 
 ## 1. Background & Motivation
 
@@ -144,10 +144,11 @@ As part of this assignment you are required to write some tests for your compone
 
 For **component testing**, you must:
  * Write tests for at least 3 different components
- * For each of the 4 components, they mustn't have more than 50% similarity (e.g. you can't test a "Card" component and a "BigCard" component, that are virtually the same)
+ * For each of the 3 components, they mustn't have more than 50% similarity (e.g. you can't test a "Card" component and a "BigCard" component, that are virtually the same)
  * Ensure your tests have excellent **coverage** (look at all different use cases and edge cases)
  * Ensure your tests have excellent **clarity** (well commented and code isn't overly complex)
  * Ensure your tests are **designed** well (logical ordering of tests, avoid any tests that aren't necessary or don't add any meaningful value)
+ * (We encourage you to only use shallow component rendering)
 
 For **ui testing**, you must:
  * Write a single test for the "happy path" of an admin that is described as:
