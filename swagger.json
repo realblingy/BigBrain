@@ -172,6 +172,12 @@
                 "type": "string",
                 "description": "Javascript ISO string of when the question was most recently answered",
                 "example": "2020-10-31T14:45:21.077Z"
+            },
+            "QuestionStartedAt": {
+                "nullable": true,
+                "type": "string",
+                "description": "Javascript ISO string of when the question was started for all users",
+                "example": "2020-10-31T14:45:21.077Z"
             }
         },
         "parameters": {
@@ -437,6 +443,9 @@
                                             },
                                             "answeredAt": {
                                                 "$ref": "#/components/fields/AnsweredAt"  
+                                            },
+                                            "questionStartedAt": {
+                                                "$ref": "#/components/fields/QuestionStartedAt"  
                                             }
                                         }
                                     }
@@ -459,6 +468,9 @@
                                 },
                                 "answeredAt": {
                                     "$ref": "#/components/fields/AnsweredAt"  
+                                },
+                                "questionStartedAt": {
+                                    "$ref": "#/components/fields/QuestionStartedAt"  
                                 }
                             }
                         }

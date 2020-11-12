@@ -26,7 +26,7 @@
 * 09/11: Section on "Testing" criteria updated.
 * 10/11: Reminder that `2.5` is NOT bonus features; Non-null return type when user hasn't answered anything
 * 11/11: Upon request, added 'isoTimeLastQuestionStarted' property to `GET /play/{playerid}/question` so that you can display a countdown / remaining timer on the frontend
-* 12/11: Added `answeredAt` property to results, to complete various sections; Clarity that only 3 components need to be tested; We encourage you to only use shallow component rendering
+* 12/11: Added `answeredAt` property to results, to complete various sections; Clarity that only 3 components need to be tested; We encourage you to only use shallow component rendering; Question started time added to overall results payload for each user
 
 ## 1. Background & Motivation
 

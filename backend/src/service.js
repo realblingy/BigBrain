@@ -297,6 +297,7 @@ const newSessionPayload = quizId => ({
 const newPlayerPayload = (name, numQuestions) => ({
   name: name,
   answers: Array(numQuestions).fill({
+    questionStartedAt: null,
     answeredAt: null,
     answerIds: [],
     correct: false,
@@ -377,6 +378,7 @@ export const submitAnswers = (playerId, answerList) => sessionLock((resolve, rej
       reject(new InputError('Can\'t answer question once answer is available'));
     } else {
       session.players[playerId].answers[session.position] = {
+        questionStartedAt: session.isoTimeLastQuestionStarted,
         answeredAt: new Date().toISOString(),
         answerIds: answerList,
         correct: JSON.stringify(quizQuestionGetCorrectAnswers(session.questions[session.position]).sort()) === JSON.stringify(answerList.sort()),
