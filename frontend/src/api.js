@@ -41,3 +41,21 @@ export const getQuizzes = async (token) => {
   }
   throw new Error('Could not load quizzes.');
 };
+
+export const postNewQuiz = async (token, name) => {
+  const response = await fetch(`${port}/admin/quiz/new`, {
+    method: 'POST',
+    body: JSON.stringify({
+      name,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return responseData;
+  }
+  throw new Error('Could not post new quiz');
+};

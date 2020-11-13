@@ -6,10 +6,8 @@ import port from '../api';
 
 function LogoutButton(props) {
   const { setToken, token } = props;
-  console.log(useHistory());
   const history = useHistory();
   const logOut = async () => {
-    console.log(token);
     const response = await fetch(`${port}/admin/auth/logout`, {
       method: 'POST',
       headers: {
@@ -21,7 +19,6 @@ function LogoutButton(props) {
     const responseData = await response.json();
     if (response.status === 200) {
       setToken('');
-      console.log(history);
       history.push('/');
     } else {
       console.log(responseData.error);
