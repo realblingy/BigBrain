@@ -25,6 +25,9 @@ const useStyles = makeStyles(() => ({
   image: {
     postion: 'relative',
   },
+  input: {
+    marginBottom: 15,
+  },
 }));
 
 function NewQuizButton(props) {
@@ -56,7 +59,12 @@ function NewQuizButton(props) {
       <h1 className={classes.name}>
         New Quiz
       </h1>
-      <TextField onChange={(e) => setNewQuizName(e.target.value)} value={newQuizName} />
+      <TextField
+        placeholder="Enter Quiz Name"
+        className={classes.input}
+        onChange={(e) => setNewQuizName(e.target.value)}
+        value={newQuizName}
+      />
       <AddCircleOutlineIcon
         onClick={onClick}
       />
