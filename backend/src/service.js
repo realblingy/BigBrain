@@ -344,6 +344,15 @@ export const playerJoin = (name, sessionId) => sessionLock((resolve, reject) => 
   }
 });
 
+export const hasStarted = playerId => sessionLock((resolve, reject) => {
+  const session = getActiveSessionFromSessionId(sessionIdFromPlayerId(playerId));
+  if (session.isoTimeLastQuestionStarted !== null) {
+    resolve(true);
+  } else {
+    resolve(false);
+  }
+});
+
 export const getQuestion = playerId => sessionLock((resolve, reject) => {
   const session = getActiveSessionFromSessionId(sessionIdFromPlayerId(playerId));
   if (session.position === -1) {

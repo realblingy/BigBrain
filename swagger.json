@@ -87,6 +87,11 @@
                 "description": "Javascript ISO string of when it was created",
                 "example": "2020-10-31T14:45:21.077Z"
             },
+            "PlayerStarted": {
+                "type": "boolean",
+                "description": "True if the game has started, false otherwise",
+                "example": true
+            },
             "SessionIsoTimeLastQuestionStarted": {
                 "nullable": true,
                 "type": "string",
@@ -523,6 +528,17 @@
                         }
                     }
                 },
+                "PlayerStatus" : {
+                    "description": "OK",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "started": {
+                                "$ref": "#/components/fields/PlayerStarted" 
+                            }
+                        }
+                    }
+                },
                 "PlayerQuestion": {
                     "description": "OK - results of your customer.js 'quizQuestionPublicReturn', along with time that the question started!",
                     "schema": {
@@ -785,6 +801,19 @@
                 ],
                 "responses": {
                     "200": { "$ref": "#/components/responses/200/PlayerId" },
+                    "400": { "$ref": "#/components/responses/400" }
+                }
+            }
+        },
+        "/play/{playerid}/status": {
+            "get": {
+                "summary": "For the current session, the player can determine if it's started or not",
+                "tags": [ "Player" ],
+                "parameters": [
+                    { "$ref": "#/components/parameters/PlayerIdQuery" }
+                ],
+                "responses": {
+                    "200": { "$ref": "#/components/responses/200/PlayerStatus" },
                     "400": { "$ref": "#/components/responses/400" }
                 }
             }
