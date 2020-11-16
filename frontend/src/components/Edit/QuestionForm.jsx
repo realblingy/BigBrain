@@ -36,6 +36,13 @@ function QuestionForm() {
           >
             <MenuItem value={10}>10</MenuItem>
           </Select>
+          <Select
+            inputProps={{
+              name: 'answersQty',
+            }}
+          >
+            <MenuItem value={2}>2</MenuItem>
+          </Select>
         </FormControl>
       </form>
     </div>

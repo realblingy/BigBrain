@@ -41,3 +41,9 @@ export const getQuizzes = async (token) => {
   }
   throw new Error('Could not load quizzes.');
 };
+
+// export const deleteQuiz = async (token, id) => {
+//   const response = await fetch(`${port}/admin/quiz/`, {
+
+//   })
+// }
