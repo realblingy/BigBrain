@@ -87,6 +87,11 @@
                 "description": "Javascript ISO string of when it was created",
                 "example": "2020-10-31T14:45:21.077Z"
             },
+            "PlayerStarted": {
+                "type": "boolean",
+                "description": "True if the game has started, false otherwise",
+                "example": true
+            },
             "SessionIsoTimeLastQuestionStarted": {
                 "nullable": true,
                 "type": "string",
@@ -171,6 +176,12 @@
                 "nullable": true,
                 "type": "string",
                 "description": "Javascript ISO string of when the question was most recently answered",
+                "example": "2020-10-31T14:45:21.077Z"
+            },
+            "QuestionStartedAt": {
+                "nullable": true,
+                "type": "string",
+                "description": "Javascript ISO string of when the question was started for all users",
                 "example": "2020-10-31T14:45:21.077Z"
             }
         },
@@ -437,6 +448,9 @@
                                             },
                                             "answeredAt": {
                                                 "$ref": "#/components/fields/AnsweredAt"  
+                                            },
+                                            "questionStartedAt": {
+                                                "$ref": "#/components/fields/QuestionStartedAt"  
                                             }
                                         }
                                     }
@@ -459,6 +473,9 @@
                                 },
                                 "answeredAt": {
                                     "$ref": "#/components/fields/AnsweredAt"  
+                                },
+                                "questionStartedAt": {
+                                    "$ref": "#/components/fields/QuestionStartedAt"  
                                 }
                             }
                         }
@@ -507,6 +524,17 @@
                                 "type": "integer",
                                 "description": "ID of the player in this session",
                                 "example": 2389498
+                            }
+                        }
+                    }
+                },
+                "PlayerStatus" : {
+                    "description": "OK",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "started": {
+                                "$ref": "#/components/fields/PlayerStarted" 
                             }
                         }
                     }
@@ -773,6 +801,19 @@
                 ],
                 "responses": {
                     "200": { "$ref": "#/components/responses/200/PlayerId" },
+                    "400": { "$ref": "#/components/responses/400" }
+                }
+            }
+        },
+        "/play/{playerid}/status": {
+            "get": {
+                "summary": "For the current session, the player can determine if it's started or not",
+                "tags": [ "Player" ],
+                "parameters": [
+                    { "$ref": "#/components/parameters/PlayerIdQuery" }
+                ],
+                "responses": {
+                    "200": { "$ref": "#/components/responses/200/PlayerStatus" },
                     "400": { "$ref": "#/components/responses/400" }
                 }
             }

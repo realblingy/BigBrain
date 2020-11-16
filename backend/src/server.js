@@ -29,6 +29,7 @@ import {
   advanceQuiz,
   getQuestion,
   getAnswers,
+  hasStarted,
 } from './service';
 
 const app = express();
@@ -154,6 +155,11 @@ app.post('/play/join/:sessionid', catchErrors(async (req, res) => {
   const { name, } = req.body;
   const playerId = await playerJoin(name, sessionid);
   return res.status(200).send({ playerId, });
+}));
+
+app.get('/play/:playerid/status', catchErrors(async (req, res) => {
+  const { playerid, } = req.params;
+  return res.status(200).send({ started: await hasStarted(playerid), });
 }));
 
 app.get('/play/:playerid/question', catchErrors(async (req, res) => {

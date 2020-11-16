@@ -1,5 +1,4 @@
 import React from 'react';
-import './LoginForm.css';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -31,6 +30,16 @@ const useStyles = makeStyles((theme) => ({
   error: {
     minHeight: '24px',
     color: theme.palette.error.main,
+  },
+  loginForm: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: 400,
+    height: 400,
+    border: '1px solid black',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '0.5rem',
   },
 }));
 
@@ -71,7 +80,7 @@ function LoginForm(props) {
 
   return (
     <>
-      <div className="login-form">
+      <div className={classes.loginForm}>
         <Typography variant="h2" className={classes.loginTitle}>
           <PersonIcon className={classes.icon} />
           LOGIN
@@ -97,7 +106,7 @@ function LoginForm(props) {
           onClick={() => setErrorMsg('')}
         />
         <ButtonGroup aria-label="contained button group">
-          <Button className={classes.button} variant="contained" type="button" id="submit-login" onClick={() => { submitLogin(email, password); }}>Log On</Button>
+          <Button className={classes.button} variant="contained" type="button" id="submit-login" onClick={() => { submitLogin(email, password); }}>Log In</Button>
           <Button className={classes.button} variant="contained" type="button" onClick={goToRegister}>Register</Button>
         </ButtonGroup>
         <Typography className={classes.error}>{errorMsg}</Typography>

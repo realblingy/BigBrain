@@ -50,7 +50,6 @@ function Register(props) {
         setErrorMsg('Email cannot be empty');
         return;
       }
-      console.log(inputEmail, inputPassword, inputName);
       const response = await fetch(`${port}/admin/auth/register`, {
         method: 'POST',
         body: JSON.stringify({
