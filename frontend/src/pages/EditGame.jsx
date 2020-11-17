@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Container } from '@material-ui/core';
-import { getQuizData } from '../api';
+import { getQuizData, updateQuiz } from '../api';
 import QuestionList from '../components/Edit/QuestionList';
 import QuestionForm from '../components/Edit/QuestionForm';
 
@@ -30,6 +30,7 @@ const useStyles = makeStyles({
 
 function EditGame(props) {
   const [questions, setQuestions] = React.useState([]);
+  // const [updateQuiz, setUpdateQuiz] = React.useState(true);
   const [action, setAction] = React.useState(null);
   const { id, token } = props;
   const classes = useStyles();
@@ -47,22 +48,45 @@ function EditGame(props) {
     fetchData();
   }, [id, token]);
 
-  React.useEffect(() => {
-    console.log('action');
-  }, [action]);
-
-  const handleDeleteClick = () => {
-    setAction('delete');
+  const handleDeleteClick = async (idx) => {
+    const newQuestions = [...questions];
+    newQuestions.splice(idx, 1);
+    try {
+      const result = await updateQuiz(token, 'defaultName', newQuestions, id);
+      if (result) {
+        setQuestions(newQuestions);
+        setAction('main');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleAddClick = () => {
     setAction('add');
   };
 
+  React.useEffect(() => {
+    console.log(questions);
+  }, [questions]);
+
+  const addNewQuestion = async (newQuestion) => {
+    const newQuestions = [...questions, newQuestion];
+    try {
+      const result = await updateQuiz(token, 'defaultName', newQuestions, id);
+      if (result) {
+        setQuestions(newQuestions);
+        setAction('main');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const renderAction = () => {
     switch (action) {
       case 'add':
-        return <QuestionForm />;
+        return <QuestionForm submitForm={addNewQuestion} />;
       default:
         return (
           <QuestionList

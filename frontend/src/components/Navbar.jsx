@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  AppBar, Toolbar, Typography, Button, IconButton, makeStyles,
+  AppBar, Toolbar, Typography, IconButton, makeStyles,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import PropTypes from 'prop-types';
@@ -29,7 +29,6 @@ function Navbar(props) {
         <Typography variant="h6" className={classes.title}>
           Dashboard
         </Typography>
-        <Button color="inherit">Login</Button>
         <LogoutButton setToken={setToken} token={token} />
       </Toolbar>
     </AppBar>

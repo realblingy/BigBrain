@@ -36,7 +36,6 @@ const useStyles = makeStyles({
 function QuestionList(props) {
   const { questions, handleDeleteClick, handleAddClick } = props;
   const classes = useStyles();
-  console.log(questions);
 
   return (
     <Container>

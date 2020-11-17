@@ -59,3 +59,22 @@ export const postNewQuiz = async (token, name) => {
   }
   throw new Error('Could not post new quiz');
 };
+
+export const updateQuiz = async (token, name, questions, quizid) => {
+  const response = await fetch(`${port}/admin/quiz/${quizid}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      questions,
+      name,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return (Object.keys(responseData).length === 0 && responseData.constructor === Object);
+  }
+  throw new Error('Could not update quiz');
+};
