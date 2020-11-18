@@ -6,6 +6,7 @@ import { CircularProgress, Grid } from '@material-ui/core';
 import { getQuizzes } from '../api';
 import QuizButton from '../components/QuizButton';
 import NewQuizButton from '../components/NewQuizButton';
+import SessionDialog from '../components/SessionDialog';
 
 const useStyles = makeStyles(() => ({
   quizGrid: {
@@ -19,6 +20,8 @@ function Dashboard(props) {
   const [quizzes, setQuizzes] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const [newQuizName, setNewQuizName] = React.useState('');
+  const [open, setOpen] = React.useState(false);
+  const [sessionID, setSessionID] = React.useState(null);
   const classes = useStyles();
   const history = useHistory();
 
@@ -52,7 +55,10 @@ function Dashboard(props) {
                 name={q.name}
                 numberOfQuestions={q.questions.length}
                 id={q.id}
+                active={q.active}
                 redirect={() => handleQuizBtnClick(q.id)}
+                handleOpen={() => setOpen(true)}
+                setSessionID={setSessionID}
               />
             ))}
           <NewQuizButton
@@ -66,6 +72,7 @@ function Dashboard(props) {
           />
         </Grid>
       )}
+      <SessionDialog sessionID={sessionID} open={open} handleClose={() => setOpen(false)} />
     </div>
   );
 }

@@ -78,3 +78,33 @@ export const updateQuiz = async (token, name, questions, quizid) => {
   }
   throw new Error('Could not update quiz');
 };
+
+export const startGamePost = async (token, quizid) => {
+  const response = await fetch(`${port}/admin/quiz/${quizid}/start`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return responseData;
+  }
+  throw new Error('Could not start quiz');
+};
+
+export const endGamePost = async (token, quizid) => {
+  const response = await fetch(`${port}/admin/quiz/${quizid}/end`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return responseData;
+  }
+  throw new Error('Could not end quiz');
+};

@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard';
 import Register from './pages/Register';
 import EditGame from './pages/EditGame';
 import Navbar from './components/Navbar';
+import TokenContext from './TokenContext';
 
 const theme = createMuiTheme({
   typography: {
@@ -43,26 +44,28 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        {token && <Navbar setToken={setToken} token={token} />}
-        <Switch>
-          <Route exact path="/">
-            <Login setToken={setToken} token={token} />
-          </Route>
-          <Route exact path="/dashboard">
-            <Dashboard setToken={setToken} token={token} />
-          </Route>
-          <Route exact path="/register">
-            <Register setToken={setToken} token={token} />
-          </Route>
-          <Route
-            exact
-            path="/edit/:id"
-            render={(props) => {
-              const { match } = props;
-              return (<EditGame token={token} id={Number(match.params.id)} />);
-            }}
-          />
-        </Switch>
+        <TokenContext.Provider value={{ token, setToken }}>
+          {token && <Navbar setToken={setToken} token={token} />}
+          <Switch>
+            <Route exact path="/">
+              <Login setToken={setToken} token={token} />
+            </Route>
+            <Route exact path="/dashboard">
+              <Dashboard setToken={setToken} token={token} />
+            </Route>
+            <Route exact path="/register">
+              <Register setToken={setToken} token={token} />
+            </Route>
+            <Route
+              exact
+              path="/edit/:id"
+              render={(props) => {
+                const { match } = props;
+                return (<EditGame token={token} id={Number(match.params.id)} />);
+              }}
+            />
+          </Switch>
+        </TokenContext.Provider>
       </Router>
     </ThemeProvider>
   );
