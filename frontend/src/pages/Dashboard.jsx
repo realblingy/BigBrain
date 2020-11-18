@@ -7,6 +7,7 @@ import { getQuizzes } from '../api';
 import QuizButton from '../components/QuizButton';
 import NewQuizButton from '../components/NewQuizButton';
 import SessionDialog from '../components/SessionDialog';
+import ResultDialog from '../components/ResultDialog';
 
 const useStyles = makeStyles(() => ({
   quizGrid: {
@@ -20,11 +21,11 @@ function Dashboard(props) {
   const [quizzes, setQuizzes] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const [newQuizName, setNewQuizName] = React.useState('');
-  const [open, setOpen] = React.useState(false);
+  const [start, setStart] = React.useState(false);
+  const [stop, setStop] = React.useState(false);
   const [sessionID, setSessionID] = React.useState(null);
   const classes = useStyles();
   const history = useHistory();
-
   React.useEffect(() => {
     async function fetchData() {
       try {
@@ -57,7 +58,8 @@ function Dashboard(props) {
                 id={q.id}
                 active={q.active}
                 redirect={() => handleQuizBtnClick(q.id)}
-                handleOpen={() => setOpen(true)}
+                handleStart={() => setStart(true)}
+                handleStop={() => setStop(true)}
                 setSessionID={setSessionID}
               />
             ))}
@@ -72,7 +74,8 @@ function Dashboard(props) {
           />
         </Grid>
       )}
-      <SessionDialog sessionID={sessionID} open={open} handleClose={() => setOpen(false)} />
+      <SessionDialog sessionID={sessionID} open={start} handleClose={() => setStart(false)} />
+      <ResultDialog sessionID={sessionID} open={stop} handleClose={() => setStop(false)} />
     </div>
   );
 }

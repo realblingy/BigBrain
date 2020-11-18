@@ -4,7 +4,7 @@ import PauseIcon from '@material-ui/icons/Pause';
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import TokenContext from '../TokenContext';
-import { endGamePost, startGamePost } from '../api';
+import { endGamePost, startGamePost, getQuizData } from '../api';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -39,21 +39,25 @@ function QuizButton(props) {
   const { token } = useContext(TokenContext);
   const classes = useStyles();
   const {
-    color, name, numberOfQuestions, redirect, id, active, handleOpen, setSessionID,
+    color, name, numberOfQuestions, redirect, id, active, handleStart, handleStop, setSessionID,
   } = props;
   const [gameState, setGameState] = React.useState(!(active === null));
 
-  const startGame = (e) => {
+  const startGame = async (e) => {
     e.stopPropagation();
-    startGamePost(token, id);
+    await startGamePost(token, id);
+    const quizData = await getQuizData(id, token);
+    setSessionID(quizData.active);
     setGameState(true);
-    setSessionID(id);
-    handleOpen();
+    handleStart();
   };
-  const endGame = (e) => {
+  const endGame = async (e) => {
     e.stopPropagation();
-    endGamePost(token, id);
+    const quizData = await getQuizData(id, token);
+    setSessionID(quizData.active);
+    await endGamePost(token, id);
     setGameState(false);
+    handleStop();
   };
   return (
     <ButtonBase
@@ -93,7 +97,8 @@ QuizButton.propTypes = {
   redirect: PropTypes.func.isRequired,
   id: PropTypes.number.isRequired,
   active: PropTypes.number,
-  handleOpen: PropTypes.func.isRequired,
+  handleStart: PropTypes.func.isRequired,
+  handleStop: PropTypes.func.isRequired,
   setSessionID: PropTypes.func,
 };
 

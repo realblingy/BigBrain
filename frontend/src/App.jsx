@@ -12,6 +12,7 @@ import Register from './pages/Register';
 import EditGame from './pages/EditGame';
 import Navbar from './components/Navbar';
 import TokenContext from './TokenContext';
+import Results from './pages/Results';
 
 const theme = createMuiTheme({
   typography: {
@@ -55,6 +56,9 @@ function App() {
             </Route>
             <Route exact path="/register">
               <Register setToken={setToken} token={token} />
+            </Route>
+            <Route exact path="/results/:id">
+              <Results />
             </Route>
             <Route
               exact

@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 function SessionDialog(props) {
   const { open, handleClose, sessionID } = props;
   const getUrl = window.location;
-  const urlString = `${getUrl.origin}/play?sessionID=${sessionID}`;
+  const urlString = `${getUrl.origin}/play/${sessionID}`;
   const [copy, setCopy] = React.useState(false);
 
   const copyToClipBoard = async (copyMe) => {

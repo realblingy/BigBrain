@@ -108,3 +108,18 @@ export const endGamePost = async (token, quizid) => {
   }
   throw new Error('Could not end quiz');
 };
+
+export const getSessionResults = async (token, sessionid) => {
+  const response = await fetch(`${port}/admin/session/${sessionid}/results`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return responseData;
+  }
+  return new Error('Could not get results');
+};
