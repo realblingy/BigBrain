@@ -60,6 +60,9 @@ function QuestionForm(props) {
   const [newAnswer, setNewAnswer] = React.useState('');
   const [answerFieldError, setAnswerFieldError] = React.useState(false);
   const [questionFieldError, setQuestionFieldError] = React.useState(false);
+  const [mediaError, setMediaError] = React.useState(false);
+  const [youtubeURL, setYoutubeURL] = React.useState(null);
+  const [imageData, setImageData] = React.useState('#');
 
   React.useEffect(() => {
     if (answers.length === 1) {
@@ -130,7 +133,21 @@ function QuestionForm(props) {
   };
 
   const handleMediaFormatRadioGroup = (e) => {
+    if (e.target.value !== addedMediaFormat) {
+      setMediaError(false);
+    }
     setAddedMediaFormat(e.target.value);
+  };
+
+  const getMediaData = () => {
+    switch (addedMediaFormat) {
+      case 'image':
+        return imageData;
+      case 'video':
+        return youtubeURL;
+      default:
+        return {};
+    }
   };
 
   const handleAddQuestionBtnClick = (e) => {
@@ -141,13 +158,33 @@ function QuestionForm(props) {
     if (answers.length < 2) {
       setAnswerFieldError('Must have at least two answers');
     }
-    if (question.trim().length !== 0 && answers.length >= 2) {
+    switch (addedMediaFormat) {
+      case 'image':
+        if (imageData === '#') {
+          setMediaError(true);
+          return;
+        }
+        break;
+      case 'video':
+        if (youtubeURL === null) {
+          setMediaError(true);
+          return;
+        }
+        break;
+      default:
+        break;
+    }
+    if (question.trim().length !== 0 && answers.length >= 2 && !mediaError) {
       submitForm({
         question,
         answers,
         correctAnswers,
         timer,
         points,
+        media: {
+          format: addedMediaFormat,
+          data: getMediaData(),
+        },
       });
     }
   };
@@ -288,8 +325,22 @@ function QuestionForm(props) {
             />
           </RadioGroup>
         </div>
-        {(addedMediaFormat === 'image') && <QuestionImageForm />}
-        {(addedMediaFormat === 'video') && <QuestionVideoForm />}
+        {(addedMediaFormat === 'image') && (
+          <QuestionImageForm
+            imageData={imageData}
+            setImageData={setImageData}
+            setError={setMediaError}
+            error={mediaError}
+          />
+        )}
+        {(addedMediaFormat === 'video') && (
+          <QuestionVideoForm
+            youtubeURL={youtubeURL}
+            setYoutubeURL={setYoutubeURL}
+            setError={setMediaError}
+            error={mediaError}
+          />
+        )}
         <Button
           type="submit"
           onClick={handleAddQuestionBtnClick}

@@ -1,4 +1,5 @@
 import { Button, makeStyles, TextField } from '@material-ui/core';
+import PropTypes from 'prop-types';
 import React from 'react';
 
 const useStyles = makeStyles({
@@ -19,19 +20,20 @@ const useStyles = makeStyles({
   },
 });
 
-function QuestionVideoForm() {
+function QuestionVideoForm(props) {
+  const {
+    youtubeURL,
+    setYoutubeURL,
+    setError,
+    error,
+  } = props;
+
   const classes = useStyles();
   const [videoURL, setVideoURL] = React.useState('');
-  const [iframeURL, setIframeURL] = React.useState(null);
-  const [videoURLError, setVideoURLError] = React.useState(false);
-
   const handleURLTextFieldChange = (e) => {
     setVideoURL(e.target.value);
-    if (videoURLError) {
-      setVideoURLError(false);
-    }
-    if (iframeURL !== null) {
-      setIframeURL(null);
+    if (youtubeURL !== null) {
+      setYoutubeURL(null);
     }
   };
 
@@ -40,35 +42,35 @@ function QuestionVideoForm() {
     const match = videoURL.match(regExp);
 
     if (match && match[2].length === 11) {
-      setIframeURL(match[2]);
-      setVideoURL(false);
-      console.log(match[2]);
+      setYoutubeURL(match[2]);
+      setError(false);
     } else {
-      setVideoURLError(true);
-      setIframeURL(null);
+      setError(true);
+      setYoutubeURL(null);
     }
   };
 
   return (
     <>
-      {iframeURL
+      {youtubeURL
       && (
         <iframe
           title="Youtube Player"
           width="560"
           height="315"
-          src={`//www.youtube.com/embed/${iframeURL}`}
+          src={`//www.youtube.com/embed/${youtubeURL}`}
           allowFullScreen
           frameBorder="0"
         />
       )}
       <div className={classes.getVideo}>
         <TextField
+          value={videoURL}
           className={classes.TextField}
           variant="outlined"
           placeholder="Enter the Youtube video's URL"
-          error={videoURLError}
-          helperText={videoURLError && 'URL is not a valid Youtube link. Please try again.'}
+          error={error}
+          helperText={error && 'URL is not a valid Youtube link. Please try again.'}
           onChange={handleURLTextFieldChange}
         />
         <Button
@@ -82,5 +84,16 @@ function QuestionVideoForm() {
     </>
   );
 }
+
+QuestionVideoForm.propTypes = {
+  youtubeURL: PropTypes.string,
+  setYoutubeURL: PropTypes.func.isRequired,
+  setError: PropTypes.func.isRequired,
+  error: PropTypes.bool.isRequired,
+};
+
+QuestionVideoForm.defaultProps = {
+  youtubeURL: null,
+};
 
 export default QuestionVideoForm;

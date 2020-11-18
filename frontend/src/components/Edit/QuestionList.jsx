@@ -41,7 +41,7 @@ function QuestionList(props) {
     <Container>
       <List component="nav">
         {(questions.length > 0)
-          && questions.map((q) => (
+          && questions.map((q, idx) => (
             <ListItem
               key={q.id}
               className={classes.questionContainer}
@@ -52,7 +52,7 @@ function QuestionList(props) {
               <IconButton
                 color="secondary"
                 className={classes.deleteBtn}
-                onClick={handleDeleteClick}
+                onClick={() => handleDeleteClick(idx)}
               >
                 <DeleteIcon />
               </IconButton>

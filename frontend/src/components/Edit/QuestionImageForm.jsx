@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDropzone } from 'react-dropzone';
 import Cropper from 'react-cropper';
+import PropTypes from 'prop-types';
 import 'cropperjs/dist/cropper.css';
 import { Button } from '@material-ui/core';
 // import { useDropzone } from 'react-dropzone';
@@ -38,18 +39,20 @@ const rejectStyle = {
   borderColor: '#ff1744',
 };
 
-function QuestionImageForm() {
+function QuestionImageForm(props) {
+  const {
+    setImageData,
+    imageData,
+    setError,
+    error,
+  } = props;
   const [imageFileObj, setImageFileObj] = React.useState(null);
-  const [imageUploaded, setImageUploaded] = React.useState(false);
   const [imageUrl, setImageUrl] = React.useState('');
   const [cropper, setCropper] = React.useState();
-  const [cropData, setCropData] = React.useState('#');
   // const [cropping, setCropping] = useState(false);
 
   React.useEffect(() => {
     if (imageFileObj !== null || undefined) {
-      setImageUploaded(true);
-
       const reader = new FileReader();
 
       if (imageFileObj instanceof Blob) {
@@ -64,7 +67,8 @@ function QuestionImageForm() {
 
   const getCropData = () => {
     if (typeof cropper !== 'undefined') {
-      setCropData(cropper.getCroppedCanvas().toDataURL());
+      setError(false);
+      setImageData(cropper.getCroppedCanvas().toDataURL());
     }
   };
 
@@ -79,7 +83,6 @@ function QuestionImageForm() {
     maxFiles: 1,
     onDrop: (acceptedFiles) => {
       setImageFileObj(acceptedFiles[0]);
-      console.log(imageUrl);
     },
   });
 
@@ -95,16 +98,16 @@ function QuestionImageForm() {
   ]);
 
   const handleRemoveImageBtnClick = () => {
-    setCropData('#');
+    setImageData('#');
     setImageFileObj(null);
     setImageUrl('');
-    setImageUploaded(false);
   };
 
   return (
-    <>
+    <div className="questionImageForm">
+      {error && <p style={{ color: 'red' }}>Must have an image!</p>}
       {
-        !imageUploaded
+        !imageFileObj
           ? (
             <div {...getRootProps({ style })}>
               <input type="file" {...getInputProps()} />
@@ -121,10 +124,10 @@ function QuestionImageForm() {
               justifyContent: 'center',
             }}
             >
-              {cropData !== '#'
+              {imageData !== '#'
               && (
                 <>
-                  <img style={{ width: 640, height: 360 }} src={cropData} alt="cropped" />
+                  <img style={{ width: 640, height: 360 }} src={imageData} alt="cropped" />
                   <Button
                     onClick={handleRemoveImageBtnClick}
                     style={{ marginTop: '1rem' }}
@@ -136,11 +139,14 @@ function QuestionImageForm() {
                 </>
               )}
               {
-                cropData === '#'
+                imageData === '#'
                 && (
                   <>
                     <Cropper
-                      style={{ height: '400px', width: '100%' }}
+                      style={{
+                        height: '400px',
+                        width: '100%',
+                      }}
                       initialAspectRatio={1}
                       // preview=".img-preview"
                       src={imageUrl}
@@ -169,12 +175,15 @@ function QuestionImageForm() {
             </div>
           )
       }
-    </>
+    </div>
   );
 }
 
-// QuestionImageForm.propTypes = {
-//   imageUrl: PropTypes.string.isRequired,
-// };
+QuestionImageForm.propTypes = {
+  setImageData: PropTypes.func.isRequired,
+  imageData: PropTypes.string.isRequired,
+  setError: PropTypes.func.isRequired,
+  error: PropTypes.bool.isRequired,
+};
 
 export default QuestionImageForm;
