@@ -47,7 +47,7 @@ function QuestionImageForm(props) {
     error,
   } = props;
   const [imageFileObj, setImageFileObj] = React.useState(null);
-  const [imageUrl, setImageUrl] = React.useState('');
+  const [imageUrl, setImageUrl] = React.useState(imageData);
   const [cropper, setCropper] = React.useState();
   // const [cropping, setCropping] = useState(false);
 
@@ -107,7 +107,7 @@ function QuestionImageForm(props) {
     <div className="questionImageForm">
       {error && <p style={{ color: 'red' }}>Must have an image!</p>}
       {
-        !imageFileObj
+        !imageFileObj && imageData === '#'
           ? (
             <div {...getRootProps({ style })}>
               <input type="file" {...getInputProps()} />

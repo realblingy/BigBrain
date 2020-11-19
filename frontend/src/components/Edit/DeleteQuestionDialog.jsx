@@ -28,7 +28,7 @@ function DeleteQuestionDialog(props) {
           Cancel
         </Button>
         <Button onClick={deleteGame} color="primary" autoFocus>
-          Agree
+          Delete
         </Button>
       </DialogActions>
     </Dialog>

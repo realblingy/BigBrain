@@ -40,6 +40,7 @@ function QuizButton(props) {
   const classes = useStyles();
   const {
     color, name, numberOfQuestions, redirect, id, active, handleStart, handleStop, setSessionID,
+    time,
   } = props;
   const [gameState, setGameState] = React.useState(!(active === null));
 
@@ -59,6 +60,22 @@ function QuizButton(props) {
     setGameState(false);
     handleStop();
   };
+
+  const timeFormat = (timeTaken) => {
+    const hours = Math.floor(timeTaken / 3000);
+    const minutes = Math.floor(timeTaken / 60);
+    const seconds = timeTaken - minutes * 60;
+    let timeString = '';
+    if (hours > 0) timeString += `${hours}h `;
+    if (minutes > 0) timeString += `${minutes}m `;
+    if (seconds > 0) timeString += `${seconds}s`;
+    if (timeString === '') {
+      return '0s';
+    }
+
+    return timeString;
+  };
+
   return (
     <ButtonBase
       focusRipple
@@ -85,6 +102,7 @@ function QuizButton(props) {
         style={{ left: '5%' }}
       >
         Total Time:
+        {timeFormat(time)}
       </h4>
     </ButtonBase>
   );
@@ -100,6 +118,7 @@ QuizButton.propTypes = {
   handleStart: PropTypes.func.isRequired,
   handleStop: PropTypes.func.isRequired,
   setSessionID: PropTypes.func,
+  time: PropTypes.number.isRequired,
 };
 
 QuizButton.defaultProps = {

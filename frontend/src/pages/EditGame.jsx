@@ -158,14 +158,17 @@ function EditGame(props) {
         deleteGame={deleteGame}
       />
       <Container className={classes.root}>
-        <Button
-          variant="outlined"
-          color="secondary"
-          className={classes.deleteBtn}
-          onClick={handleDeleteBtnClick}
-        >
-          Delete Game
-        </Button>
+        {action === 'main' && (
+          <Button
+            variant="outlined"
+            color="secondary"
+            className={classes.deleteBtn}
+            onClick={handleDeleteBtnClick}
+          >
+            Delete Game
+          </Button>
+        )}
+
         <h1>{`Editing ${quizName}`}</h1>
         {renderAction()}
       </Container>

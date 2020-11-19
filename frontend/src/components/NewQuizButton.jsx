@@ -52,9 +52,9 @@ function NewQuizButton(props) {
 
   return (
     <ButtonBase
-      focusRipple
       className={classes.root}
       variant="contained"
+      disableRipple
     >
       <h1 className={classes.name}>
         New Quiz

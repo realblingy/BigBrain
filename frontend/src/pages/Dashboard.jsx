@@ -45,6 +45,14 @@ function Dashboard(props) {
     history.push(`/edit/${id}`);
   };
 
+  const getQuizTotalTime = (quiz) => {
+    let totalTime = 0;
+    quiz.questions.forEach((question) => {
+      totalTime += question.timer;
+    });
+    return totalTime;
+  };
+
   return (
     <div className={classes.root}>
       {(loading) ? <CircularProgress color="primary" /> : (
@@ -56,6 +64,7 @@ function Dashboard(props) {
                 name={q.name}
                 numberOfQuestions={q.questions.length}
                 id={q.id}
+                time={getQuizTotalTime(q)}
                 active={q.active}
                 redirect={() => handleQuizBtnClick(q.id)}
                 handleStart={() => setStart(true)}
