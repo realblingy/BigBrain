@@ -199,3 +199,18 @@ export const getSessionStatus = async (token, sessionid) => {
   }
   throw new Error('Could not get session status');
 };
+
+export const deleteQuiz = async (token, quizid) => {
+  const response = await fetch(`${port}/admin/quiz/${quizid}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return (Object.keys(responseData).length === 0 && responseData.constructor === Object);
+  }
+  return new Error('Quiz could not be deleted at this time.');
+};

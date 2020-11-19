@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
+// import EditIcon from '@material-ui/icons/Edit';
 
 const useStyles = makeStyles({
   root: {
@@ -15,10 +15,11 @@ const useStyles = makeStyles({
   },
   questionContainer: {
     border: 'solid black 1px',
+    marginBottom: '1rem',
   },
   deleteBtn: {
     position: 'absolute',
-    right: '9%',
+    right: '5%',
   },
   editBtn: {
     position: 'absolute',
@@ -26,7 +27,7 @@ const useStyles = makeStyles({
   },
   questionBtn: {
     fontSize: '1.3em',
-    fontWeight: 500,
+    fontWeight: 300,
   },
   addQuestionBtn: {
     width: '100%',
@@ -34,33 +35,32 @@ const useStyles = makeStyles({
 });
 
 function QuestionList(props) {
-  const { questions, handleDeleteClick, handleAddClick } = props;
+  const {
+    questions,
+    handleDeleteClick,
+    handleAddClick,
+    handleQuestionClick,
+  } = props;
   const classes = useStyles();
 
   return (
     <Container>
       <List component="nav">
         {(questions.length > 0)
-          && questions.map((q) => (
+          && questions.map((q, idx) => (
             <ListItem
               key={q.id}
               className={classes.questionContainer}
+              button
+              onClick={() => handleQuestionClick(idx)}
             >
-              <Button>
-                <p className={classes.questionBtn}>{q.question}</p>
-              </Button>
+              <p className={classes.questionBtn}>{q.question}</p>
               <IconButton
                 color="secondary"
                 className={classes.deleteBtn}
-                onClick={handleDeleteClick}
+                onClick={() => handleDeleteClick(idx)}
               >
                 <DeleteIcon />
-              </IconButton>
-              <IconButton
-                color="secondary"
-                className={classes.editBtn}
-              >
-                <EditIcon />
               </IconButton>
             </ListItem>
           ))}
@@ -82,6 +82,7 @@ QuestionList.propTypes = {
   questions: PropTypes.instanceOf(Array).isRequired,
   handleDeleteClick: PropTypes.func.isRequired,
   handleAddClick: PropTypes.func.isRequired,
+  handleQuestionClick: PropTypes.func.isRequired,
 };
 
 export default QuestionList;

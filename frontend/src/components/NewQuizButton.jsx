@@ -1,6 +1,9 @@
-import { ButtonBase, makeStyles, TextField } from '@material-ui/core';
+import {
+  ButtonBase, IconButton, makeStyles, TextField,
+} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import React from 'react';
 import { postNewQuiz, getQuizData } from '../api';
 
@@ -28,11 +31,17 @@ const useStyles = makeStyles(() => ({
   input: {
     marginBottom: 15,
   },
+  uploadIcon: {
+    position: 'absolute',
+    right: '0%',
+    bottom: '0%',
+  },
 }));
 
 function NewQuizButton(props) {
   const {
     token, newQuizName, setNewQuizName, setQuizzes, quizzes,
+    openQuestionDialog,
   } = props;
   const classes = useStyles();
 
@@ -52,9 +61,9 @@ function NewQuizButton(props) {
 
   return (
     <ButtonBase
-      focusRipple
       className={classes.root}
       variant="contained"
+      disableRipple
     >
       <h1 className={classes.name}>
         New Quiz
@@ -68,6 +77,9 @@ function NewQuizButton(props) {
       <AddCircleOutlineIcon
         onClick={onClick}
       />
+      <IconButton onClick={openQuestionDialog} className={classes.uploadIcon}>
+        <CloudUploadIcon />
+      </IconButton>
     </ButtonBase>
   );
 }
@@ -78,6 +90,7 @@ NewQuizButton.propTypes = {
   setNewQuizName: PropTypes.func.isRequired,
   setQuizzes: PropTypes.func.isRequired,
   quizzes: PropTypes.string.isRequired,
+  openQuestionDialog: PropTypes.func.isRequired,
 };
 
 export default NewQuizButton;

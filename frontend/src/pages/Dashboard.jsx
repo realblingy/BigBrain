@@ -8,6 +8,7 @@ import QuizButton from '../components/QuizButton';
 import NewQuizButton from '../components/NewQuizButton';
 import SessionDialog from '../components/SessionDialog';
 import ResultDialog from '../components/ResultDialog';
+import UploadQuestionDialog from '../components/UploadQuestionDialog';
 
 const useStyles = makeStyles(() => ({
   quizGrid: {
@@ -25,8 +26,10 @@ function Dashboard(props) {
   const [stop, setStop] = React.useState(false);
   const [sessionID, setSessionID] = React.useState(null);
   const [quizID, setQuizId] = React.useState(null);
+  const [showUploadDialog, setShowUploadDialog] = React.useState(false);
   const classes = useStyles();
   const history = useHistory();
+
   React.useEffect(() => {
     async function fetchData() {
       try {
@@ -40,10 +43,18 @@ function Dashboard(props) {
       }
     }
     fetchData();
-  }, [token, start]);
+  }, [token, start, stop]);
 
   const handleQuizBtnClick = (id) => {
     history.push(`/edit/${id}`);
+  };
+
+  const getQuizTotalTime = (quiz) => {
+    let totalTime = 0;
+    quiz.questions.forEach((question) => {
+      totalTime += question.timer;
+    });
+    return totalTime;
   };
 
   return (
@@ -57,6 +68,7 @@ function Dashboard(props) {
                 name={q.name}
                 numberOfQuestions={q.questions.length}
                 id={q.id}
+                time={getQuizTotalTime(q)}
                 active={q.active}
                 redirect={() => handleQuizBtnClick(q.id)}
                 handleStart={() => setStart(true)}
@@ -73,6 +85,7 @@ function Dashboard(props) {
             setNewQuizName={setNewQuizName}
             setQuizzes={setQuizzes}
             quizzes={quizzes}
+            openQuestionDialog={() => setShowUploadDialog(true)}
           />
         </Grid>
       )}
@@ -84,6 +97,10 @@ function Dashboard(props) {
         handleClose={() => setStart(false)}
       />
       <ResultDialog sessionID={sessionID} open={stop} handleClose={() => setStop(false)} />
+      <UploadQuestionDialog
+        open={showUploadDialog}
+        handleClose={() => setShowUploadDialog(false)}
+      />
     </div>
   );
 }

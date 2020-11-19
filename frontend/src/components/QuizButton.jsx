@@ -5,7 +5,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import TokenContext from '../TokenContext';
 import {
-  endGamePost, startGamePost, getQuizData,
+  endGamePost, startGamePost, getQuizData, getSessionStatus,
 } from '../api';
 
 const useStyles = makeStyles(() => ({
@@ -42,9 +42,19 @@ function QuizButton(props) {
   const classes = useStyles();
   const {
     color, name, numberOfQuestions, redirect, id, active, handleStart, handleStop,
-    setSessionID, setQuizId,
+    setSessionID, setQuizId, time,
   } = props;
-  const [started, setStarted] = React.useState(active !== null);
+  const [started, setStarted] = React.useState(false);
+
+  React.useEffect(() => {
+    if (active !== null) {
+      getSessionStatus(token, active).then((r) => {
+        if (r.results.position !== -1) {
+          setStarted(true);
+        }
+      });
+    }
+  });
 
   const startGame = async (e) => {
     e.stopPropagation();
@@ -59,9 +69,25 @@ function QuizButton(props) {
     const quizData = await getQuizData(id, token);
     setSessionID(quizData.active);
     await endGamePost(token, id);
-    setStarted(false);
     handleStop();
+    setStarted(false);
   };
+
+  const timeFormat = (timeTaken) => {
+    const hours = Math.floor(timeTaken / 3000);
+    const minutes = Math.floor(timeTaken / 60);
+    const seconds = timeTaken - minutes * 60;
+    let timeString = '';
+    if (hours > 0) timeString += `${hours}h `;
+    if (minutes > 0) timeString += `${minutes}m `;
+    if (seconds > 0) timeString += `${seconds}s`;
+    if (timeString === '') {
+      return '0s';
+    }
+
+    return timeString;
+  };
+
   return (
     <ButtonBase
       focusRipple
@@ -88,6 +114,7 @@ function QuizButton(props) {
         style={{ left: '5%' }}
       >
         Total Time:
+        {timeFormat(time)}
       </h4>
     </ButtonBase>
   );
@@ -104,6 +131,7 @@ QuizButton.propTypes = {
   setSessionID: PropTypes.func,
   setQuizId: PropTypes.func.isRequired,
   active: PropTypes.number,
+  time: PropTypes.number.isRequired,
 };
 
 QuizButton.defaultProps = {
