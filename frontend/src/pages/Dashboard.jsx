@@ -24,6 +24,7 @@ function Dashboard(props) {
   const [start, setStart] = React.useState(false);
   const [stop, setStop] = React.useState(false);
   const [sessionID, setSessionID] = React.useState(null);
+  const [quizID, setQuizId] = React.useState(null);
   const classes = useStyles();
   const history = useHistory();
   React.useEffect(() => {
@@ -39,7 +40,7 @@ function Dashboard(props) {
       }
     }
     fetchData();
-  }, [token]);
+  }, [token, start]);
 
   const handleQuizBtnClick = (id) => {
     history.push(`/edit/${id}`);
@@ -61,6 +62,7 @@ function Dashboard(props) {
                 handleStart={() => setStart(true)}
                 handleStop={() => setStop(true)}
                 setSessionID={setSessionID}
+                setQuizId={setQuizId}
               />
             ))}
           <NewQuizButton
@@ -74,7 +76,13 @@ function Dashboard(props) {
           />
         </Grid>
       )}
-      <SessionDialog sessionID={sessionID} open={start} handleClose={() => setStart(false)} />
+      <SessionDialog
+        quizID={quizID}
+        sessionID={sessionID}
+        open={start}
+        setStart={setStart}
+        handleClose={() => setStart(false)}
+      />
       <ResultDialog sessionID={sessionID} open={stop} handleClose={() => setStop(false)} />
     </div>
   );
