@@ -6,6 +6,8 @@ const useStyles = makeStyles({
   getVideo: {
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: '1rem',
   },
   TextField: {
     minWidth: '80%',

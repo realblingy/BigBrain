@@ -30,17 +30,23 @@ const useStyles = makeStyles({
 
 function EditGame(props) {
   const [questions, setQuestions] = React.useState([]);
-  // const [updateQuiz, setUpdateQuiz] = React.useState(true);
+  const [quizName, setQuizName] = React.useState('');
+  const [editingQuestion, setEditingQuestion] = React.useState(null);
   const [action, setAction] = React.useState(null);
   const { id, token } = props;
   const classes = useStyles();
 
   React.useEffect(() => {
+    setAction('main');
+  }, []);
+
+  React.useEffect(() => {
     setQuestions([]);
     const fetchData = async () => {
       try {
-        const data = await getQuizData(id, token);
-        setQuestions(data.questions);
+        const quizData = await getQuizData(id, token);
+        setQuizName(quizData.name);
+        setQuestions(quizData.questions);
       } catch (error) {
         console.log(error);
       }
@@ -52,7 +58,7 @@ function EditGame(props) {
     const newQuestions = [...questions];
     newQuestions.splice(idx, 1);
     try {
-      const result = await updateQuiz(token, 'defaultName', newQuestions, id);
+      const result = await updateQuiz(token, quizName, newQuestions, id);
       if (result) {
         setQuestions(newQuestions);
         setAction('main');
@@ -66,14 +72,22 @@ function EditGame(props) {
     setAction('add');
   };
 
-  React.useEffect(() => {
-    console.log(questions);
-  }, [questions]);
+  const handleQuestionClick = (idx) => {
+    setEditingQuestion(idx);
+    setAction('edit');
+  };
 
   const addNewQuestion = async (newQuestion) => {
-    const newQuestions = [...questions, newQuestion];
+    let newQuestions = [];
+    if (action === 'add') {
+      newQuestions = [...questions, newQuestion];
+    } else if (action === 'edit') {
+      newQuestions = [...questions];
+      newQuestions[editingQuestion] = newQuestion;
+    }
+
     try {
-      const result = await updateQuiz(token, 'defaultName', newQuestions, id);
+      const result = await updateQuiz(token, quizName, newQuestions, id);
       if (result) {
         setQuestions(newQuestions);
         setAction('main');
@@ -83,24 +97,40 @@ function EditGame(props) {
     }
   };
 
+  // const updateQuestion = async () => {
+  //   const newQuestions = [...questions]
+  // }
+
   const renderAction = () => {
     switch (action) {
       case 'add':
-        return <QuestionForm submitForm={addNewQuestion} />;
+        return <QuestionForm submitForm={addNewQuestion} cancel={() => { setAction('main'); }} />;
+      case 'edit':
+        return (
+          <QuestionForm
+            questionObj={questions[editingQuestion]}
+            submitForm={addNewQuestion}
+            cancel={() => { setAction('main'); }}
+          />
+        );
       default:
         return (
-          <QuestionList
-            questions={questions}
-            handleDeleteClick={handleDeleteClick}
-            handleAddClick={handleAddClick}
-          />
+          <>
+            <p>{questions.length > 0 ? 'Select a question to edit' : 'Make a question!' }</p>
+            <QuestionList
+              questions={questions}
+              handleDeleteClick={handleDeleteClick}
+              handleAddClick={handleAddClick}
+              handleQuestionClick={handleQuestionClick}
+            />
+          </>
         );
     }
   };
 
   return (
     <Container className={classes.root}>
-      <h1>Edit Game</h1>
+      <h1>{`Editing ${quizName}`}</h1>
       {renderAction()}
     </Container>
   );

@@ -2,6 +2,7 @@ import {
   FormControl, Button,
   FormControlLabel, InputLabel, Radio, RadioGroup, NativeSelect,
   TextField, IconButton, List, ListItem, ListItemText, ListItemSecondaryAction, Checkbox,
+  ButtonGroup,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
@@ -44,10 +45,18 @@ const useStyles = makeStyles({
   answerListItem: {
     borderRadius: '1%',
   },
+  bottomButtonGroup: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    marginTop: '1rem',
+    width: '100%',
+  },
 });
 
 function QuestionForm(props) {
-  const { submitForm } = props;
+  const { submitForm, cancel, questionObj } = props;
 
   const classes = useStyles();
   const [question, setQuestion] = React.useState('');
@@ -63,6 +72,26 @@ function QuestionForm(props) {
   const [mediaError, setMediaError] = React.useState(false);
   const [youtubeURL, setYoutubeURL] = React.useState(null);
   const [imageData, setImageData] = React.useState('#');
+
+  React.useEffect(() => {
+    if (Object.keys(questionObj).length !== 0 && questionObj.constructor === Object) {
+      setQuestion(questionObj.question);
+      setAnswers(questionObj.answers);
+      setCorrectAnswers(questionObj.correctAnswers);
+      const mediaObj = questionObj.media;
+      setAddedMediaFormat(mediaObj.format);
+      switch (mediaObj.format) {
+        case 'video':
+          setYoutubeURL(mediaObj.data);
+          break;
+        case 'image':
+          setImageData(mediaObj.data);
+          break;
+        default:
+          break;
+      }
+    }
+  }, [questionObj]);
 
   React.useEffect(() => {
     if (answers.length === 1) {
@@ -181,6 +210,7 @@ function QuestionForm(props) {
         correctAnswers,
         timer,
         points,
+        answerQty,
         media: {
           format: addedMediaFormat,
           data: getMediaData(),
@@ -206,7 +236,6 @@ function QuestionForm(props) {
 
   return (
     <div className={classes.root}>
-      <h2>New Question</h2>
       <form className={classes.questionForm}>
         <TextField
           className={classes.textField}
@@ -341,13 +370,24 @@ function QuestionForm(props) {
             error={mediaError}
           />
         )}
-        <Button
-          type="submit"
-          onClick={handleAddQuestionBtnClick}
-          style={{ backgroundColor: '#212032', color: 'white', marginTop: '2rem' }}
+        <ButtonGroup
+          className={classes.bottomButtonGroup}
         >
-          Add Question
-        </Button>
+          <Button
+            type="submit"
+            onClick={handleAddQuestionBtnClick}
+            style={{ backgroundColor: '#212032', color: 'white', marginRight: '1rem' }}
+          >
+            {questionObj !== null ? 'Save Changes' : 'Add Question'}
+          </Button>
+          <Button
+            type="button"
+            style={{ backgroundColor: '#af0404', color: 'white' }}
+            onClick={cancel}
+          >
+            Cancel
+          </Button>
+        </ButtonGroup>
       </form>
     </div>
   );
@@ -355,6 +395,12 @@ function QuestionForm(props) {
 
 QuestionForm.propTypes = {
   submitForm: PropTypes.func.isRequired,
+  cancel: PropTypes.func.isRequired,
+  questionObj: PropTypes.objectOf(PropTypes.object),
+};
+
+QuestionForm.defaultProps = {
+  questionObj: {},
 };
 
 export default QuestionForm;
