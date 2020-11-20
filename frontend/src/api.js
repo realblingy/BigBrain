@@ -186,7 +186,7 @@ export const getPlayerQuestion = async (playerID) => {
     const responseData = await response.json();
     return responseData;
   }
-  throw new Error('Cannot get player question');
+  throw new Error('Waiting for host to start session');
 };
 
 export const advanceQuizPost = async (token, quizid) => {
@@ -232,21 +232,4 @@ export const deleteQuiz = async (token, quizid) => {
     return (Object.keys(responseData).length === 0 && responseData.constructor === Object);
   }
   return new Error('Quiz could not be deleted at this time.');
-};
-
-export const putPlayerAnswer = async (playerid, answerIds) => {
-  const response = await fetch(`${port}/play/${playerid}/answer`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      answerIds,
-    }),
-  });
-  if (response.status === 200) {
-    const responseData = await response.json();
-    return responseData;
-  }
-  return response;
 };

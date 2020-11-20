@@ -131,7 +131,7 @@ QuizButton.propTypes = {
   setSessionID: PropTypes.func,
   setQuizId: PropTypes.func.isRequired,
   active: PropTypes.number,
-  time: PropTypes.string.isRequired,
+  time: PropTypes.number.isRequired,
 };
 
 QuizButton.defaultProps = {

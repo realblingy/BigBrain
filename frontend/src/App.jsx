@@ -63,10 +63,10 @@ function App() {
             <Route exact path="/results/:id">
               <Results />
             </Route>
-            <Route exact path={['/play', '/play/:quizId/:id']}>
+            <Route exact path={['/play', '/play/:id']}>
               <Play />
             </Route>
-            <Route exact path="/game/:quizID/:sessionID/:playerID">
+            <Route exact path="/game/:sessionID/:playerID">
               <Game />
             </Route>
             <Route
