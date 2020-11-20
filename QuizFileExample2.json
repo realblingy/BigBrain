@@ -1,0 +1,27 @@
+{
+    "name": "Spiderman Quiz",
+    "owner": "jamespoop@gmail.com",
+    "questions": [
+      {
+        "question": "Who was the actor in Batman?",
+        "answers": [
+          "Gareth Bale",
+          "Christian Bale"
+        ],
+        "correctAnswers": [
+          "Gareth Bale"
+        ],
+        "timer": 15,
+        "points": 10,
+        "answerQty": "single",
+        "media": {
+          "format": "none",
+          "data": {}
+        }
+      }
+    ],
+    "thumbnail": null,
+    "active": null,
+    "createdAt": "2020-11-20T05:05:06.933Z",
+    "oldSessions": []
+}
