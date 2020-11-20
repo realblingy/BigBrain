@@ -56,7 +56,12 @@ const useStyles = makeStyles({
 });
 
 function QuestionForm(props) {
-  const { submitForm, cancel, questionObj } = props;
+  const {
+    submitForm,
+    cancel,
+    questionObj,
+    action,
+  } = props;
 
   const classes = useStyles();
   const [question, setQuestion] = React.useState('');
@@ -263,10 +268,10 @@ function QuestionForm(props) {
             className={classes.selectMenu}
             onChange={handleTimerChange}
           >
-            <option value={15}>15</option>
-            <option value={30}>30</option>
-            <option value={45}>45</option>
-            <option value={60}>60</option>
+            <option value={10}>15</option>
+            <option value={20}>30</option>
+            <option value={30}>45</option>
+            <option value={40}>60</option>
           </NativeSelect>
         </FormControl>
         <FormControl>
@@ -378,7 +383,7 @@ function QuestionForm(props) {
             onClick={handleAddQuestionBtnClick}
             style={{ backgroundColor: '#212032', color: 'white', marginRight: '1rem' }}
           >
-            {questionObj !== null ? 'Save Changes' : 'Add Question'}
+            {action === 'edit' ? 'Save Changes' : 'Add Question'}
           </Button>
           <Button
             type="button"
@@ -397,6 +402,7 @@ QuestionForm.propTypes = {
   submitForm: PropTypes.func.isRequired,
   cancel: PropTypes.func.isRequired,
   questionObj: PropTypes.objectOf(PropTypes.object),
+  action: PropTypes.string.isRequired,
 };
 
 QuestionForm.defaultProps = {

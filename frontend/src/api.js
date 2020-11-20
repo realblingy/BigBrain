@@ -4,6 +4,38 @@ import config from './config.json';
 const port = `http://localhost:${config.BACKEND_PORT}`;
 export default port;
 
+export const logOut = async (token) => {
+  const response = await fetch(`${port}/admin/auth/logout`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const responseData = await response.json();
+  if (response.status === 200) {
+    return responseData;
+  }
+  throw new Error('Could not logout user');
+};
+
+export const getUser = async (token) => {
+  const response = await fetch(`${port}/admin/auth/profile`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return responseData;
+  }
+  throw new Error('Could not load user at the moment');
+};
+
 export const getQuizData = async (quizid, token) => {
   const response = await fetch(`${port}/admin/quiz/${quizid}`, {
     method: 'GET',
@@ -60,12 +92,11 @@ export const postNewQuiz = async (token, name) => {
   throw new Error('Could not post new quiz');
 };
 
-export const updateQuiz = async (token, name, questions, quizid) => {
+export const updateQuiz = async (token, questions, quizid) => {
   const response = await fetch(`${port}/admin/quiz/${quizid}`, {
     method: 'PUT',
     body: JSON.stringify({
       questions,
-      name,
     }),
     headers: {
       'Content-Type': 'application/json',
@@ -80,21 +111,23 @@ export const updateQuiz = async (token, name, questions, quizid) => {
 };
 
 export const uploadQuiz = async (token, quiz) => {
-  console.log(JSON.stringify(quiz));
   const response = await fetch(`${port}/admin/quiz/new`, {
     method: 'POST',
-    body: JSON.stringify(quiz),
+    body: JSON.stringify({ name: quiz.name }),
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
   });
   if (response.status === 200) {
-    const responseData = await response.json();
-    return responseData;
+    response.json()
+      .then((data) => {
+        updateQuiz(token, quiz.questions, data.quizId);
+      })
+      .catch((e) => {
+        throw new Error(e);
+      });
   }
-  console.log(response.status);
-  throw new Error('Could not upload quiz');
 };
 
 export const startGamePost = async (token, quizid) => {
@@ -185,7 +218,7 @@ export const getPlayerQuestion = async (playerID) => {
     const responseData = await response.json();
     return responseData;
   }
-  throw new Error('Cannot get player question');
+  throw new Error('Waiting for host to start session');
 };
 
 export const advanceQuizPost = async (token, quizid) => {
@@ -231,21 +264,4 @@ export const deleteQuiz = async (token, quizid) => {
     return (Object.keys(responseData).length === 0 && responseData.constructor === Object);
   }
   return new Error('Quiz could not be deleted at this time.');
-};
-
-export const putPlayerAnswer = async (playerid, answerIds) => {
-  const response = await fetch(`${port}/play/${playerid}/answer`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      answerIds,
-    }),
-  });
-  if (response.status === 200) {
-    const responseData = await response.json();
-    return responseData;
-  }
-  return response;
 };

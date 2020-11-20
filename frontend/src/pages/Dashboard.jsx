@@ -98,10 +98,6 @@ function Dashboard(props) {
         handleClose={() => setStart(false)}
       />
       <ResultDialog sessionID={sessionID} open={stop} handleClose={() => setStop(false)} />
-      {/* <UploadQuestionDialog
-        open={showUploadDialog}
-        handleClose={() => setShowUploadDialog(false)}
-      /> */}
       <UploadQuestionDialog
         open={showUploadDialog}
         token={token}
