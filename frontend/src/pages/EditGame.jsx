@@ -97,7 +97,7 @@ function EditGame(props) {
     }
 
     try {
-      const result = await updateQuiz(token, quizName, newQuestions, id);
+      const result = await updateQuiz(token, newQuestions, id);
       if (result) {
         setQuestions(newQuestions);
         setAction('main');

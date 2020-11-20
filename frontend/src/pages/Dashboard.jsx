@@ -44,7 +44,7 @@ function Dashboard(props) {
 
   React.useEffect(() => {
     fetchQuizzes(token);
-  }, [token, start, stop]);
+  }, [token]);
 
   const handleQuizBtnClick = (id) => {
     history.push(`/edit/${id}`);
