@@ -263,10 +263,10 @@ function QuestionForm(props) {
             className={classes.selectMenu}
             onChange={handleTimerChange}
           >
-            <option value={10}>15</option>
-            <option value={20}>30</option>
-            <option value={30}>45</option>
-            <option value={40}>60</option>
+            <option value={15}>15</option>
+            <option value={30}>30</option>
+            <option value={45}>45</option>
+            <option value={60}>60</option>
           </NativeSelect>
         </FormControl>
         <FormControl>
