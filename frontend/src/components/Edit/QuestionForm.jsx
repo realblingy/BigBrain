@@ -56,7 +56,12 @@ const useStyles = makeStyles({
 });
 
 function QuestionForm(props) {
-  const { submitForm, cancel, questionObj } = props;
+  const {
+    submitForm,
+    cancel,
+    questionObj,
+    action,
+  } = props;
 
   const classes = useStyles();
   const [question, setQuestion] = React.useState('');
@@ -378,7 +383,7 @@ function QuestionForm(props) {
             onClick={handleAddQuestionBtnClick}
             style={{ backgroundColor: '#212032', color: 'white', marginRight: '1rem' }}
           >
-            {questionObj !== null ? 'Save Changes' : 'Add Question'}
+            {action === 'edit' ? 'Save Changes' : 'Add Question'}
           </Button>
           <Button
             type="button"
@@ -397,6 +402,7 @@ QuestionForm.propTypes = {
   submitForm: PropTypes.func.isRequired,
   cancel: PropTypes.func.isRequired,
   questionObj: PropTypes.objectOf(PropTypes.object),
+  action: PropTypes.string.isRequired,
 };
 
 QuestionForm.defaultProps = {

@@ -15,6 +15,7 @@ import TokenContext from './TokenContext';
 import Results from './pages/Results';
 import Play from './pages/Play';
 import Game from './pages/Game';
+import EditQuestion from './pages/EditQuestion';
 
 const theme = createMuiTheme({
   typography: {
@@ -74,6 +75,20 @@ function App() {
               render={(props) => {
                 const { match } = props;
                 return (<EditGame token={token} id={Number(match.params.id)} />);
+              }}
+            />
+            <Route
+              exact
+              path="/edit/:id/:questionid"
+              render={(props) => {
+                const { match } = props;
+                return (
+                  <EditQuestion
+                    token={token}
+                    id={Number(match.params.id)}
+                    questionid={Number(match.params.questionid)}
+                  />
+                );
               }}
             />
           </Switch>
