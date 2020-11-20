@@ -4,7 +4,9 @@ import PauseIcon from '@material-ui/icons/Pause';
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import TokenContext from '../TokenContext';
-import { endGamePost, startGamePost, getQuizData } from '../api';
+import {
+  endGamePost, startGamePost, getQuizData, getSessionStatus,
+} from '../api';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -39,17 +41,27 @@ function QuizButton(props) {
   const { token } = useContext(TokenContext);
   const classes = useStyles();
   const {
-    color, name, numberOfQuestions, redirect, id, active, handleStart, handleStop, setSessionID,
-    time,
+    color, name, numberOfQuestions, redirect, id, active, handleStart, handleStop,
+    setSessionID, setQuizId, time,
   } = props;
-  const [gameState, setGameState] = React.useState(!(active === null));
+  const [started, setStarted] = React.useState(false);
+
+  React.useEffect(() => {
+    if (active !== null) {
+      getSessionStatus(token, active).then((r) => {
+        if (r.results.position !== -1) {
+          setStarted(true);
+        }
+      });
+    }
+  });
 
   const startGame = async (e) => {
     e.stopPropagation();
     await startGamePost(token, id);
     const quizData = await getQuizData(id, token);
     setSessionID(quizData.active);
-    setGameState(true);
+    setQuizId(id);
     handleStart();
   };
   const endGame = async (e) => {
@@ -57,8 +69,8 @@ function QuizButton(props) {
     const quizData = await getQuizData(id, token);
     setSessionID(quizData.active);
     await endGamePost(token, id);
-    setGameState(false);
     handleStop();
+    setStarted(false);
   };
 
   const timeFormat = (timeTaken) => {
@@ -88,8 +100,8 @@ function QuizButton(props) {
       <h1 className={classes.name}>
         { name }
       </h1>
-      {gameState && <PauseIcon onClick={(e) => endGame(e)} className={classes.icon} />}
-      {!gameState && <PlayArrowIcon onClick={(e) => startGame(e)} className={classes.icon} />}
+      {started && <PauseIcon onClick={(e) => endGame(e)} className={classes.icon} />}
+      {!started && <PlayArrowIcon onClick={(e) => startGame(e)} className={classes.icon} />}
       <h4
         className={classes.subHeadings}
         style={{ right: '5%' }}
@@ -114,17 +126,18 @@ QuizButton.propTypes = {
   numberOfQuestions: PropTypes.number.isRequired,
   redirect: PropTypes.func.isRequired,
   id: PropTypes.number.isRequired,
-  active: PropTypes.number,
   handleStart: PropTypes.func.isRequired,
   handleStop: PropTypes.func.isRequired,
   setSessionID: PropTypes.func,
+  setQuizId: PropTypes.func.isRequired,
+  active: PropTypes.number,
   time: PropTypes.number.isRequired,
 };
 
 QuizButton.defaultProps = {
   color: '#E53026',
-  active: null,
   setSessionID: null,
+  active: null,
 };
 
 export default QuizButton;

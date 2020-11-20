@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -7,12 +7,32 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import PropTypes from 'prop-types';
+import { advanceQuizPost, getQuizData } from '../api';
+import TokenContext from '../TokenContext';
 
 function SessionDialog(props) {
-  const { open, handleClose, sessionID } = props;
+  const { token } = useContext(TokenContext);
+  const {
+    open, handleClose, sessionID, quizID, setStart,
+  } = props;
   const getUrl = window.location;
   const urlString = `${getUrl.origin}/play/${sessionID}`;
   const [copy, setCopy] = React.useState(false);
+  const [err, setErr] = React.useState('');
+
+  const startSession = async () => {
+    try {
+      await advanceQuizPost(token, quizID);
+      const response = await getQuizData(quizID, token);
+      if (response.active === null) {
+        setErr('NOT ENOUGH QUESTIONS');
+        return;
+      }
+      setStart(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const copyToClipBoard = async (copyMe) => {
     try {
@@ -21,7 +41,7 @@ function SessionDialog(props) {
       setTimeout(() => {
         setCopy(false);
       }, 2000);
-    } catch (err) {
+    } catch (error) {
       console.log('fail copied');
     }
   };
@@ -30,7 +50,10 @@ function SessionDialog(props) {
     <div>
       <Dialog
         open={open}
-        onClose={handleClose}
+        onClose={() => {
+          handleClose();
+          setErr('');
+        }}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
         PaperProps={{
@@ -47,7 +70,16 @@ function SessionDialog(props) {
             Link is Copied!
           </DialogTitle>
         </Slide>
-        <DialogTitle id="alert-dialog-slide-title">SESSION ID</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title"> SESSION ID</DialogTitle>
+        <DialogTitle style={{
+          color: 'red',
+          margin: 0,
+          padding: 0,
+          paddingLeft: 20,
+        }}
+        >
+          {` ${err}`}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             {urlString}
@@ -57,7 +89,16 @@ function SessionDialog(props) {
           <Button onClick={() => copyToClipBoard(urlString)} color="primary">
             Copy Link
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={startSession} color="primary">
+            Start Session
+          </Button>
+          <Button
+            onClick={() => {
+              handleClose();
+              setErr('');
+            }}
+            color="primary"
+          >
             Exit
           </Button>
         </DialogActions>
@@ -70,10 +111,13 @@ SessionDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   sessionID: PropTypes.number,
+  quizID: PropTypes.number,
+  setStart: PropTypes.func.isRequired,
 };
 
 SessionDialog.defaultProps = {
   sessionID: null,
+  quizID: null,
 };
 
 export default SessionDialog;

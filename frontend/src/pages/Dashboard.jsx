@@ -25,6 +25,7 @@ function Dashboard(props) {
   const [start, setStart] = React.useState(false);
   const [stop, setStop] = React.useState(false);
   const [sessionID, setSessionID] = React.useState(null);
+  const [quizID, setQuizId] = React.useState(null);
   const [showUploadDialog, setShowUploadDialog] = React.useState(false);
   const classes = useStyles();
   const history = useHistory();
@@ -43,7 +44,7 @@ function Dashboard(props) {
 
   React.useEffect(() => {
     fetchQuizzes(token);
-  }, [token]);
+  }, [token, start, stop]);
 
   const handleQuizBtnClick = (id) => {
     history.push(`/edit/${id}`);
@@ -74,6 +75,7 @@ function Dashboard(props) {
                 handleStart={() => setStart(true)}
                 handleStop={() => setStop(true)}
                 setSessionID={setSessionID}
+                setQuizId={setQuizId}
               />
             ))}
           <NewQuizButton
@@ -88,7 +90,13 @@ function Dashboard(props) {
           />
         </Grid>
       )}
-      <SessionDialog sessionID={sessionID} open={start} handleClose={() => setStart(false)} />
+      <SessionDialog
+        quizID={quizID}
+        sessionID={sessionID}
+        open={start}
+        setStart={setStart}
+        handleClose={() => setStart(false)}
+      />
       <ResultDialog sessionID={sessionID} open={stop} handleClose={() => setStop(false)} />
       {/* <UploadQuestionDialog
         open={showUploadDialog}

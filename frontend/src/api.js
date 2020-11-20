@@ -109,7 +109,8 @@ export const startGamePost = async (token, quizid) => {
     const responseData = await response.json();
     return responseData;
   }
-  throw new Error('Could not start quiz');
+  return response;
+  // throw new Error('Could not start quiz');
 };
 
 export const endGamePost = async (token, quizid) => {
@@ -139,7 +140,82 @@ export const getSessionResults = async (token, sessionid) => {
     const responseData = await response.json();
     return responseData;
   }
-  return new Error('Could not get results');
+  throw new Error('Could not get results');
+};
+
+export const joinGame = async (name, sessionid) => {
+  const response = await fetch(`${port}/play/join/${sessionid}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name,
+    }),
+  });
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return responseData;
+  }
+  throw new Error('Could not join game');
+};
+
+export const getPlayerStatus = async (playerID) => {
+  const response = await fetch(`${port}/play/${playerID}/status`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return responseData;
+  }
+  throw new Error('Could not get player status');
+};
+
+export const getPlayerQuestion = async (playerID) => {
+  const response = await fetch(`${port}/play/${playerID}/question`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return responseData;
+  }
+  throw new Error('Waiting for host to start session');
+};
+
+export const advanceQuizPost = async (token, quizid) => {
+  const response = await fetch(`${port}/admin/quiz/${quizid}/advance`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return responseData;
+  }
+  throw new Error('Could not advance quiz to the next section');
+};
+
+export const getSessionStatus = async (token, sessionid) => {
+  const response = await fetch(`${port}/admin/session/${sessionid}/status`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return responseData;
+  }
+  throw new Error('Could not get session status');
 };
 
 export const deleteQuiz = async (token, quizid) => {

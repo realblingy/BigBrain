@@ -13,6 +13,8 @@ import EditGame from './pages/EditGame';
 import Navbar from './components/Navbar';
 import TokenContext from './TokenContext';
 import Results from './pages/Results';
+import Play from './pages/Play';
+import Game from './pages/Game';
 
 const theme = createMuiTheme({
   typography: {
@@ -59,6 +61,12 @@ function App() {
             </Route>
             <Route exact path="/results/:id">
               <Results />
+            </Route>
+            <Route exact path={['/play', '/play/:id']}>
+              <Play />
+            </Route>
+            <Route exact path="/game/:sessionID/:playerID">
+              <Game />
             </Route>
             <Route
               exact
