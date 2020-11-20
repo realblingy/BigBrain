@@ -79,6 +79,24 @@ export const updateQuiz = async (token, name, questions, quizid) => {
   throw new Error('Could not update quiz');
 };
 
+export const uploadQuiz = async (token, quiz) => {
+  console.log(JSON.stringify(quiz));
+  const response = await fetch(`${port}/admin/quiz/new`, {
+    method: 'POST',
+    body: JSON.stringify(quiz),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return responseData;
+  }
+  console.log(response.status);
+  throw new Error('Could not upload quiz');
+};
+
 export const startGamePost = async (token, quizid) => {
   const response = await fetch(`${port}/admin/quiz/${quizid}/start`, {
     method: 'POST',

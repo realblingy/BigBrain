@@ -29,19 +29,20 @@ function Dashboard(props) {
   const classes = useStyles();
   const history = useHistory();
 
-  React.useEffect(() => {
-    async function fetchData() {
-      try {
-        setLoading(true);
-        const data = await getQuizzes(token);
-        setQuizzes(JSON.stringify(data));
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        console.log(error);
-      }
+  const fetchQuizzes = async (tokenID) => {
+    try {
+      setLoading(true);
+      const data = await getQuizzes(tokenID);
+      setQuizzes(JSON.stringify(data));
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
     }
-    fetchData();
+  };
+
+  React.useEffect(() => {
+    fetchQuizzes(token);
   }, [token]);
 
   const handleQuizBtnClick = (id) => {
@@ -63,7 +64,7 @@ function Dashboard(props) {
           {(quizzes.length > 0) && JSON.parse(quizzes)
             .map((q) => (
               <QuizButton
-                key={q.name}
+                key={q.id}
                 name={q.name}
                 numberOfQuestions={q.questions.length}
                 id={q.id}
@@ -89,9 +90,15 @@ function Dashboard(props) {
       )}
       <SessionDialog sessionID={sessionID} open={start} handleClose={() => setStart(false)} />
       <ResultDialog sessionID={sessionID} open={stop} handleClose={() => setStop(false)} />
-      <UploadQuestionDialog
+      {/* <UploadQuestionDialog
         open={showUploadDialog}
         handleClose={() => setShowUploadDialog(false)}
+      /> */}
+      <UploadQuestionDialog
+        open={showUploadDialog}
+        token={token}
+        handleClose={() => setShowUploadDialog(false)}
+        fetchQuizzes={fetchQuizzes}
       />
     </div>
   );
