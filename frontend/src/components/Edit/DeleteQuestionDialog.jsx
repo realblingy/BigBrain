@@ -5,6 +5,10 @@ import {
 import React from 'react';
 import PropTypes from 'prop-types';
 
+/**
+ * Deletes a question and should only be used in the Edit section
+ * @param {*} props
+ */
 function DeleteQuestionDialog(props) {
   const { open, close, deleteGame } = props;
 
