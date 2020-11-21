@@ -40,7 +40,7 @@ const useStyles = makeStyles({
 
 function PlayForm(props) {
   const classes = useStyles();
-  const { id } = props;
+  const { quizID, id } = props;
   const [sessionID, setSessionID] = React.useState(id === undefined ? '' : id);
   const [name, setName] = React.useState('');
   const [error, setError] = React.useState('');
@@ -49,7 +49,7 @@ function PlayForm(props) {
   const joinGameHandler = async () => {
     try {
       const response = await joinGame(name, sessionID);
-      history.push(`/game/${sessionID}/${response.playerId}`);
+      history.push(`/game/${quizID}/${sessionID}/${response.playerId}`);
     } catch (err) {
       setError(err.message);
     }
@@ -96,10 +96,12 @@ function PlayForm(props) {
 
 PlayForm.propTypes = {
   id: PropTypes.string,
+  quizID: PropTypes.string,
 };
 
 PlayForm.defaultProps = {
   id: undefined,
+  quizID: undefined,
 };
 
 export default PlayForm;

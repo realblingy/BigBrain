@@ -71,7 +71,7 @@ function App() {
               <Route exact path="/results/:id">
                 <Results />
               </Route>
-              <Route exact path={['/play', '/play/:quizId/:id']}>
+              <Route exact path={['/play', '/play/:quizID/:id']}>
                 <Play />
               </Route>
               <Route exact path="/playerResults/:quizID/:playerID">
