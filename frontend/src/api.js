@@ -36,6 +36,23 @@ export const getUser = async (token) => {
   throw new Error('Could not load user at the moment');
 };
 
+export const updateUser = async (token, payload) => {
+  const response = await fetch(`${port}/admin/auth/profile`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return responseData;
+  }
+  throw new Error('Could not update user at the moment');
+};
+
 export const getQuizData = async (quizid, token) => {
   const response = await fetch(`${port}/admin/quiz/${quizid}`, {
     method: 'GET',

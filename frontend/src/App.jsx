@@ -17,6 +17,7 @@ import Play from './pages/Play';
 import Game from './pages/Game';
 import EditQuestion from './pages/EditQuestion';
 import ProfilePage from './pages/ProfilePage';
+import ProfileEditPage from './pages/ProfileEditPage';
 
 const theme = createMuiTheme({
   typography: {
@@ -96,6 +97,11 @@ function App() {
               exact
               path="/profile/"
               render={() => (<ProfilePage token={token} />)}
+            />
+            <Route
+              exact
+              path="/profile/edit"
+              render={() => (<ProfileEditPage token={token} />)}
             />
           </Switch>
         </TokenContext.Provider>

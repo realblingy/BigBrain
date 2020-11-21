@@ -43,7 +43,7 @@ function Navbar(props) {
   };
 
   const handleProfileClick = () => {
-    history.push('/profile');
+    history.push('/profile/');
     handleMenuClose();
   };
 
