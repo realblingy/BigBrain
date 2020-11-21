@@ -16,7 +16,7 @@ const useStyles = makeStyles({
 
 function Play() {
   const classes = useStyles();
-  const { quizId, id } = useParams();
+  const { id } = useParams();
   const rootRef = useRef(null);
 
   React.useEffect(() => {
@@ -37,7 +37,7 @@ function Play() {
 
   return (
     <div className={classes.root} ref={rootRef}>
-      <PlayForm quizId={quizId} id={id} />
+      <PlayForm id={id} />
     </div>
   );
 }

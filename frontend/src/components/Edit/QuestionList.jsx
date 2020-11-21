@@ -54,13 +54,14 @@ function QuestionList(props) {
               button
               onClick={() => handleQuestionClick(idx)}
             >
-              <p className={classes.questionBtn}>{q.question}</p>
+              <p key={q.id} className={classes.questionBtn}>{q.question}</p>
               <IconButton
+                key={q.id}
                 color="secondary"
                 className={classes.deleteBtn}
                 onClick={() => handleDeleteClick(idx)}
               >
-                <DeleteIcon />
+                <DeleteIcon key={q.id} />
               </IconButton>
             </ListItem>
           ))}

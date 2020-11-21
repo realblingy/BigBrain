@@ -8,6 +8,8 @@ import QuestionList from '../components/Edit/QuestionList';
 import QuestionForm from '../components/Edit/QuestionForm';
 import DeleteQuestionDialog from '../components/Edit/DeleteQuestionDialog';
 
+/* eslint-disable no-param-reassign */
+
 const useStyles = makeStyles({
   root: {
     display: 'flex',
@@ -85,6 +87,7 @@ function EditGame(props) {
   const handleQuestionClick = (idx) => {
     setEditingQuestion(idx);
     setAction('edit');
+    history.push(`/edit/${id}/${idx}`);
   };
 
   const addNewQuestion = async (newQuestion) => {
@@ -95,6 +98,11 @@ function EditGame(props) {
       newQuestions = [...questions];
       newQuestions[editingQuestion] = newQuestion;
     }
+
+    newQuestions = newQuestions.map((q, idx) => {
+      q.id = idx;
+      return q;
+    });
 
     try {
       const result = await updateQuiz(token, newQuestions, id);
@@ -126,10 +134,17 @@ function EditGame(props) {
   const renderAction = () => {
     switch (action) {
       case 'add':
-        return <QuestionForm submitForm={addNewQuestion} cancel={() => { setAction('main'); }} />;
+        return (
+          <QuestionForm
+            action={action}
+            submitForm={addNewQuestion}
+            cancel={() => { setAction('main'); }}
+          />
+        );
       case 'edit':
         return (
           <QuestionForm
+            action={action}
             questionObj={questions[editingQuestion]}
             submitForm={addNewQuestion}
             cancel={() => { setAction('main'); }}

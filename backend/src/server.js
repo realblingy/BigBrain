@@ -30,6 +30,7 @@ import {
   getQuestion,
   getAnswers,
   hasStarted,
+  getUser,
 } from './service';
 
 const app = express();
@@ -79,6 +80,12 @@ app.post('/admin/auth/logout', catchErrors(authed(async (req, res, email) => {
   await logout(email);
   return res.json({});
 })));
+
+app.get('/admin/auth/profile', catchErrors(authed(async (req, res, email) => {
+  const user = await getUser(email);
+  return res.json({user});
+})));
+
 
 /***************************************************************
                        Quiz Functions

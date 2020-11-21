@@ -87,6 +87,11 @@ const generateId = (currentList, max = 999999999) => {
   }
   return R.toString();
 };
+function hashCode(s) {
+  for(var i = 0, h = 0; i < s.length; i++)
+      h = Math.imul(31, h) + s.charCodeAt(i) | 0;
+  return h;
+}
 
 /***************************************************************
                        Auth Functions
@@ -104,6 +109,13 @@ export const getEmailFromAuthorization = authorization => {
     throw new AccessError('Invalid token');
   }
 };
+
+export const getUser = (email) => userLock((resolve, reject) => {
+  if (admins[email]) {
+    resolve(admins[email]);
+  }
+  reject(new InputError('User does not exist'));
+});
 
 export const login = (email, password) => userLock((resolve, reject) => {
   if (email in admins) {
@@ -125,6 +137,8 @@ export const register = (email, password, name) => userLock((resolve, reject) =>
     reject(new InputError('Email address already registered'));
   }
   admins[email] = {
+    // id: email.hashCode(),
+    id: hashCode(email),
     name,
     password,
     sessionActive: true,

@@ -17,6 +17,8 @@ import Results from './pages/Results';
 import Play from './pages/Play';
 import Game from './pages/Game';
 import PlayerResults from './pages/PlayerResults';
+import EditQuestion from './pages/EditQuestion';
+import ProfilePage from './pages/ProfilePage';
 
 const theme = createMuiTheme({
   typography: {
@@ -82,6 +84,25 @@ function App() {
                   const { match } = props;
                   return (<EditGame token={token} id={Number(match.params.id)} />);
                 }}
+              />
+              <Route
+                exact
+                path="/edit/:id/:questionid"
+                render={(props) => {
+                  const { match } = props;
+                  return (
+                    <EditQuestion
+                      token={token}
+                      id={Number(match.params.id)}
+                      questionid={Number(match.params.questionid)}
+                    />
+                  );
+                }}
+              />
+              <Route
+                exact
+                path="/profile/"
+                render={() => (<ProfilePage token={token} />)}
               />
             </Switch>
           </GameEndContext.Provider>
