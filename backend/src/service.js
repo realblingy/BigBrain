@@ -117,6 +117,18 @@ export const getUser = (email) => userLock((resolve, reject) => {
   reject(new InputError('User does not exist'));
 });
 
+export const updateUser = (email, body) => userLock((resolve, reject) => {
+  if (admins[email]) {
+    Object.keys(body).forEach((key) => {
+      if (body[key] !== undefined && body[key] !== null) {
+        admins[email][key] = body[key];
+      }
+    })
+    resolve();
+  }
+  reject(new InputError('Could not update user at this time'));
+})
+
 export const login = (email, password) => userLock((resolve, reject) => {
   if (email in admins) {
     if (admins[email].password === password) {
@@ -138,9 +150,11 @@ export const register = (email, password, name) => userLock((resolve, reject) =>
   }
   admins[email] = {
     // id: email.hashCode(),
-    id: hashCode(email),
+    id: Math.abs(hashCode(email)),
     name,
     password,
+    totalHours: 0,
+    wins: 0,
     sessionActive: true,
   };
   const token = jwt.sign({ email, }, JWT_SECRET, { algorithm: 'HS256', });

@@ -10,7 +10,7 @@ import DeleteQuestionDialog from '../components/Edit/DeleteQuestionDialog';
 
 /* eslint-disable no-param-reassign */
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
@@ -27,6 +27,10 @@ const useStyles = makeStyles({
     marginTop: '1rem',
     position: 'absolute',
     right: '5%',
+    [theme.breakpoints.down(600)]: {
+      width: '60px',
+      fontSize: '0.7em',
+    },
   },
   editBtn: {
     position: 'absolute',
@@ -36,7 +40,12 @@ const useStyles = makeStyles({
     fontSize: '1.3em',
     fontWeight: 500,
   },
-});
+  editing: {
+    [theme.breakpoints.down(600)]: {
+      maxWidth: 250,
+    },
+  },
+}));
 
 function EditGame(props) {
   const [questions, setQuestions] = React.useState([]);
@@ -184,7 +193,7 @@ function EditGame(props) {
           </Button>
         )}
 
-        <h1>{`Editing ${quizName}`}</h1>
+        <h1 className={classes.editing}>{`Editing ${quizName}`}</h1>
         {renderAction()}
       </Container>
     </>

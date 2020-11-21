@@ -12,7 +12,7 @@ import React from 'react';
 import QuestionImageForm from './QuestionImageForm';
 import QuestionVideoForm from './QuestionVideoForm';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     paddingBottom: '2rem',
   },
@@ -25,7 +25,11 @@ const useStyles = makeStyles({
     marginBottom: '1rem',
   },
   textField: {
-    minWidth: 800,
+    minWidth: 500,
+    maxWidth: 650,
+    [theme.breakpoints.down(600)]: {
+      minWidth: 300,
+    },
   },
   questionForm: {
     display: 'flex',
@@ -52,8 +56,11 @@ const useStyles = makeStyles({
     justifyContent: 'flex-end',
     marginTop: '1rem',
     width: '100%',
+    [theme.breakpoints.down(600)]: {
+      marginTop: '2rem',
+    },
   },
-});
+}));
 
 function QuestionForm(props) {
   const {
@@ -251,6 +258,7 @@ function QuestionForm(props) {
           helperText={questionFieldError !== false && questionFieldError}
           onChange={handleQuestionFieldChange}
           required
+          inputProps={{ maxLength: 50 }}
         />
         <RadioGroup className={classes.radioGroup}>
           <FormControlLabel value="single" onClick={handleQuantityAnswerRadioGroup} checked={answerQty === 'single'} label="Single Answer" control={<Radio />} />
@@ -307,6 +315,7 @@ function QuestionForm(props) {
                       helperText={answerFieldError !== false && answerFieldError}
                       className={classes.textField}
                       placeholder="Give an answer"
+                      inputProps={{ maxLength: 30 }}
                     />
                     <IconButton onClick={handleAddIconClick}>
                       <AddCircleIcon style={{ color: 'green' }} />

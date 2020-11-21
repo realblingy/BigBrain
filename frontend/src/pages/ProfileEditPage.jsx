@@ -64,8 +64,17 @@ function ProfileEditPage(props) {
     }
   };
 
+  const changeImageData = (data) => {
+    setImageData(data);
+    setShowProfileImgModal(false);
+  };
+
   const handleSaveChangesClick = async () => {
-    await updateUser(token, { name });
+    const updates = { name };
+    if (imageData !== '#') {
+      updates.profileImg = imageData;
+    }
+    await updateUser(token, updates);
     history.push('/profile');
   };
 
@@ -100,7 +109,7 @@ function ProfileEditPage(props) {
         <DialogContent>
           <ProfileImageEditor
             imageData={imageData}
-            setImageData={setImageData}
+            setImageData={changeImageData}
             setError={setMediaError}
             error={mediaError}
             uploadImage={uploadProfileImage}

@@ -3,7 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import Cropper from 'react-cropper';
 import PropTypes from 'prop-types';
 import 'cropperjs/dist/cropper.css';
-import { Button } from '@material-ui/core';
+import { Button, ButtonGroup } from '@material-ui/core';
 // import { useDropzone } from 'react-dropzone';
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/void-dom-elements-no-children */
@@ -42,13 +42,14 @@ const rejectStyle = {
 function ProfileImageEditor(props) {
   const {
     setImageData,
-    imageData,
     setError,
     error,
   } = props;
   const [imageFileObj, setImageFileObj] = React.useState(null);
   const [imageUrl, setImageUrl] = React.useState('#');
   const [cropper, setCropper] = React.useState();
+  const [croppedData, setCroppedData] = React.useState('#');
+  // const classes = useStyles();
   // const [cropping, setCropping] = useState(false);
 
   React.useEffect(() => {
@@ -68,7 +69,8 @@ function ProfileImageEditor(props) {
   const getCropData = () => {
     if (typeof cropper !== 'undefined') {
       setError(false);
-      setImageData(cropper.getCroppedCanvas().toDataURL());
+      setImageUrl('#');
+      setCroppedData(cropper.getCroppedCanvas().toDataURL());
     }
   };
 
@@ -97,22 +99,33 @@ function ProfileImageEditor(props) {
     isDragAccept,
   ]);
 
-  const handleRemoveImageBtnClick = () => {
-    setImageData('#');
+  // const handleRemoveImageBtnClick = () => {
+  //   setImageFileObj(null);
+  //   setImageUrl('#');
+  // };
+
+  const undoChanges = () => {
+    setCroppedData('#');
+    setImageUrl('#');
     setImageFileObj(null);
-    setImageUrl('');
+  };
+
+  const saveChanges = () => {
+    setImageData(croppedData);
   };
 
   return (
     <div className="questionImageForm">
       {error && <p style={{ color: 'red' }}>Must have an image!</p>}
       {
-        !imageFileObj && imageData === '#'
+        !imageFileObj && imageUrl === '#'
           ? (
-            <div {...getRootProps({ style })}>
-              <input type="file" {...getInputProps()} />
-              <p>Drag n drop a picture here, or click to select file</p>
-              <em>(Only *.jpeg and *.png images will be accepted)</em>
+            <div>
+              <div {...getRootProps({ style })}>
+                <input type="file" {...getInputProps()} />
+                <p>Drag n drop a picture here, or click to select file</p>
+                <em>(Only *.jpeg and *.png images will be accepted)</em>
+              </div>
             </div>
           )
           : (
@@ -124,22 +137,32 @@ function ProfileImageEditor(props) {
               justifyContent: 'center',
             }}
             >
-              {imageData !== '#'
+              {croppedData !== '#'
               && (
                 <>
-                  <img style={{ width: 400, height: 400, bordeRadius: '50%' }} src={imageData} alt="cropped" />
-                  <Button
-                    onClick={handleRemoveImageBtnClick}
-                    style={{ marginTop: '1rem' }}
-                    color="primary"
-                    variant="contained"
-                  >
-                    Save Changes
-                  </Button>
+                  <img style={{ width: 300, height: 300, bordeRadius: '50%' }} src={croppedData} alt="cropped" />
+                  <ButtonGroup>
+                    <Button
+                      onClick={undoChanges}
+                      style={{ marginTop: '1rem' }}
+                      color="secondary"
+                      variant="contained"
+                    >
+                      Undo
+                    </Button>
+                    <Button
+                      onClick={saveChanges}
+                      style={{ marginTop: '1rem' }}
+                      color="primary"
+                      variant="contained"
+                    >
+                      Save
+                    </Button>
+                  </ButtonGroup>
                 </>
               )}
               {
-                imageData === '#'
+                imageUrl !== '#'
                 && (
                   <>
                     <Cropper
@@ -181,7 +204,7 @@ function ProfileImageEditor(props) {
 
 ProfileImageEditor.propTypes = {
   setImageData: PropTypes.func.isRequired,
-  imageData: PropTypes.string.isRequired,
+  // imageData: PropTypes.string.isRequired,
   setError: PropTypes.func.isRequired,
   error: PropTypes.bool.isRequired,
 };

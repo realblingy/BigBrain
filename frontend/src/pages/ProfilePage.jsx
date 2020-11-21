@@ -43,7 +43,6 @@ function ProfilePage(props) {
   const { token } = props;
   const classes = useStyles();
   const [loaded, setLoaded] = React.useState(false);
-  // const [avatarHover, setAvatarHover] = React.useState(false);
   const [user, setUser] = React.useState({});
 
   const uploadUser = async (tokenID) => {

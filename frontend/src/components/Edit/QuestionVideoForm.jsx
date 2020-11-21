@@ -2,7 +2,7 @@ import { Button, makeStyles, TextField } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   getVideo: {
     display: 'flex',
     flexDirection: 'row',
@@ -20,7 +20,15 @@ const useStyles = makeStyles({
       color: 'white',
     },
   },
-});
+  iframe: {
+    width: 560,
+    height: 315,
+    [theme.breakpoints.down(560)]: {
+      width: 340,
+      height: 180,
+    },
+  },
+}));
 
 function QuestionVideoForm(props) {
   const {
@@ -58,8 +66,9 @@ function QuestionVideoForm(props) {
       && (
         <iframe
           title="Youtube Player"
-          width="560"
-          height="315"
+          // width="560"
+          // height="315"
+          className={classes.iframe}
           src={`//www.youtube.com/embed/${youtubeURL}`}
           allowFullScreen
           frameBorder="0"

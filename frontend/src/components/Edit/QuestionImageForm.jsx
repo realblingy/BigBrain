@@ -3,11 +3,22 @@ import { useDropzone } from 'react-dropzone';
 import Cropper from 'react-cropper';
 import PropTypes from 'prop-types';
 import 'cropperjs/dist/cropper.css';
-import { Button } from '@material-ui/core';
+import { Button, makeStyles } from '@material-ui/core';
 // import { useDropzone } from 'react-dropzone';
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/void-dom-elements-no-children */
 /* eslint-disable react/jsx-boolean-value */
+
+const useStyles = makeStyles((theme) => ({
+  croppedImg: {
+    width: 640,
+    height: 360,
+    [theme.breakpoints.down(650)]: {
+      width: 320,
+      height: 180,
+    },
+  },
+}));
 
 const baseStyle = {
   flex: 1,
@@ -24,7 +35,7 @@ const baseStyle = {
   outline: 'none',
   transition: 'border .24s ease-in-out',
   cursor: 'pointer',
-  height: 400,
+  height: 200,
 };
 
 const activeStyle = {
@@ -49,6 +60,7 @@ function QuestionImageForm(props) {
   const [imageFileObj, setImageFileObj] = React.useState(null);
   const [imageUrl, setImageUrl] = React.useState(imageData);
   const [cropper, setCropper] = React.useState();
+  const classes = useStyles();
   // const [cropping, setCropping] = useState(false);
 
   React.useEffect(() => {
@@ -127,7 +139,7 @@ function QuestionImageForm(props) {
               {imageData !== '#'
               && (
                 <>
-                  <img style={{ width: 640, height: 360 }} src={imageData} alt="cropped" />
+                  <img className={classes.croppedImg} src={imageData} alt="cropped" />
                   <Button
                     onClick={handleRemoveImageBtnClick}
                     style={{ marginTop: '1rem' }}

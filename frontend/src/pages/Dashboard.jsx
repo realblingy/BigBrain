@@ -10,10 +10,15 @@ import SessionDialog from '../components/SessionDialog';
 import ResultDialog from '../components/ResultDialog';
 import UploadQuestionDialog from '../components/UploadQuestionDialog';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   quizGrid: {
     gridGap: '2rem',
     padding: '2rem',
+    [theme.breakpoints.down(680)]: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
   },
 }));
 
