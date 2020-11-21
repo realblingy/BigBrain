@@ -1,12 +1,14 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import TokenContext from '../TokenContext';
 import {
   getPlayerQuestion, getPlayerStatus, advanceQuizPost, getPlayerAnswer,
+  getQuizData, getSessionStatus,
 } from '../api';
 import GamePanel from '../components/GamePanel';
+import GameEndContext from '../GameEndContext';
 
 const useStyles = makeStyles({
   body: {
@@ -21,8 +23,10 @@ const useStyles = makeStyles({
 });
 function Game() {
   const { token } = useContext(TokenContext);
+  const { setQuizEnded } = useContext(GameEndContext);
   const classes = useStyles();
-  const { quizID, playerID } = useParams();
+  const history = useHistory();
+  const { quizID, sessionID, playerID } = useParams();
   const [errMsg, setErrMsg] = React.useState('');
   const [countdown, setCountDown] = React.useState(null);
   const [countdownState, setCountDownState] = React.useState(true);
@@ -50,6 +54,9 @@ function Game() {
       // set and show answer
       const response = await getPlayerAnswer(playerID);
       const idsAnswer = response.answerIds;
+      if (idsAnswer === undefined) {
+        return;
+      }
       let stringAns = '';
       idsAnswer.forEach((id) => {
         stringAns += `, ${question.answers[id]}`;
@@ -61,12 +68,22 @@ function Game() {
         setAnswer(null);
         // TODO advance only if not last question
         const advanceQuizPostRes = await advanceQuizPost(token, quizID);
+        const quizData = await getQuizData(quizID, token);
+        if (advanceQuizPostRes.stage === quizData.questions.length) {
+          console.log({
+            quizID,
+            sessionID,
+          });
+          setQuizEnded(quizID);
+          history.push(`/playerResults/${quizID}/${playerID}`);
+          return;
+        }
         const nextQuestion = await getPlayerQuestion(playerID);
         setCurrQuestion(nextQuestion.question);
         resolve();
       }, 3000));
     },
-    [playerID, quizID, token],
+    [playerID, quizID, token],  //eslint-disable-line
   );
 
   // Loading new questions enables countdown
@@ -103,9 +120,31 @@ function Game() {
         } else {
           setErrMsg('Waiting for host');
         }
+      }).catch((err) => {
+        console.log(err);
+        clearInterval(constantFetch);
       });
     }, 1000);
+    return () => {
+      clearInterval(constantFetch);
+    };
   }, [playerID]);
+
+  // Get session status (checking if admin closed the game)
+  React.useEffect(() => {
+    const checkSessionStatus = setInterval(() => {
+      getSessionStatus(token, sessionID).then((r) => {
+        if (!r.results.active) {
+          setCurrQuestion(null);
+          setErrMsg('Host has closed the game');
+          setCountDownState(false);
+        }
+      });
+    }, 1000);
+    return () => {
+      clearInterval(checkSessionStatus);
+    };
+  }, [sessionID, token]);
 
   return (
     <div className={classes.body}>

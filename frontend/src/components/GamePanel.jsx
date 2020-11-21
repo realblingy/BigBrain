@@ -21,6 +21,7 @@ function GamePanel(props) {
     answer,
   } = props;
   const [answerIds, setAnswerIds] = React.useState([]);
+  const [buttonStates, setButtonStates] = React.useState(Array(answers.length).fill(false));
 
   React.useEffect(() => {
     if (answerIds.length !== 0) {
@@ -30,14 +31,35 @@ function GamePanel(props) {
     }
   }, [answerIds, playerID]);
 
+  // Reset everything upon question change
+  React.useEffect(() => {
+    setButtonStates(Array(answers.length).fill(false));
+    setAnswerIds([]);
+  }, [question, answers]);
+
   const selectAnswer = (indx) => {
-    setAnswerIds([...answerIds, indx]);
+    // Toggling button from inactive to active
+    const newButtonStates = buttonStates;
+    newButtonStates[indx] = !newButtonStates[indx];
+    setButtonStates([...newButtonStates]);
+
+    if (newButtonStates[indx]) {
+      // if inactive --> active, add to answerIds
+      console.log([...answerIds, indx]);
+      setAnswerIds([...answerIds, indx]);
+    } else {
+      // if active --> inactive, remove from answerIds
+      const newAnswerIds = answerIds;
+      newAnswerIds.splice(newAnswerIds.indexOf(indx), 1);
+      console.log(newAnswerIds);
+      setAnswerIds([...newAnswerIds]);
+    }
   };
   return (
     <div className={classes.root}>
       <Typography variant="h1">{question}</Typography>
       {answers.map((ans, indx) => (
-        <Button variant="contained" color="primary" onClick={() => selectAnswer(indx)} key={ans}>{ans}</Button>
+        <Button variant="contained" color={buttonStates[indx] === true ? 'secondary' : 'primary'} onClick={() => selectAnswer(indx)} key={ans}>{ans}</Button>
       ))}
       <Typography variant="h1">{`Points: ${points}`}</Typography>
       {answer !== null && <Typography variant="h1">{`Answer: ${answer}`}</Typography>}
@@ -50,7 +72,11 @@ GamePanel.propTypes = {
   points: PropTypes.number.isRequired,
   question: PropTypes.string.isRequired,
   playerID: PropTypes.string.isRequired,
-  answer: PropTypes.string.isRequired,
+  answer: PropTypes.string,
+};
+
+GamePanel.defaultProps = {
+  answer: null,
 };
 
 export default GamePanel;

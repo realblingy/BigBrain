@@ -42,9 +42,18 @@ function QuizButton(props) {
   const classes = useStyles();
   const {
     color, name, numberOfQuestions, redirect, id, active, handleStart, handleStop,
-    setSessionID, setQuizId, time,
+    setSessionID, setQuizId, time, quizEnded,
   } = props;
   const [started, setStarted] = React.useState(false);
+
+  // If quizEnded, trigger from pause to play.
+  React.useEffect(() => {
+    console.log('came into here QuizButton from Game', quizEnded);
+    if (quizEnded !== null && quizEnded.quizID === id) {
+      setStarted(false);
+      handleStop();
+    }
+  }, [quizEnded, handleStop, id]);
 
   React.useEffect(() => {
     if (active !== null) {
@@ -64,6 +73,7 @@ function QuizButton(props) {
     setQuizId(id);
     handleStart();
   };
+
   const endGame = async (e) => {
     e.stopPropagation();
     const quizData = await getQuizData(id, token);
@@ -132,12 +142,17 @@ QuizButton.propTypes = {
   setQuizId: PropTypes.func.isRequired,
   active: PropTypes.number,
   time: PropTypes.string.isRequired,
+  quizEnded: PropTypes.shape({
+    quizID: PropTypes.number,
+    sessionID: PropTypes.number,
+  }),
 };
 
 QuizButton.defaultProps = {
   color: '#E53026',
   setSessionID: null,
   active: null,
+  quizEnded: null,
 };
 
 export default QuizButton;

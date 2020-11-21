@@ -262,3 +262,17 @@ export const getPlayerAnswer = async (playerid) => {
   }
   return response;
 };
+
+export const getPlayerResults = async (playerID) => {
+  const response = await fetch(`${port}/play/${playerID}/results`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return responseData;
+  }
+  throw new Error('Cannot get player results');
+};
