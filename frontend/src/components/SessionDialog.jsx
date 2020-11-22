@@ -6,11 +6,27 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
+import { makeStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
 import { advanceQuizPost, getQuizData } from '../api';
 import TokenContext from '../TokenContext';
 
+const useStyles = makeStyles({
+  content: {
+    '@media (max-width: 550px)': {
+      width: 300,
+      height: 300,
+    },
+  },
+  link: {
+    '@media (max-width: 550px)': {
+      wordWrap: 'break-word',
+    },
+  },
+});
+
 function SessionDialog(props) {
+  const classes = useStyles();
   const { token } = useContext(TokenContext);
   const {
     open, handleClose, sessionID, quizID, setStart,
@@ -49,6 +65,7 @@ function SessionDialog(props) {
   return (
     <div>
       <Dialog
+        className={classes.content}
         open={open}
         onClose={() => {
           handleClose();
@@ -81,7 +98,7 @@ function SessionDialog(props) {
           {` ${err}`}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
+          <DialogContentText className={classes.link} id="alert-dialog-slide-description">
             {urlString}
           </DialogContentText>
         </DialogContent>
