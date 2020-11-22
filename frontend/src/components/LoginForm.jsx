@@ -23,10 +23,16 @@ const useStyles = makeStyles((theme) => ({
   },
   icon: {
     fontSize: '3rem',
+    '@media (max-width: 550px)': {
+      fontSize: '1rem',
+    },
   },
   loginTitle: {
     display: 'flex',
     alignItems: 'center',
+    '@media (max-width: 550px)': {
+      fontSize: '1rem',
+    },
   },
   error: {
     minHeight: '24px',
@@ -41,6 +47,10 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: '0.5rem',
+    '@media (max-width: 550px)': {
+      width: 250,
+      height: 250,
+    },
   },
 }));
 
@@ -96,7 +106,6 @@ function LoginForm(props) {
           LOGIN
         </Typography>
         <TextField
-          className={classes.root}
           placeholder="Email"
           inputProps={{
             'aria-label': 'email input',

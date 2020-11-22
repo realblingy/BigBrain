@@ -14,6 +14,9 @@ const useStyles = makeStyles({
   },
   grid: {
     width: 600,
+    '@media (max-width: 600px)': {
+      width: 300,
+    },
   },
   gridItem: {
     display: 'flex',
@@ -24,6 +27,17 @@ const useStyles = makeStyles({
     height: 150,
     width: 300,
     fontSize: '2rem',
+    '@media (max-width: 600px)': {
+      fontSize: '1rem',
+      height: 50,
+      width: 150,
+    },
+  },
+  text: {
+    fontSize: '2rem',
+    '@media (max-width: 600px)': {
+      fontSize: '1.5rem',
+    },
   },
 });
 
@@ -74,7 +88,7 @@ function GamePanel(props) {
   };
   return (
     <div className={classes.root}>
-      <Typography variant="h1">{question}</Typography>
+      <Typography className={classes.text} variant="h1">{question}</Typography>
       <Grid className={classes.grid} container spacing={3}>
         {answers.map((ans, indx) => (
           <Grid className={classes.gridItem} xs={6} item>
@@ -82,8 +96,8 @@ function GamePanel(props) {
           </Grid>
         ))}
       </Grid>
-      <Typography variant="h1">{`Points: ${points}`}</Typography>
-      {answer !== null && <Typography variant="h1">{`Answer: ${answer}`}</Typography>}
+      <Typography className={classes.text} variant="h1">{`Points: ${points}`}</Typography>
+      {answer !== null && <Typography className={classes.text} variant="h1">{`Answer: ${answer}`}</Typography>}
     </div>
   );
 }

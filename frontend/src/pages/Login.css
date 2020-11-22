@@ -11,4 +11,13 @@
   height: 100vh;
   justify-content: center;
   background-color: #fefb92;
+  background: #fefb92;
+}
+
+@media (max-width: 550px) {
+  .welcome-message {
+    color: black;
+    width: 200px;
+    font-size: 1rem;
+  }
 }
