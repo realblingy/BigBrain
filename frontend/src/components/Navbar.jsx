@@ -51,13 +51,9 @@ function Navbar() {
     handleMenuClose();
     logOut(token)
       .then(() => {
-        console.log('logging out here');
         setToken('');
         history.push('/');
         window.localStorage.removeItem('token');
-      })
-      .catch((e) => {
-        console.log(e);
       });
   };
 
