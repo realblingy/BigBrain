@@ -89,7 +89,7 @@ function QuizButton(props) {
         setStarted(false);
       }
       prev = response.active;
-    }, 2000);
+    }, 1000);
     return () => {
       clearInterval(fetchQuizStatus);
     };
