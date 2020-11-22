@@ -7,6 +7,7 @@ import {
 import { useDropzone } from 'react-dropzone';
 import PublishIcon from '@material-ui/icons/Publish';
 import { uploadQuiz } from '../api';
+import GlobalError from './GlobalError';
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/void-dom-elements-no-children */
 /* eslint-disable react/jsx-boolean-value */
@@ -46,6 +47,8 @@ function UploadQuestionDialog(props) {
     fetchQuizzes,
   } = props;
   const [quizFile, setQuizFile] = React.useState(null);
+  const [errorMsg, setErrorMsg] = React.useState('');
+  const [errorState, setErrorState] = React.useState(false);
 
   const uploadQuizFile = async (file) => {
     const fr = new FileReader();
@@ -61,7 +64,7 @@ function UploadQuestionDialog(props) {
         });
         setQuizFile(result);
       } catch (error) {
-        console.log(error);
+        setErrorMsg('An error has occurred with the quiz file. Please try again.');
       }
     };
 
@@ -78,8 +81,8 @@ function UploadQuestionDialog(props) {
     accept: 'application/JSON',
     maxFiles: 1,
     onDrop: async (acceptedFiles) => {
-      uploadQuizFile(acceptedFiles[0]).catch((e) => {
-        console.log(e);
+      uploadQuizFile(acceptedFiles[0]).catch(() => {
+        setErrorMsg('File is not in the correct format. Please try again.');
       });
     },
   });
@@ -95,6 +98,12 @@ function UploadQuestionDialog(props) {
     isDragAccept,
   ]);
 
+  React.useEffect(() => {
+    if (errorMsg !== '') {
+      setErrorState(true);
+    }
+  }, [errorMsg]);
+
   const handleUploadedCancelBtnClick = () => {
     handleClose();
     setQuizFile(null);
@@ -107,8 +116,16 @@ function UploadQuestionDialog(props) {
         fetchQuizzes(token);
       })
       .catch((error) => {
-        console.log(error);
+        setErrorMsg(error);
       });
+  };
+
+  const handleErrorClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setErrorState(false);
+    setErrorMsg('');
   };
 
   return (
@@ -121,6 +138,7 @@ function UploadQuestionDialog(props) {
         },
       }}
     >
+      <GlobalError errMsg={errorMsg} open={errorState} handleClose={handleErrorClose} />
       <DialogContent>
         {
         quizFile !== null

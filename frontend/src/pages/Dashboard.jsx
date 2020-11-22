@@ -9,6 +9,7 @@ import NewQuizButton from '../components/NewQuizButton';
 import SessionDialog from '../components/SessionDialog';
 import ResultDialog from '../components/ResultDialog';
 import UploadQuestionDialog from '../components/UploadQuestionDialog';
+import GlobalError from '../components/GlobalError';
 
 const useStyles = makeStyles((theme) => ({
   quizGrid: {
@@ -37,7 +38,13 @@ function Dashboard() {
   const [showUploadDialog, setShowUploadDialog] = React.useState(false);
   const classes = useStyles();
   const history = useHistory();
-
+  const [errorMsg, setErrorMsg] = React.useState('');
+  const handleErrorClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setErrorMsg('');
+  };
   // Fetches all quizzes made by a user given a token
   const fetchQuizzes = async (tokenID) => {
     try {
@@ -47,7 +54,7 @@ function Dashboard() {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.log(error);
+      setErrorMsg('Could not load quizzes at this time. Please try again');
     }
   };
 
@@ -72,6 +79,7 @@ function Dashboard() {
 
   return (
     <div className={classes.root}>
+      <GlobalError errMsg={errorMsg} open={errorMsg !== ''} handleClose={handleErrorClose} />
       {(loading) ? <CircularProgress color="primary" /> : (
         <Grid className={classes.quizGrid} container spacing={2}>
           {(quizzes.length > 0) && JSON.parse(quizzes)

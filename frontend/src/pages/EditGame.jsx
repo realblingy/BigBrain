@@ -7,6 +7,7 @@ import { deleteQuiz, getQuizData, updateQuiz } from '../api';
 import QuestionList from '../components/Edit/QuestionList';
 import QuestionForm from '../components/Edit/QuestionForm';
 import DeleteQuestionDialog from '../components/Edit/DeleteQuestionDialog';
+import GlobalError from '../components/GlobalError';
 
 /* eslint-disable no-param-reassign */
 
@@ -56,6 +57,7 @@ function EditGame(props) {
   const [editingQuestion, setEditingQuestion] = React.useState(null);
   const [action, setAction] = React.useState(null);
   const [showDialog, setShowDialog] = React.useState(false);
+  const [errorMsg, setErrorMsg] = React.useState('');
   const { id, token } = props;
   const classes = useStyles();
   const history = useHistory();
@@ -71,7 +73,7 @@ function EditGame(props) {
         setQuizName(quizData.name);
         setQuestions(quizData.questions);
       } catch (error) {
-        console.log(error);
+        setErrorMsg('Could not load quiz data at this time. Try again');
       }
     };
     fetchData();
@@ -87,7 +89,7 @@ function EditGame(props) {
         setAction('main');
       }
     } catch (error) {
-      console.log(error);
+      setErrorMsg('Could not delete question at this time. Try agian.');
     }
   };
   const handleAddClick = () => {
@@ -119,7 +121,7 @@ function EditGame(props) {
         setAction('main');
       }
     } catch (error) {
-      console.log(error);
+      setErrorMsg('Could update quiz at this moment. Try again.');
     }
   };
   const handleDeleteBtnClick = () => {
@@ -133,8 +135,14 @@ function EditGame(props) {
         history.push('/dashboard');
       }
     } catch (error) {
-      console.log(error);
+      setErrorMsg('Could not delete the game at this moment. Try again.');
     }
+  };
+  const handleErrorClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setErrorMsg('');
   };
   // Based on the action state, renders either a question form or question list of quiz
   const renderAction = () => {
@@ -163,6 +171,7 @@ function EditGame(props) {
   };
   return (
     <>
+      <GlobalError errMsg={errorMsg} open={errorMsg !== ''} handleClose={handleErrorClose} />
       <DeleteQuestionDialog
         open={showDialog}
         close={() => setShowDialog(false)}

@@ -7,6 +7,7 @@ import {
 import PropTypes from 'prop-types';
 import FaceIcon from '@material-ui/icons/Face';
 import CloseIcon from '@material-ui/icons/Close';
+import GlobalError from '../components/GlobalError';
 import { getUser, updateUser } from '../api';
 import ProfileImageEditor from '../components/Profile/ProfileImageEditor';
 
@@ -51,6 +52,13 @@ function ProfileEditPage(props) {
   const [mediaError, setMediaError] = React.useState(false);
   const [user, setUser] = React.useState({});
   const [name, setName] = React.useState();
+  const [errorMsg, setErrorMsg] = React.useState('');
+  const handleErrorClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setErrorMsg('');
+  };
   const history = useHistory();
   // Fetches user data
   const uploadUser = async (tokenID) => {
@@ -63,7 +71,7 @@ function ProfileEditPage(props) {
       setLoaded(true);
     } catch (e) {
       setLoaded(true);
-      console.log(e);
+      setErrorMsg('Could not find user at this moment. Please try again');
     }
   };
   // Changes the image shown given image data
@@ -91,6 +99,7 @@ function ProfileEditPage(props) {
   }, [token, user.name, user.profileImg]);
   return (
     <Container className={classes.root}>
+      <GlobalError open={errorMsg !== ''} handleClose={handleErrorClose} />
       <Dialog
         open={showProfileImgModal}
         onClose={() => setShowProfileImgModal(false)}

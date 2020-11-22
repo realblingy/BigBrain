@@ -73,6 +73,7 @@ function QuestionList(props) {
         color="primary"
         endIcon={<AddCircleIcon />}
         onClick={handleAddClick}
+        name="addQuestionBtn"
         className={classes.addQuestionBtn}
       >
         Add A Question

@@ -51,20 +51,16 @@ function Navbar() {
     handleMenuClose();
     logOut(token)
       .then(() => {
-        console.log('logging out here');
         setToken('');
         history.push('/');
         window.localStorage.removeItem('token');
-      })
-      .catch((e) => {
-        console.log(e);
       });
   };
 
   return (
     <AppBar className={classes.root} position="static">
       <Toolbar>
-        <Typography onClick={goToDashboard} variant="h6" className={classes.title}>
+        <Typography button name="homeButton" onClick={goToDashboard} variant="h6" className={classes.title}>
           BigBrain Dashboard
         </Typography>
         <IconButton

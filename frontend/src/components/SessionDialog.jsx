@@ -106,7 +106,7 @@ function SessionDialog(props) {
           <Button onClick={() => copyToClipBoard(urlString)} color="primary">
             Copy Link
           </Button>
-          <Button onClick={startSession} color="primary">
+          <Button name="startSession" onClick={startSession} color="primary">
             Start Session
           </Button>
           <Button
@@ -115,6 +115,7 @@ function SessionDialog(props) {
               setErr('');
             }}
             color="primary"
+            name="exit"
           >
             Exit
           </Button>

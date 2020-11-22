@@ -111,6 +111,7 @@ function LoginForm(props) {
             'aria-label': 'email input',
           }}
           variant="outlined"
+          name="email"
           onChange={(event) => setEmail(event.target.value)}
           onClick={() => handleErrorClose()}
         />
@@ -121,12 +122,13 @@ function LoginForm(props) {
           }}
           variant="outlined"
           type="password"
+          name="password"
           onChange={(event) => setPassword(event.target.value)}
           onClick={() => handleErrorClose()}
         />
         <ButtonGroup aria-label="contained button group">
           <Button className={classes.button} variant="contained" type="button" id="submit-login" onClick={() => { submitLogin(email, password); }}>Log In</Button>
-          <Button className={classes.button} variant="contained" type="button" onClick={goToRegister}>Register</Button>
+          <Button name="register" className={classes.button} variant="contained" type="button" onClick={goToRegister}>Register</Button>
         </ButtonGroup>
         <GlobalError errMsg={errorMsg} open={errorState} handleClose={handleErrorClose} />
       </div>

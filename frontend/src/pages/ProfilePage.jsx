@@ -6,6 +6,7 @@ import {
 import PropTypes from 'prop-types';
 import FaceIcon from '@material-ui/icons/Face';
 import { getUser } from '../api';
+import GlobalError from '../components/GlobalError';
 
 const useStyles = makeStyles({
   root: {
@@ -47,6 +48,13 @@ function ProfilePage(props) {
   const classes = useStyles();
   const [loaded, setLoaded] = React.useState(false);
   const [user, setUser] = React.useState({});
+  const [errorMsg, setErrorMsg] = React.useState('');
+  const handleErrorClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setErrorMsg('');
+  };
   // Fetches user data
   const uploadUser = async (tokenID) => {
     try {
@@ -55,7 +63,7 @@ function ProfilePage(props) {
       setLoaded(true);
     } catch (e) {
       setLoaded(true);
-      console.log(e);
+      setErrorMsg('Could not find user at this moment. Please try again.');
     }
   };
   React.useEffect(() => {
@@ -63,6 +71,7 @@ function ProfilePage(props) {
   }, [token]);
   return (
     <Container className={classes.root}>
+      <GlobalError errMsg={errorMsg} open={errorMsg !== ''} handleClose={handleErrorClose} />
       {
         loaded ? (
           <>

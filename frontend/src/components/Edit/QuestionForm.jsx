@@ -263,6 +263,7 @@ function QuestionForm(props) {
       <form className={classes.questionForm}>
         <TextField
           className={classes.textField}
+          name="questionField"
           label="Question"
           variant="outlined"
           value={question}
@@ -322,6 +323,7 @@ function QuestionForm(props) {
                     <TextField
                       value={newAnswer}
                       error={answerFieldError !== false}
+                      name="answerField"
                       onChange={handleNewAnswerFieldChange}
                       variant="outlined"
                       helperText={answerFieldError !== false && answerFieldError}
@@ -329,7 +331,7 @@ function QuestionForm(props) {
                       placeholder="Give an answer"
                       inputProps={{ maxLength: 30, 'aria-label': 'Give an answer' }}
                     />
-                    <IconButton aria-label="Add Question" onClick={handleAddIconClick}>
+                    <IconButton name="addQuestionIcon" aria-label="Add Question" onClick={handleAddIconClick}>
                       <AddCircleIcon style={{ color: 'green' }} />
                     </IconButton>
                   </>
@@ -404,6 +406,7 @@ function QuestionForm(props) {
           <Button
             type="submit"
             onClick={handleAddQuestionBtnClick}
+            name="submitBtn"
             style={{ backgroundColor: '#212032', color: 'white', marginRight: '1rem' }}
             aria-label="Submit Changes"
           >
