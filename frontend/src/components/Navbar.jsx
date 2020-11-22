@@ -68,6 +68,7 @@ function Navbar() {
           aria-label="account of current user"
           aria-haspopup="true"
           onClick={handleProfileMenuOpen}
+          name="accountIcon"
         >
           <AccountCircleIcon style={{ color: 'white' }} />
         </IconButton>
@@ -84,8 +85,8 @@ function Navbar() {
             },
           }}
         >
-          <MenuItem aria-label="Profile" onClick={handleProfileClick}>Profile</MenuItem>
-          <MenuItem aria-label="Logout" onClick={handleLogoutClick}>Logout</MenuItem>
+          <MenuItem name="profile" aria-label="Profile" onClick={handleProfileClick}>Profile</MenuItem>
+          <MenuItem name="logout" aria-label="Logout" onClick={handleLogoutClick}>Logout</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

@@ -113,7 +113,7 @@ function LoginForm(props) {
           }}
           variant="outlined"
           type="password"
-          name="password"
+          name="passwordField"
           onChange={(event) => setPassword(event.target.value)}
           onClick={() => handleErrorClose()}
         />

@@ -4,12 +4,12 @@ context('Happy path', () => {
   })
 
   it('Happy path test', async () => {
-    const name = 'Jane Doe';
-    const email = 'jamedds@gmail.com';
+    const name = 'Hayden Smith';
+    const email = 'HaydenSmithy2gmail.com';
     const password = 'passw0rd';
     const quizName = 'Hayden Smith Chips'
     const question = 'Best Lecturer?';
-    const answers = ['Yes', 'No'];
+    const answers = ['Yes', 'No', 'I dunno'];
 
     cy.get('button[name=register]')
       .click();
@@ -36,12 +36,9 @@ context('Happy path', () => {
 
     cy.get('svg[name=addQuizIcon]')
       .click();
-      
-    cy.get('svg[class="MuiSvgIcon-root makeStyles-icon-28"]')
-      .click();
 
-    cy.get('button[name=exit]')
-      .click();
+    // cy.get('button[name=exit]')
+    //   .click();
 
     cy.get('button[aria-label="Hayden Smith Chips Quiz Button"]')
       .click();
@@ -79,11 +76,33 @@ context('Happy path', () => {
     cy.get('button[name=startSession]')
       .click();
 
+    cy.wait(500);
+
+    cy.get('svg[name=pauseIcon]')
+      .click();
+    
+    cy.get('button[name=yes]')
+      .click();
     // cy.get('button[name=exit]')
     //   .click();
     // cy.get('button[aria-label="Hayden Smith Chips Quiz Button"]')
     //   .click();
+    cy.get('button[name=accountIcon]')
+      .click();
 
+    cy.get('li[name=logout]')
+      .click();
+
+    cy.get('input[name=email]')
+      .focus()
+      .type(email);
+
+    cy.get('input[name=passwordField')
+      .focus()
+      .type(password);
+
+    cy.get('button[id="submit-login"')
+      .click();
   });
 
 })

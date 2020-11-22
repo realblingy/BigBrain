@@ -30,10 +30,10 @@ function ResultDialog(props) {
       >
         <DialogTitle id="alert-dialog-slide-title">{`Would you like to view the results of session ${sessionID}?`}</DialogTitle>
         <DialogActions>
-          <Button onClick={handleResults} color="primary">
+          <Button name="yes" onClick={handleResults} color="primary">
             Yes
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button name="no" onClick={handleClose} color="primary">
             No
           </Button>
         </DialogActions>
