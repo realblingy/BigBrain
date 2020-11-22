@@ -38,13 +38,16 @@ const useStyles = makeStyles({
     marginTop: '1rem',
   },
 });
-
+/**
+ * Page to show profile of a user
+ * @param {*} props
+ */
 function ProfilePage(props) {
   const { token } = props;
   const classes = useStyles();
   const [loaded, setLoaded] = React.useState(false);
   const [user, setUser] = React.useState({});
-
+  // Fetches user data
   const uploadUser = async (tokenID) => {
     try {
       const result = await getUser(tokenID);
@@ -55,11 +58,9 @@ function ProfilePage(props) {
       console.log(e);
     }
   };
-
   React.useEffect(() => {
     uploadUser(token);
   }, [token]);
-
   return (
     <Container className={classes.root}>
       {

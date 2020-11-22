@@ -96,12 +96,25 @@ function QuizButton(props) {
       style={{ backgroundColor: color }}
       id={id}
       onClick={redirect}
+      aria-label={`${name} Quiz Button`}
     >
       <h1 className={classes.name}>
         { name }
       </h1>
-      {started && <PauseIcon onClick={(e) => endGame(e)} className={classes.icon} />}
-      {!started && <PlayArrowIcon onClick={(e) => startGame(e)} className={classes.icon} />}
+      {started && (
+        <PauseIcon
+          inputProps={{ 'aria-label': 'Pause Button' }}
+          onClick={(e) => endGame(e)}
+          className={classes.icon}
+        />
+      )}
+      {!started && (
+        <PlayArrowIcon
+          inputProps={{ 'aria-label': 'Play Button' }}
+          onClick={(e) => startGame(e)}
+          className={classes.icon}
+        />
+      )}
       <h4
         className={classes.subHeadings}
         style={{ right: '5%' }}

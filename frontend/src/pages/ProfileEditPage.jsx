@@ -38,7 +38,10 @@ const useStyles = makeStyles({
     alignItems: 'center',
   },
 });
-
+/**
+ * Page used to edit a profile
+ * @param {*} props
+ */
 function ProfileEditPage(props) {
   const { token } = props;
   const classes = useStyles();
@@ -49,7 +52,7 @@ function ProfileEditPage(props) {
   const [user, setUser] = React.useState({});
   const [name, setName] = React.useState();
   const history = useHistory();
-
+  // Fetches user data
   const uploadUser = async (tokenID) => {
     try {
       const result = await getUser(tokenID);
@@ -63,12 +66,12 @@ function ProfileEditPage(props) {
       console.log(e);
     }
   };
-
+  // Changes the image shown given image data
   const changeImageData = (data) => {
     setImageData(data);
     setShowProfileImgModal(false);
   };
-
+  // Sends backend request to save changes made
   const handleSaveChangesClick = async () => {
     const updates = { name };
     if (imageData !== '#') {
@@ -77,19 +80,15 @@ function ProfileEditPage(props) {
     await updateUser(token, updates);
     history.push('/profile');
   };
-
   const uploadProfileImage = async () => {
     setShowProfileImgModal(false);
   };
-
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
-
   React.useEffect(() => {
     uploadUser(token);
   }, [token, user.name, user.profileImg]);
-
   return (
     <Container className={classes.root}>
       <Dialog
@@ -102,7 +101,10 @@ function ProfileEditPage(props) {
         }}
       >
         <DialogActions>
-          <IconButton onClick={() => setShowProfileImgModal(false)}>
+          <IconButton
+            onClick={() => setShowProfileImgModal(false)}
+            aria-label="close window"
+          >
             <CloseIcon />
           </IconButton>
         </DialogActions>
@@ -122,6 +124,7 @@ function ProfileEditPage(props) {
             <IconButton
               className={classes.profileImg}
               onClick={() => setShowProfileImgModal(true)}
+              aria-label="Profile Image Click Here To Change Image"
             >
               {
                 (imageData === '#' ? (
@@ -129,7 +132,7 @@ function ProfileEditPage(props) {
                 ) : <img className={classes.profileImg} src={imageData} alt="profile" />)
               }
             </IconButton>
-            <Button color="primary" onClick={() => setShowProfileImgModal(true)}>
+            <Button aria-label="Change Profile Image" color="primary" onClick={() => setShowProfileImgModal(true)}>
               Change Profile Image
             </Button>
             <TextField
@@ -139,8 +142,16 @@ function ProfileEditPage(props) {
               className={classes.nameField}
               variant="outlined"
               onChange={handleNameChange}
+              inputProps={{ 'aria-label': 'Change Name' }}
             />
-            <Button variant="contained" color="primary" onClick={handleSaveChangesClick}>Save Changes</Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSaveChangesClick}
+              aria-label="Save Changes"
+            >
+              Save Changes
+            </Button>
           </>
         )
           : (<CircularProgress />)

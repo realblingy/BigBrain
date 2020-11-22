@@ -49,8 +49,6 @@ function ProfileImageEditor(props) {
   const [imageUrl, setImageUrl] = React.useState('#');
   const [cropper, setCropper] = React.useState();
   const [croppedData, setCroppedData] = React.useState('#');
-  // const classes = useStyles();
-  // const [cropping, setCropping] = useState(false);
 
   React.useEffect(() => {
     if (imageFileObj !== null || undefined) {
@@ -99,11 +97,6 @@ function ProfileImageEditor(props) {
     isDragAccept,
   ]);
 
-  // const handleRemoveImageBtnClick = () => {
-  //   setImageFileObj(null);
-  //   setImageUrl('#');
-  // };
-
   const undoChanges = () => {
     setCroppedData('#');
     setImageUrl('#');
@@ -122,7 +115,11 @@ function ProfileImageEditor(props) {
           ? (
             <div>
               <div {...getRootProps({ style })}>
-                <input type="file" {...getInputProps()} />
+                <input
+                  type="file"
+                  {...getInputProps()}
+                  aria-label="Drag and drop a picture, or click to select file"
+                />
                 <p>Drag n drop a picture here, or click to select file</p>
                 <em>(Only *.jpeg and *.png images will be accepted)</em>
               </div>
@@ -147,6 +144,7 @@ function ProfileImageEditor(props) {
                       style={{ marginTop: '1rem' }}
                       color="secondary"
                       variant="contained"
+                      aria-label="undo"
                     >
                       Undo
                     </Button>
@@ -155,6 +153,7 @@ function ProfileImageEditor(props) {
                       style={{ marginTop: '1rem' }}
                       color="primary"
                       variant="contained"
+                      aria-label="save"
                     >
                       Save
                     </Button>
@@ -189,6 +188,7 @@ function ProfileImageEditor(props) {
                       style={{ width: '200px', marginTop: '1rem' }}
                       color="secondary"
                       variant="contained"
+                      aria-label="crop image"
                     >
                       Crop Image
                     </Button>

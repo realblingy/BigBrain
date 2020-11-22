@@ -270,19 +270,20 @@ function QuestionForm(props) {
           helperText={questionFieldError !== false && questionFieldError}
           onChange={handleQuestionFieldChange}
           required
-          inputProps={{ maxLength: 50 }}
+          inputProps={{ maxLength: 50, 'aria-label': 'Question Field' }}
         />
         <RadioGroup className={classes.radioGroup}>
           <FormControlLabel value="single" onClick={handleQuantityAnswerRadioGroup} checked={answerQty === 'single'} label="Single Answer" control={<Radio />} />
           <FormControlLabel value="multi" onClick={handleQuantityAnswerRadioGroup} checked={answerQty === 'multi'} label="Multi Answer" control={<Radio />} />
         </RadioGroup>
         <FormControl className={classes.timerMenu}>
-          <InputLabel htmlFor="outlined-age-native-simple">Timer (seconds)</InputLabel>
+          <InputLabel htmlFor="outlined-timer-native-simple">Timer (seconds)</InputLabel>
           <NativeSelect
             id="demo-simple-select-helper"
             inputProps={{
               name: 'quizTimer',
-              id: 'outlined-age-native-simple',
+              id: 'outlined-timer-native-simple',
+              'aria-label': 'timer',
             }}
             className={classes.selectMenu}
             onChange={handleTimerChange}
@@ -294,14 +295,14 @@ function QuestionForm(props) {
           </NativeSelect>
         </FormControl>
         <FormControl>
-          <InputLabel htmlFor="outlined-age-native-simple" className={classes.selectMenu}>Points</InputLabel>
+          <InputLabel htmlFor="outlined-points-native-simple" className={classes.selectMenu}>Points</InputLabel>
           <NativeSelect
-            // labelId="demo-simple-select-helper-label"
             id="demo-simple-select-helper"
             className={classes.selectMenu}
             inputProps={{
-              name: 'quizTimer',
-              id: 'outlined-age-native-simple',
+              name: 'points',
+              id: 'outlined-points-native-simple',
+              'aria-label': 'points',
             }}
             onChange={handlePointsChange}
           >
@@ -326,9 +327,9 @@ function QuestionForm(props) {
                       helperText={answerFieldError !== false && answerFieldError}
                       className={classes.textField}
                       placeholder="Give an answer"
-                      inputProps={{ maxLength: 30 }}
+                      inputProps={{ maxLength: 30, 'aria-label': 'Give an answer' }}
                     />
-                    <IconButton onClick={handleAddIconClick}>
+                    <IconButton aria-label="Add Question" onClick={handleAddIconClick}>
                       <AddCircleIcon style={{ color: 'green' }} />
                     </IconButton>
                   </>
@@ -354,7 +355,10 @@ function QuestionForm(props) {
         </div>
         <div>
           <h2>Add an image or Youtube link?</h2>
-          <RadioGroup className={classes.radioGroup}>
+          <RadioGroup
+            inputProps={{ 'arial-label': 'Media format' }}
+            className={classes.radioGroup}
+          >
             <FormControlLabel
               value="none"
               label="None"
@@ -401,6 +405,7 @@ function QuestionForm(props) {
             type="submit"
             onClick={handleAddQuestionBtnClick}
             style={{ backgroundColor: '#212032', color: 'white', marginRight: '1rem' }}
+            aria-label="Submit Changes"
           >
             {action === 'edit' ? 'Save Changes' : 'Add Question'}
           </Button>
@@ -408,6 +413,7 @@ function QuestionForm(props) {
             type="button"
             style={{ backgroundColor: '#af0404', color: 'white' }}
             onClick={cancel}
+            aria-label="Cancel Changes"
           >
             Cancel
           </Button>

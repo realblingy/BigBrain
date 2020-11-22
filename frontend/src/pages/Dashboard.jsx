@@ -22,6 +22,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Main Dashboard where users can add, delete and update questions of a quiz
+ * @param {*} props
+ */
 function Dashboard(props) {
   const { token } = props;
   const [quizzes, setQuizzes] = React.useState('');
@@ -34,7 +38,7 @@ function Dashboard(props) {
   const [showUploadDialog, setShowUploadDialog] = React.useState(false);
   const classes = useStyles();
   const history = useHistory();
-
+  // Fetches all quizzes made by a user given a token
   const fetchQuizzes = async (tokenID) => {
     try {
       setLoading(true);
@@ -46,15 +50,14 @@ function Dashboard(props) {
       console.log(error);
     }
   };
-
   React.useEffect(() => {
     fetchQuizzes(token);
   }, [token]);
-
+  // Redirects to the edit question page
   const handleQuizBtnClick = (id) => {
     history.push(`/edit/${id}`);
   };
-
+  // Calculates a quiz's time by iterating over each question and summing their times
   const getQuizTotalTime = (quiz) => {
     let totalTime = 0;
     quiz.questions.forEach((question) => {
