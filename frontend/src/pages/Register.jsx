@@ -109,6 +109,7 @@ function Register(props) {
           'aria-label': 'email input',
         }}
         variant="outlined"
+        name="email"
         className={classes.input}
         type="text"
         onChange={(e) => setEmail(e.target.value)}
@@ -120,6 +121,7 @@ function Register(props) {
           'aria-label': 'password input',
         }}
         variant="outlined"
+        name="password"
         className={classes.input}
         type="password"
         onChange={(e) => setPassword(e.target.value)}
@@ -130,6 +132,7 @@ function Register(props) {
         inputProps={{
           'aria-label': 'name input',
         }}
+        name="name"
         variant="outlined"
         className={classes.input}
         type="text"
@@ -138,7 +141,15 @@ function Register(props) {
       />
       <ButtonGroup>
         <Button variant="contained" className={classes.button} type="button" onClick={goToLogin}>Back</Button>
-        <Button variant="contained" className={classes.button} type="button" onClick={() => { submitRegister(email, password, name); }}>Submit</Button>
+        <Button
+          variant="contained"
+          className={classes.button}
+          type="button"
+          onClick={() => { submitRegister(email, password, name); }}
+          name="submit"
+        >
+          Submit
+        </Button>
       </ButtonGroup>
       <GlobalError errMsg={errorMsg} open={errorState} handleClose={handleErrorClose} />
     </div>

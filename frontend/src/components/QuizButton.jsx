@@ -152,11 +152,13 @@ function QuizButton(props) {
             inputProps={{ 'aria-label': 'Pause Button' }}
             onClick={(e) => endGame(e)}
             className={classes.pause}
+            name="pauseIcon"
           />
           <NavigateNextIcon
             inputProps={{ 'aria-label': 'Next Button' }}
             onClick={(e) => advanceQuestion(e)}
             className={classes.next}
+            name="navigateIcon"
           />
         </div>
       )}

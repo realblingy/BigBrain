@@ -73,12 +73,14 @@ function NewQuizButton(props) {
         placeholder="Enter Quiz Name"
         className={classes.input}
         onChange={(e) => setNewQuizName(e.target.value)}
+        name="newQuizField"
         value={newQuizName}
         inputProps={{ 'aria-label': 'New Quiz Name FIeld' }}
       />
       <AddCircleOutlineIcon
         onClick={onClick}
         aria-label="Add Quiz"
+        name="addQuizIcon"
       />
       <IconButton
         onClick={openQuestionDialog}

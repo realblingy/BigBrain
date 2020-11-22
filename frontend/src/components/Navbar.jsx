@@ -60,7 +60,7 @@ function Navbar() {
   return (
     <AppBar className={classes.root} position="static">
       <Toolbar>
-        <Typography onClick={goToDashboard} variant="h6" className={classes.title}>
+        <Typography button name="homeButton" onClick={goToDashboard} variant="h6" className={classes.title}>
           BigBrain Dashboard
         </Typography>
         <IconButton
