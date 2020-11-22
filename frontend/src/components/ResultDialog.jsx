@@ -28,7 +28,7 @@ function ResultDialog(props) {
           },
         }}
       >
-        <DialogTitle id="alert-dialog-slide-title">Would you like to view the results?</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">{`Would you like to view the results of session ${sessionID}?`}</DialogTitle>
         <DialogActions>
           <Button onClick={handleResults} color="primary">
             Yes

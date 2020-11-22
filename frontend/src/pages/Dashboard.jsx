@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/styles';
@@ -9,7 +9,6 @@ import NewQuizButton from '../components/NewQuizButton';
 import SessionDialog from '../components/SessionDialog';
 import ResultDialog from '../components/ResultDialog';
 import UploadQuestionDialog from '../components/UploadQuestionDialog';
-import GameEndContext from '../GameEndContext';
 
 const useStyles = makeStyles(() => ({
   quizGrid: {
@@ -20,7 +19,6 @@ const useStyles = makeStyles(() => ({
 
 function Dashboard(props) {
   const { token } = props;
-  const { quizEnded, setQuizEnded } = useContext(GameEndContext);
   const [quizzes, setQuizzes] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const [newQuizName, setNewQuizName] = React.useState('');
@@ -46,12 +44,12 @@ function Dashboard(props) {
 
   // If quiz has ended from player side, change corresponding quiz Button from stop to play
   // and prompt host if they want to view results.
-  React.useEffect(() => {
-    console.log('Came into here Dashboard from Game');
-    if (quizEnded !== null) {
-      setQuizEnded(null);
-    }
-  }, [quizEnded, setQuizEnded]);
+  // React.useEffect(() => {
+  //   console.log('Came into here Dashboard from Game');
+  //   if (quizEnded !== null) {
+  //     setQuizEnded(null);
+  //   }
+  // }, [quizEnded, setQuizEnded]);
 
   React.useEffect(() => {
     fetchQuizzes(token);

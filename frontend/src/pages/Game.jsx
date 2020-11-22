@@ -4,11 +4,10 @@ import Typography from '@material-ui/core/Typography';
 import { useParams, useHistory } from 'react-router-dom';
 import TokenContext from '../TokenContext';
 import {
-  getPlayerQuestion, getPlayerStatus, advanceQuizPost, getPlayerAnswer,
-  getQuizData, getSessionStatus,
+  getPlayerQuestion, getPlayerStatus, getPlayerAnswer,
+  getSessionStatus, getQuizData,
 } from '../api';
 import GamePanel from '../components/GamePanel';
-import GameEndContext from '../GameEndContext';
 
 const useStyles = makeStyles({
   body: {
@@ -23,7 +22,6 @@ const useStyles = makeStyles({
 });
 function Game() {
   const { token } = useContext(TokenContext);
-  const { setQuizEnded } = useContext(GameEndContext);
   const classes = useStyles();
   const history = useHistory();
   const { quizID, sessionID, playerID } = useParams();
@@ -32,6 +30,7 @@ function Game() {
   const [countdownState, setCountDownState] = React.useState(true);
   const [currQuestion, setCurrQuestion] = React.useState(null);
   const [answer, setAnswer] = React.useState(null);
+  const [disableBtn, setDisabledBtn] = React.useState(false);
 
   // Updates countdown every second
   React.useEffect(() => {
@@ -62,33 +61,35 @@ function Game() {
         stringAns += `, ${question.answers[id]}`;
       });
       setAnswer(stringAns.slice(1, stringAns.length));
-
-      // after 3 seconds, load next question and set answer to null
-      await new Promise((resolve) => setTimeout(async () => {
-        setAnswer(null);
-        // TODO advance only if not last question
-        const advanceQuizPostRes = await advanceQuizPost(token, quizID);
-        const quizData = await getQuizData(quizID, token);
-        if (advanceQuizPostRes.stage === quizData.questions.length) {
-          console.log({
-            quizID,
-            sessionID,
-          });
-          setQuizEnded(quizID);
-          history.push(`/playerResults/${quizID}/${playerID}`);
-          return;
-        }
-        const nextQuestion = await getPlayerQuestion(playerID);
-        setCurrQuestion(nextQuestion.question);
-        resolve();
-      }, 3000));
+      setDisabledBtn(true);
     },
-    [playerID, quizID, token],  //eslint-disable-line
+    [playerID],  //eslint-disable-line
   );
+
+  // check player status
+  // React.useEffect(() => {
+  //   const fetchPlayerStatus = setInterval(async () => {
+  //     const quizData = await getSessionStatus(token, sessionID);
+  //     const playerData = await getPlayerStatus(playerID);
+  //     console.log(quizData, playerData);
+  //     // if () {
+  //     //   console.log({
+  //     //     quizID,
+  //     //     sessionID,
+  //     //   });
+  //     //   history.push(`/playerResults/${quizID}/${playerID}`);
+  //     //   return;
+  //     // }
+  //   }, 2000);
+  //   return () => {
+  //     clearInterval(fetchPlayerStatus);
+  //   };
+  // });
 
   // Loading new questions enables countdown
   React.useEffect(() => {
     if (currQuestion !== null) {
+      setDisabledBtn(false);
       let targetTime = new Date(currQuestion.isoTimeLastQuestionStarted);
       targetTime = targetTime.getTime() + parseInt(currQuestion.timer, 10) * 1000 + 1;
       const currTime = new Date();
@@ -100,7 +101,7 @@ function Game() {
 
   // Once countdown goes to 0, disable countdown --> show answer --> advance to next question
   React.useEffect(() => {
-    if (countdown === 0) {
+    if (countdown <= 0) {
       // stop countdown
       setCountDownState(false);
       // show answer and advance to next question
@@ -132,19 +133,33 @@ function Game() {
 
   // Get session status (checking if admin closed the game)
   React.useEffect(() => {
-    const checkSessionStatus = setInterval(() => {
-      getSessionStatus(token, sessionID).then((r) => {
-        if (!r.results.active) {
-          setCurrQuestion(null);
-          setErrMsg('Host has closed the game');
-          setCountDownState(false);
+    let position = null;
+    const checkSessionStatus = setInterval(async () => {
+      const sessionStatus = await getSessionStatus(token, sessionID);
+      const quizData = await getQuizData(quizID, token);
+      if (!sessionStatus.results.active) {
+        setCurrQuestion(null);
+        // setErrMsg('Game Ended');
+        history.push(`/playerResults/${quizID}/${playerID}`);
+        setCountDownState(false);
+      }
+
+      console.log('HIII', sessionStatus.results.position, position);
+      if (sessionStatus.results.position !== position && position !== null
+        && sessionStatus.results.position !== quizData.questions.length) {
+        // get new questions
+        const nextQuestion = await getPlayerQuestion(playerID);
+        if (nextQuestion !== undefined) {
+          setCurrQuestion(nextQuestion.question);
         }
-      });
+      }
+      // update position
+      position = sessionStatus.results.position;
     }, 1000);
     return () => {
       clearInterval(checkSessionStatus);
     };
-  }, [sessionID, token]);
+  }, [sessionID, token, history, quizID, playerID]);
 
   return (
     <div className={classes.body}>
@@ -157,6 +172,7 @@ function Game() {
           question={currQuestion.question}
           playerID={playerID}
           answer={answer}
+          disableBtn={disableBtn}
         />
       )}
       {countdownState && <Typography variant="h2">{countdown}</Typography>}

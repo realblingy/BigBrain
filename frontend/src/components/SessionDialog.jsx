@@ -70,7 +70,7 @@ function SessionDialog(props) {
             Link is Copied!
           </DialogTitle>
         </Slide>
-        <DialogTitle id="alert-dialog-slide-title"> SESSION ID</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">{`SESSION ${sessionID}`}</DialogTitle>
         <DialogTitle style={{
           color: 'red',
           margin: 0,

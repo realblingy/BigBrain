@@ -6,9 +6,6 @@ import Button from '@material-ui/core/Button';
 import { putPlayerAnswer } from '../api';
 
 const useStyles = makeStyles({
-  root: {
-
-  },
 });
 
 function GamePanel(props) {
@@ -19,6 +16,7 @@ function GamePanel(props) {
     question,
     playerID,
     answer,
+    disableBtn,
   } = props;
   const [answerIds, setAnswerIds] = React.useState([]);
   const [buttonStates, setButtonStates] = React.useState(Array(answers.length).fill(false));
@@ -59,7 +57,7 @@ function GamePanel(props) {
     <div className={classes.root}>
       <Typography variant="h1">{question}</Typography>
       {answers.map((ans, indx) => (
-        <Button variant="contained" color={buttonStates[indx] === true ? 'secondary' : 'primary'} onClick={() => selectAnswer(indx)} key={ans}>{ans}</Button>
+        <Button disabled={disableBtn} variant="contained" color={buttonStates[indx] === true ? 'secondary' : 'primary'} onClick={() => selectAnswer(indx)} key={ans}>{ans}</Button>
       ))}
       <Typography variant="h1">{`Points: ${points}`}</Typography>
       {answer !== null && <Typography variant="h1">{`Answer: ${answer}`}</Typography>}
@@ -73,6 +71,7 @@ GamePanel.propTypes = {
   question: PropTypes.string.isRequired,
   playerID: PropTypes.string.isRequired,
   answer: PropTypes.string,
+  disableBtn: PropTypes.bool.isRequired,
 };
 
 GamePanel.defaultProps = {
