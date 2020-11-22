@@ -282,3 +282,48 @@ export const deleteQuiz = async (token, quizid) => {
   }
   return new Error('Quiz could not be deleted at this time.');
 };
+
+export const putPlayerAnswer = async (playerid, answerIds) => {
+  const response = await fetch(`${port}/play/${playerid}/answer`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      answerIds,
+    }),
+  });
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return responseData;
+  }
+  return response;
+};
+
+export const getPlayerAnswer = async (playerid) => {
+  const response = await fetch(`${port}/play/${playerid}/answer`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return responseData;
+  }
+  return response;
+};
+
+export const getPlayerResults = async (playerID) => {
+  const response = await fetch(`${port}/play/${playerID}/results`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (response.status === 200) {
+    const responseData = await response.json();
+    return responseData;
+  }
+  throw new Error('Cannot get player results');
+};

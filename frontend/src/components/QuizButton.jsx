@@ -1,11 +1,12 @@
 import { ButtonBase, makeStyles } from '@material-ui/core';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import PauseIcon from '@material-ui/icons/Pause';
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import TokenContext from '../TokenContext';
 import {
-  endGamePost, startGamePost, getQuizData, getSessionStatus,
+  endGamePost, startGamePost, getQuizData, getSessionStatus, advanceQuizPost,
 } from '../api';
 
 const useStyles = makeStyles(() => ({
@@ -35,6 +36,26 @@ const useStyles = makeStyles(() => ({
     top: '10%',
     borderRadius: '0.3rem',
   },
+  pause: {
+    fontSize: 50,
+    display: 'block',
+    color: 'white',
+    backgroundColor: '#93073e',
+    position: 'absolute',
+    top: '10%',
+    left: '30%',
+    borderRadius: '0.3rem',
+  },
+  next: {
+    fontSize: 50,
+    display: 'block',
+    color: 'white',
+    backgroundColor: '#93073e',
+    position: 'absolute',
+    top: '10%',
+    right: '30%',
+    borderRadius: '0.3rem',
+  },
 }));
 
 function QuizButton(props) {
@@ -56,6 +77,24 @@ function QuizButton(props) {
     }
   });
 
+  // check if game has ended
+  React.useEffect(() => {
+    let prev = null;
+    const fetchQuizStatus = setInterval(async () => {
+      const response = await getQuizData(id, token);
+      if (prev !== null && response.active === null) {
+        // need to reload all quiz data to get new active == null value
+        setSessionID(prev);
+        handleStop();
+        setStarted(false);
+      }
+      prev = response.active;
+    }, 1000);
+    return () => {
+      clearInterval(fetchQuizStatus);
+    };
+  });
+
   const startGame = async (e) => {
     e.stopPropagation();
     await startGamePost(token, id);
@@ -64,6 +103,7 @@ function QuizButton(props) {
     setQuizId(id);
     handleStart();
   };
+
   const endGame = async (e) => {
     e.stopPropagation();
     const quizData = await getQuizData(id, token);
@@ -71,6 +111,11 @@ function QuizButton(props) {
     await endGamePost(token, id);
     handleStop();
     setStarted(false);
+  };
+
+  const advanceQuestion = async (e) => {
+    e.stopPropagation();
+    await advanceQuizPost(token, id);
   };
 
   const timeFormat = (timeTaken) => {
@@ -100,7 +145,12 @@ function QuizButton(props) {
       <h1 className={classes.name}>
         { name }
       </h1>
-      {started && <PauseIcon onClick={(e) => endGame(e)} className={classes.icon} />}
+      {started && (
+        <div>
+          <PauseIcon onClick={(e) => endGame(e)} className={classes.pause} />
+          <NavigateNextIcon onClick={(e) => advanceQuestion(e)} className={classes.next} />
+        </div>
+      )}
       {!started && <PlayArrowIcon onClick={(e) => startGame(e)} className={classes.icon} />}
       <h4
         className={classes.subHeadings}
@@ -131,13 +181,18 @@ QuizButton.propTypes = {
   setSessionID: PropTypes.func,
   setQuizId: PropTypes.func.isRequired,
   active: PropTypes.number,
-  time: PropTypes.number.isRequired,
+  time: PropTypes.string.isRequired,
+  quizEnded: PropTypes.shape({
+    quizID: PropTypes.number,
+    sessionID: PropTypes.number,
+  }),
 };
 
 QuizButton.defaultProps = {
   color: '#E53026',
   setSessionID: null,
   active: null,
+  quizEnded: null,
 };
 
 export default QuizButton;

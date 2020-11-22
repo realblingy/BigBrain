@@ -47,9 +47,18 @@ function Dashboard(props) {
     }
   };
 
+  // If quiz has ended from player side, change corresponding quiz Button from stop to play
+  // and prompt host if they want to view results.
+  // React.useEffect(() => {
+  //   console.log('Came into here Dashboard from Game');
+  //   if (quizEnded !== null) {
+  //     setQuizEnded(null);
+  //   }
+  // }, [quizEnded, setQuizEnded]);
+
   React.useEffect(() => {
     fetchQuizzes(token);
-  }, [token]);
+  }, [token, start, stop]);
 
   const handleQuizBtnClick = (id) => {
     history.push(`/edit/${id}`);

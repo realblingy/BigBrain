@@ -16,7 +16,7 @@ function SessionDialog(props) {
     open, handleClose, sessionID, quizID, setStart,
   } = props;
   const getUrl = window.location;
-  const urlString = `${getUrl.origin}/play/${sessionID}`;
+  const urlString = `${getUrl.origin}/play/${quizID}/${sessionID}`;
   const [copy, setCopy] = React.useState(false);
   const [err, setErr] = React.useState('');
 
@@ -70,7 +70,7 @@ function SessionDialog(props) {
             Link is Copied!
           </DialogTitle>
         </Slide>
-        <DialogTitle id="alert-dialog-slide-title"> SESSION ID</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">{`SESSION ${sessionID}`}</DialogTitle>
         <DialogTitle style={{
           color: 'red',
           margin: 0,
