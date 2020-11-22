@@ -46,7 +46,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
+/**
+ * Page where users can edit the questions of a game
+ * @param {*} props
+ */
 function EditGame(props) {
   const [questions, setQuestions] = React.useState([]);
   const [quizName, setQuizName] = React.useState('');
@@ -56,11 +59,10 @@ function EditGame(props) {
   const { id, token } = props;
   const classes = useStyles();
   const history = useHistory();
-
+  // On load, main is set as the action which shows all the questions of a quiz
   React.useEffect(() => {
     setAction('main');
   }, []);
-
   React.useEffect(() => {
     setQuestions([]);
     const fetchData = async () => {
@@ -74,45 +76,10 @@ function EditGame(props) {
     };
     fetchData();
   }, [id, token]);
-
+  // Deletes a question of a quiz
   const handleDeleteClick = async (idx) => {
     const newQuestions = [...questions];
     newQuestions.splice(idx, 1);
-    try {
-      const result = await updateQuiz(token, quizName, newQuestions, id);
-      if (result) {
-        setQuestions(newQuestions);
-        setAction('main');
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleAddClick = () => {
-    setAction('add');
-  };
-
-  const handleQuestionClick = (idx) => {
-    setEditingQuestion(idx);
-    setAction('edit');
-    history.push(`/edit/${id}/${idx}`);
-  };
-
-  const addNewQuestion = async (newQuestion) => {
-    let newQuestions = [];
-    if (action === 'add') {
-      newQuestions = [...questions, newQuestion];
-    } else if (action === 'edit') {
-      newQuestions = [...questions];
-      newQuestions[editingQuestion] = newQuestion;
-    }
-
-    newQuestions = newQuestions.map((q, idx) => {
-      q.id = idx;
-      return q;
-    });
-
     try {
       const result = await updateQuiz(token, newQuestions, id);
       if (result) {
@@ -123,11 +90,41 @@ function EditGame(props) {
       console.log(error);
     }
   };
-
+  const handleAddClick = () => {
+    setAction('add');
+  };
+  // Redirects to the editing page for a question
+  const handleQuestionClick = (idx) => {
+    setEditingQuestion(idx);
+    setAction('edit');
+    history.push(`/edit/${id}/${idx}`);
+  };
+  // Adds a new question and sends a request to the backend
+  const addNewQuestion = async (newQuestion) => {
+    let newQuestions = [];
+    if (action === 'add') {
+      newQuestions = [...questions, newQuestion];
+    } else if (action === 'edit') {
+      newQuestions = [...questions];
+      newQuestions[editingQuestion] = newQuestion;
+    }
+    newQuestions = newQuestions.map((q, idx) => {
+      q.id = idx;
+      return q;
+    });
+    try {
+      const result = await updateQuiz(token, newQuestions, id);
+      if (result) {
+        setQuestions(newQuestions);
+        setAction('main');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleDeleteBtnClick = () => {
     setShowDialog(true);
   };
-
   const deleteGame = async () => {
     try {
       const result = await deleteQuiz(token, id);
@@ -139,22 +136,13 @@ function EditGame(props) {
       console.log(error);
     }
   };
-
+  // Based on the action state, renders either a question form or question list of quiz
   const renderAction = () => {
     switch (action) {
       case 'add':
         return (
           <QuestionForm
             action={action}
-            submitForm={addNewQuestion}
-            cancel={() => { setAction('main'); }}
-          />
-        );
-      case 'edit':
-        return (
-          <QuestionForm
-            action={action}
-            questionObj={questions[editingQuestion]}
             submitForm={addNewQuestion}
             cancel={() => { setAction('main'); }}
           />
@@ -173,7 +161,6 @@ function EditGame(props) {
         );
     }
   };
-
   return (
     <>
       <DeleteQuestionDialog

@@ -29,7 +29,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
+/**
+ * Form to upload a video via its video ID
+ * @param {*} props
+ */
 function QuestionVideoForm(props) {
   const {
     youtubeURL,
@@ -37,7 +40,6 @@ function QuestionVideoForm(props) {
     setError,
     error,
   } = props;
-
   const classes = useStyles();
   const [videoURL, setVideoURL] = React.useState('');
   const handleURLTextFieldChange = (e) => {
@@ -46,7 +48,8 @@ function QuestionVideoForm(props) {
       setYoutubeURL(null);
     }
   };
-
+  // Extracts the video ID of Youtube URL
+  // If not valid, produce error
   const handleGetVideoBtnClick = () => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = videoURL.match(regExp);
@@ -66,8 +69,6 @@ function QuestionVideoForm(props) {
       && (
         <iframe
           title="Youtube Player"
-          // width="560"
-          // height="315"
           className={classes.iframe}
           src={`//www.youtube.com/embed/${youtubeURL}`}
           allowFullScreen

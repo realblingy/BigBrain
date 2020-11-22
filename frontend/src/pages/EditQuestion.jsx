@@ -5,11 +5,15 @@ import { Container } from '@material-ui/core';
 import QuestionForm from '../components/Edit/QuestionForm';
 import { getQuizData, updateQuiz } from '../api';
 
+/**
+ * Page where users can edit their question for a quiz
+ * @param {*} props
+ */
 function EditQuestion(props) {
   const { id, questionid, token } = props;
   const [questions, setQuestions] = React.useState([]);
   const history = useHistory();
-
+  // Fetches the data quiz questions
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -21,11 +25,11 @@ function EditQuestion(props) {
     };
     fetchData();
   }, [id, token]);
-
+  // Goes back to the edit page for quiz
   const returnToQuizPage = async () => {
     history.push(`/edit/${id}`);
   };
-
+  // Uses previous questions to update the new question
   const updateQuestion = (question) => {
     const newQuestions = [...questions];
     newQuestions[questionid] = question;

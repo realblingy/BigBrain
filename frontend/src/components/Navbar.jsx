@@ -88,10 +88,9 @@ function Navbar() {
             },
           }}
         >
-          <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
-          <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
+          <MenuItem aria-label="Profile" onClick={handleProfileClick}>Profile</MenuItem>
+          <MenuItem aria-label="Logout" onClick={handleLogoutClick}>Logout</MenuItem>
         </Menu>
-        {/* <LogoutButton setToken={setToken} token={token} /> */}
       </Toolbar>
     </AppBar>
   );

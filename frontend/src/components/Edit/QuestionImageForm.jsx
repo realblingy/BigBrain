@@ -49,7 +49,10 @@ const acceptStyle = {
 const rejectStyle = {
   borderColor: '#ff1744',
 };
-
+/**
+ * Uploads an image for a user
+ * @param {*} props
+ */
 function QuestionImageForm(props) {
   const {
     setImageData,
@@ -61,29 +64,26 @@ function QuestionImageForm(props) {
   const [imageUrl, setImageUrl] = React.useState(imageData);
   const [cropper, setCropper] = React.useState();
   const classes = useStyles();
-  // const [cropping, setCropping] = useState(false);
-
+  // Sets the iamgeURL for image uploaded
   React.useEffect(() => {
     if (imageFileObj !== null || undefined) {
       const reader = new FileReader();
-
       if (imageFileObj instanceof Blob) {
         reader.onloadend = () => {
           setImageUrl(reader.result);
         };
       }
-
       reader.readAsDataURL(imageFileObj);
     }
   }, [imageFileObj]);
-
+  // Crops tje photo
   const getCropData = () => {
     if (typeof cropper !== 'undefined') {
       setError(false);
       setImageData(cropper.getCroppedCanvas().toDataURL());
     }
   };
-
+  // Used for Dropzone
   const {
     getRootProps,
     getInputProps,
@@ -97,7 +97,7 @@ function QuestionImageForm(props) {
       setImageFileObj(acceptedFiles[0]);
     },
   });
-
+  // Used for DropZone
   const style = React.useMemo(() => ({
     ...baseStyle,
     ...(isDragActive ? activeStyle : {}),
@@ -108,19 +108,19 @@ function QuestionImageForm(props) {
     isDragReject,
     isDragAccept,
   ]);
-
+  // Removes the image uploaded
   const handleRemoveImageBtnClick = () => {
     setImageData('#');
     setImageFileObj(null);
     setImageUrl('');
   };
-
   return (
     <div className="questionImageForm">
       {error && <p style={{ color: 'red' }}>Must have an image!</p>}
       {
         !imageFileObj && imageData === '#'
           ? (
+            // Dropzone for image
             <div {...getRootProps({ style })}>
               <input type="file" {...getInputProps()} />
               <p>Drag n drop a picture here, or click to select file</p>

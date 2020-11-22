@@ -64,6 +64,7 @@ function NewQuizButton(props) {
       className={classes.root}
       variant="contained"
       disableRipple
+      aria-label="New Quiz"
     >
       <h1 className={classes.name}>
         New Quiz
@@ -73,11 +74,17 @@ function NewQuizButton(props) {
         className={classes.input}
         onChange={(e) => setNewQuizName(e.target.value)}
         value={newQuizName}
+        inputProps={{ 'aria-label': 'New Quiz Name FIeld' }}
       />
       <AddCircleOutlineIcon
         onClick={onClick}
+        aria-label="Add Quiz"
       />
-      <IconButton onClick={openQuestionDialog} className={classes.uploadIcon}>
+      <IconButton
+        onClick={openQuestionDialog}
+        className={classes.uploadIcon}
+        aria-label="Upload Quiz"
+      >
         <CloudUploadIcon />
       </IconButton>
     </ButtonBase>
