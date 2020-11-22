@@ -120,6 +120,18 @@ function Results() {
     return data;
   };
 
+  const options = {
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: true,
+          min: 0,
+        },
+      }],
+    },
+    maintainAspectRatio: false,
+  };
+
   React.useEffect(() => {
     if (results.length > 0) {
       setTopFive(getTopFive(results));
@@ -139,9 +151,7 @@ function Results() {
         && (
         <Bar
           data={barChartData}
-          options={{
-            maintainAspectRatio: false,
-          }}
+          options={options}
         />
         )}
       </div>
@@ -151,9 +161,7 @@ function Results() {
         && (
         <Bar
           data={responseChartData}
-          options={{
-            maintainAspectRatio: false,
-          }}
+          options={options}
         />
         )}
       </div>

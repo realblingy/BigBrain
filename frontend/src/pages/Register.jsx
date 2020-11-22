@@ -4,8 +4,8 @@ import { makeStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
+import GlobalError from '../components/GlobalError';
 import port from '../api';
 
 const useStyles = makeStyles((theme) => ({
@@ -43,11 +43,23 @@ function Register(props) {
   const [password, setPassword] = React.useState('');
   const [name, setName] = React.useState('');
   const [errorMsg, setErrorMsg] = React.useState('');
+  const [errorState, setErrorState] = React.useState(false);
 
   const submitRegister = React.useCallback(
     async (inputEmail, inputPassword, inputName) => {
       if (inputEmail === '') {
         setErrorMsg('Email cannot be empty');
+        setErrorState(true);
+        return;
+      }
+      if (inputPassword === '') {
+        setErrorMsg('Password cannot be empty');
+        setErrorState(true);
+        return;
+      }
+      if (inputName === '') {
+        setErrorMsg('Name cannot be empty');
+        setErrorState(true);
         return;
       }
       const response = await fetch(`${port}/admin/auth/register`, {
@@ -67,6 +79,7 @@ function Register(props) {
         history.push('/dashboard');
       } else {
         setErrorMsg(responseData.error);
+        setErrorState(true);
       }
     },
     [history, setToken],
@@ -78,6 +91,13 @@ function Register(props) {
 
   const goToLogin = () => {
     history.push('/');
+  };
+
+  const handleErrorClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setErrorState(false);
   };
 
   return (
@@ -120,7 +140,7 @@ function Register(props) {
         <Button variant="contained" className={classes.button} type="button" onClick={goToLogin}>Back</Button>
         <Button variant="contained" className={classes.button} type="button" onClick={() => { submitRegister(email, password, name); }}>Submit</Button>
       </ButtonGroup>
-      <Typography className={classes.error}>{errorMsg}</Typography>
+      <GlobalError errMsg={errorMsg} open={errorState} handleClose={handleErrorClose} />
     </div>
   );
 }

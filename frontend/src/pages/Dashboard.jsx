@@ -1,24 +1,29 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { useHistory, Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/styles';
 import { CircularProgress, Grid } from '@material-ui/core';
 import { getQuizzes } from '../api';
+import TokenContext from '../TokenContext';
 import QuizButton from '../components/QuizButton';
 import NewQuizButton from '../components/NewQuizButton';
 import SessionDialog from '../components/SessionDialog';
 import ResultDialog from '../components/ResultDialog';
 import UploadQuestionDialog from '../components/UploadQuestionDialog';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   quizGrid: {
     gridGap: '2rem',
     padding: '2rem',
+    [theme.breakpoints.down(680)]: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
   },
 }));
 
-function Dashboard(props) {
-  const { token } = props;
+function Dashboard() {
+  const { token } = useContext(TokenContext);
   const [quizzes, setQuizzes] = React.useState('');
   const [loading, setLoading] = React.useState(false);
   const [newQuizName, setNewQuizName] = React.useState('');
@@ -42,18 +47,12 @@ function Dashboard(props) {
     }
   };
 
-  // If quiz has ended from player side, change corresponding quiz Button from stop to play
-  // and prompt host if they want to view results.
-  // React.useEffect(() => {
-  //   console.log('Came into here Dashboard from Game');
-  //   if (quizEnded !== null) {
-  //     setQuizEnded(null);
-  //   }
-  // }, [quizEnded, setQuizEnded]);
-
-  React.useEffect(() => {
+  React.useEffect(() => { //eslint-disable-line
+    if (token === '') {
+      return <Redirect to="/" />;
+    }
     fetchQuizzes(token);
-  }, [token, start, stop]);
+  }, [token, start, stop, history]);
 
   const handleQuizBtnClick = (id) => {
     history.push(`/edit/${id}`);
@@ -117,7 +116,4 @@ function Dashboard(props) {
   );
 }
 
-Dashboard.propTypes = {
-  token: PropTypes.string.isRequired,
-};
 export default Dashboard;

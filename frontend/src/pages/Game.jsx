@@ -15,6 +15,7 @@ const useStyles = makeStyles({
     alignItems: 'center',
     justifyContent: 'center',
     height: '80vh',
+    flexDirection: 'column',
   },
   waiting: {
 
@@ -51,6 +52,9 @@ function Game() {
   const showAnswerAdvance = React.useCallback(
     async (question) => {
       // set and show answer
+      if (question === null) {
+        return;
+      }
       const response = await getPlayerAnswer(playerID);
       const idsAnswer = response.answerIds;
       if (idsAnswer === undefined) {
@@ -65,26 +69,6 @@ function Game() {
     },
     [playerID],  //eslint-disable-line
   );
-
-  // check player status
-  // React.useEffect(() => {
-  //   const fetchPlayerStatus = setInterval(async () => {
-  //     const quizData = await getSessionStatus(token, sessionID);
-  //     const playerData = await getPlayerStatus(playerID);
-  //     console.log(quizData, playerData);
-  //     // if () {
-  //     //   console.log({
-  //     //     quizID,
-  //     //     sessionID,
-  //     //   });
-  //     //   history.push(`/playerResults/${quizID}/${playerID}`);
-  //     //   return;
-  //     // }
-  //   }, 2000);
-  //   return () => {
-  //     clearInterval(fetchPlayerStatus);
-  //   };
-  // });
 
   // Loading new questions enables countdown
   React.useEffect(() => {
@@ -175,7 +159,7 @@ function Game() {
           disableBtn={disableBtn}
         />
       )}
-      {countdownState && <Typography variant="h2">{countdown}</Typography>}
+      {countdownState && <Typography variant="h2">{`Time Left: ${countdown}`}</Typography>}
     </div>
   );
 }

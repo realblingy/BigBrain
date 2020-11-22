@@ -31,6 +31,7 @@ import {
   getAnswers,
   hasStarted,
   getUser,
+  updateUser,
 } from './service';
 
 const app = express();
@@ -84,6 +85,11 @@ app.post('/admin/auth/logout', catchErrors(authed(async (req, res, email) => {
 app.get('/admin/auth/profile', catchErrors(authed(async (req, res, email) => {
   const user = await getUser(email);
   return res.json({user});
+})));
+
+app.put('/admin/auth/profile', catchErrors(authed(async (req, res, email) => {
+  await (updateUser(email, req.body));
+  return res.status(200).send({});
 })));
 
 

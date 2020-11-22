@@ -3,9 +3,28 @@ import { makeStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import { putPlayerAnswer } from '../api';
 
 const useStyles = makeStyles({
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  grid: {
+    width: 600,
+  },
+  gridItem: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  button: {
+    height: 150,
+    width: 300,
+    fontSize: '2rem',
+  },
 });
 
 function GamePanel(props) {
@@ -56,9 +75,13 @@ function GamePanel(props) {
   return (
     <div className={classes.root}>
       <Typography variant="h1">{question}</Typography>
-      {answers.map((ans, indx) => (
-        <Button disabled={disableBtn} variant="contained" color={buttonStates[indx] === true ? 'secondary' : 'primary'} onClick={() => selectAnswer(indx)} key={ans}>{ans}</Button>
-      ))}
+      <Grid className={classes.grid} container spacing={3}>
+        {answers.map((ans, indx) => (
+          <Grid className={classes.gridItem} xs={6} item>
+            <Button className={classes.button} disabled={disableBtn} variant="contained" color={buttonStates[indx] === true ? 'secondary' : 'primary'} onClick={() => selectAnswer(indx)} key={ans}>{ans}</Button>
+          </Grid>
+        ))}
+      </Grid>
       <Typography variant="h1">{`Points: ${points}`}</Typography>
       {answer !== null && <Typography variant="h1">{`Answer: ${answer}`}</Typography>}
     </div>

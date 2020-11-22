@@ -7,6 +7,7 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import GlobalError from './GlobalError';
 import port from '../api';
 
 const useStyles = makeStyles((theme) => ({
@@ -50,6 +51,7 @@ function LoginForm(props) {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [errorMsg, setErrorMsg] = React.useState('');
+  const [errorState, setErrorState] = React.useState(false);
 
   const submitLogin = React.useCallback(
     async (inputEmail, inputPassword) => {
@@ -69,6 +71,7 @@ function LoginForm(props) {
         history.push('/dashboard');
       } else {
         setErrorMsg(responseData.error);
+        setErrorState(true);
       }
     },
     [history, setToken],
@@ -76,6 +79,13 @@ function LoginForm(props) {
 
   const goToRegister = () => {
     history.push('/register');
+  };
+
+  const handleErrorClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setErrorState(false);
   };
 
   return (
@@ -93,7 +103,7 @@ function LoginForm(props) {
           }}
           variant="outlined"
           onChange={(event) => setEmail(event.target.value)}
-          onClick={() => setErrorMsg('')}
+          onClick={() => handleErrorClose()}
         />
         <TextField
           placeholder="Password"
@@ -103,13 +113,13 @@ function LoginForm(props) {
           variant="outlined"
           type="password"
           onChange={(event) => setPassword(event.target.value)}
-          onClick={() => setErrorMsg('')}
+          onClick={() => handleErrorClose()}
         />
         <ButtonGroup aria-label="contained button group">
           <Button className={classes.button} variant="contained" type="button" id="submit-login" onClick={() => { submitLogin(email, password); }}>Log In</Button>
           <Button className={classes.button} variant="contained" type="button" onClick={goToRegister}>Register</Button>
         </ButtonGroup>
-        <Typography className={classes.error}>{errorMsg}</Typography>
+        <GlobalError errMsg={errorMsg} open={errorState} handleClose={handleErrorClose} />
       </div>
     </>
   );

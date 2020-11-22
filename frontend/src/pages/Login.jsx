@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Redirect } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import LoginForm from '../components/LoginForm';
+import TokenContext from '../TokenContext';
 import './Login.css';
 
-function Login(props) {
-  const { setToken, token } = props;
+function Login() {
+  const { token, setToken } = useContext(TokenContext);
   if (token !== '') {
     return <Redirect to="/dashboard" />;
   }
@@ -17,10 +17,5 @@ function Login(props) {
     </div>
   );
 }
-
-Login.propTypes = {
-  setToken: PropTypes.func.isRequired,
-  token: PropTypes.string.isRequired,
-};
 
 export default Login;

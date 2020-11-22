@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   AppBar, Toolbar, Typography, IconButton, makeStyles, Menu, MenuItem,
 } from '@material-ui/core';
-import PropTypes from 'prop-types';
 // import MenuIcon from '@material-ui/icons/Menu';
 // import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import TokenContext from '../TokenContext';
 import { logOut } from '../api';
 // import LogoutButton from './LogoutButton';
 
@@ -23,8 +23,8 @@ const useStyles = makeStyles({
   },
 });
 
-function Navbar(props) {
-  const { token } = props;
+function Navbar() {
+  const { token, setToken } = useContext(TokenContext);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -43,7 +43,7 @@ function Navbar(props) {
   };
 
   const handleProfileClick = () => {
-    history.push('/profile');
+    history.push('/profile/');
     handleMenuClose();
   };
 
@@ -51,6 +51,8 @@ function Navbar(props) {
     handleMenuClose();
     logOut(token)
       .then(() => {
+        console.log('logging out here');
+        setToken('');
         history.push('/');
         window.localStorage.removeItem('token');
       })
@@ -94,10 +96,5 @@ function Navbar(props) {
     </AppBar>
   );
 }
-
-Navbar.propTypes = {
-  // setToken: PropTypes.func.isRequired,
-  token: PropTypes.string.isRequired,
-};
 
 export default Navbar;

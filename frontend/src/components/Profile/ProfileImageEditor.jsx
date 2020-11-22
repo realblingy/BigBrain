@@ -3,22 +3,11 @@ import { useDropzone } from 'react-dropzone';
 import Cropper from 'react-cropper';
 import PropTypes from 'prop-types';
 import 'cropperjs/dist/cropper.css';
-import { Button, makeStyles } from '@material-ui/core';
+import { Button, ButtonGroup } from '@material-ui/core';
 // import { useDropzone } from 'react-dropzone';
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/void-dom-elements-no-children */
 /* eslint-disable react/jsx-boolean-value */
-
-const useStyles = makeStyles((theme) => ({
-  croppedImg: {
-    width: 640,
-    height: 360,
-    [theme.breakpoints.down(650)]: {
-      width: 320,
-      height: 180,
-    },
-  },
-}));
 
 const baseStyle = {
   flex: 1,
@@ -50,17 +39,17 @@ const rejectStyle = {
   borderColor: '#ff1744',
 };
 
-function QuestionImageForm(props) {
+function ProfileImageEditor(props) {
   const {
     setImageData,
-    imageData,
     setError,
     error,
   } = props;
   const [imageFileObj, setImageFileObj] = React.useState(null);
-  const [imageUrl, setImageUrl] = React.useState(imageData);
+  const [imageUrl, setImageUrl] = React.useState('#');
   const [cropper, setCropper] = React.useState();
-  const classes = useStyles();
+  const [croppedData, setCroppedData] = React.useState('#');
+  // const classes = useStyles();
   // const [cropping, setCropping] = useState(false);
 
   React.useEffect(() => {
@@ -80,7 +69,8 @@ function QuestionImageForm(props) {
   const getCropData = () => {
     if (typeof cropper !== 'undefined') {
       setError(false);
-      setImageData(cropper.getCroppedCanvas().toDataURL());
+      setImageUrl('#');
+      setCroppedData(cropper.getCroppedCanvas().toDataURL());
     }
   };
 
@@ -109,22 +99,33 @@ function QuestionImageForm(props) {
     isDragAccept,
   ]);
 
-  const handleRemoveImageBtnClick = () => {
-    setImageData('#');
+  // const handleRemoveImageBtnClick = () => {
+  //   setImageFileObj(null);
+  //   setImageUrl('#');
+  // };
+
+  const undoChanges = () => {
+    setCroppedData('#');
+    setImageUrl('#');
     setImageFileObj(null);
-    setImageUrl('');
+  };
+
+  const saveChanges = () => {
+    setImageData(croppedData);
   };
 
   return (
     <div className="questionImageForm">
       {error && <p style={{ color: 'red' }}>Must have an image!</p>}
       {
-        !imageFileObj && imageData === '#'
+        !imageFileObj && imageUrl === '#'
           ? (
-            <div {...getRootProps({ style })}>
-              <input type="file" {...getInputProps()} />
-              <p>Drag n drop a picture here, or click to select file</p>
-              <em>(Only *.jpeg and *.png images will be accepted)</em>
+            <div>
+              <div {...getRootProps({ style })}>
+                <input type="file" {...getInputProps()} />
+                <p>Drag n drop a picture here, or click to select file</p>
+                <em>(Only *.jpeg and *.png images will be accepted)</em>
+              </div>
             </div>
           )
           : (
@@ -136,22 +137,32 @@ function QuestionImageForm(props) {
               justifyContent: 'center',
             }}
             >
-              {imageData !== '#'
+              {croppedData !== '#'
               && (
                 <>
-                  <img className={classes.croppedImg} src={imageData} alt="cropped" />
-                  <Button
-                    onClick={handleRemoveImageBtnClick}
-                    style={{ marginTop: '1rem' }}
-                    color="secondary"
-                    variant="contained"
-                  >
-                    Remove Image
-                  </Button>
+                  <img style={{ width: 300, height: 300, bordeRadius: '50%' }} src={croppedData} alt="cropped" />
+                  <ButtonGroup>
+                    <Button
+                      onClick={undoChanges}
+                      style={{ marginTop: '1rem' }}
+                      color="secondary"
+                      variant="contained"
+                    >
+                      Undo
+                    </Button>
+                    <Button
+                      onClick={saveChanges}
+                      style={{ marginTop: '1rem' }}
+                      color="primary"
+                      variant="contained"
+                    >
+                      Save
+                    </Button>
+                  </ButtonGroup>
                 </>
               )}
               {
-                imageData === '#'
+                imageUrl !== '#'
                 && (
                   <>
                     <Cropper
@@ -168,7 +179,7 @@ function QuestionImageForm(props) {
                       autoCropArea={1}
                       checkOrientation={true}
                       cropBoxResizable={false}
-                      aspectRatio={16 / 9}
+                      aspectRatio={1 / 1}
                       onInitialized={(instance) => {
                         setCropper(instance);
                       }}
@@ -191,11 +202,11 @@ function QuestionImageForm(props) {
   );
 }
 
-QuestionImageForm.propTypes = {
+ProfileImageEditor.propTypes = {
   setImageData: PropTypes.func.isRequired,
-  imageData: PropTypes.string.isRequired,
+  // imageData: PropTypes.string.isRequired,
   setError: PropTypes.func.isRequired,
   error: PropTypes.bool.isRequired,
 };
 
-export default QuestionImageForm;
+export default ProfileImageEditor;
