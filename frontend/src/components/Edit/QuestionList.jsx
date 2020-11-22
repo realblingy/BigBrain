@@ -6,7 +6,6 @@ import {
 } from '@material-ui/core';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
-// import EditIcon from '@material-ui/icons/Edit';
 
 const useStyles = makeStyles({
   root: {
@@ -33,7 +32,10 @@ const useStyles = makeStyles({
     width: '100%',
   },
 });
-
+/**
+ * Renders a list of questions
+ * @param {*} props
+ */
 function QuestionList(props) {
   const {
     questions,

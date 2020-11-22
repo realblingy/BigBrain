@@ -62,6 +62,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * Users can make their questions for a game with this form. Should only be used
+ * in the Edit section.
+ * @param {*} props
+ */
 function QuestionForm(props) {
   const {
     submitForm,
@@ -86,6 +91,8 @@ function QuestionForm(props) {
   const [imageData, setImageData] = React.useState('#');
 
   React.useEffect(() => {
+    // Checks if the question object is === {}. If not true, we add the appropriate
+    // fields into our states
     if (Object.keys(questionObj).length !== 0 && questionObj.constructor === Object) {
       setQuestion(questionObj.question);
       setAnswers(questionObj.answers);
@@ -104,19 +111,24 @@ function QuestionForm(props) {
       }
     }
   }, [questionObj]);
-
+  // For the first answer, it will automatically be a correct answer
+  // This disables users having 0 correct answers
   React.useEffect(() => {
     if (answers.length === 1) {
       setCorrectAnswers([...answers]);
     }
   }, [answers]);
 
+  // If the answerQty is ever changed back to single, the first
+  // answer will be the correct one
   React.useEffect(() => {
     if (answerQty === 'single' && answers.length > 0) {
       setCorrectAnswers([answers[0]]);
     }
   }, [answerQty, answers]);
-
+  // Adds an answer to the answer list
+  // Will prompt an error if it is a duplicate answer.
+  // Empty answers are allowed.
   const handleAddIconClick = () => {
     let fieldError = false;
     const trimmedNewAnswer = newAnswer.trim();
@@ -131,24 +143,24 @@ function QuestionForm(props) {
       setNewAnswer('');
     }
   };
-
+  // Changing the answer field will turn off the field error
   const handleNewAnswerFieldChange = (e) => {
     if (answerFieldError) {
       setAnswerFieldError(false);
     }
     setNewAnswer(e.target.value);
   };
-
+  // Determines if the question is single or multi
   const handleQuantityAnswerRadioGroup = (e) => {
     setAnswerQty(e.target.value);
   };
-
+  // Deletes an answer from the answers list
   const handleDeleteAnswerClick = (answerIdx) => {
     const answersArray = [...answers];
     answersArray.splice(answerIdx, 1);
     setAnswers(answersArray);
   };
-
+  // Adds an answer to the correct answers array
   const handleCheckboxAnswerClick = (answerIdx) => {
     const correctAnswersArray = [...correctAnswers];
     const answer = answers[answerIdx];
@@ -164,7 +176,7 @@ function QuestionForm(props) {
       setCorrectAnswers([answer]);
     }
   };
-
+  // Checks if an answer is correct
   const isCorrectAnswer = (answerIdx) => {
     const answer = answers[answerIdx];
     if (correctAnswers.includes(answer)) {
@@ -172,14 +184,14 @@ function QuestionForm(props) {
     }
     return false;
   };
-
+  // Sets the media format : 'None', 'Image', 'Youtube'
   const handleMediaFormatRadioGroup = (e) => {
     if (e.target.value !== addedMediaFormat) {
       setMediaError(false);
     }
     setAddedMediaFormat(e.target.value);
   };
-
+  // Retrieves media data based on the current format
   const getMediaData = () => {
     switch (addedMediaFormat) {
       case 'image':
@@ -190,7 +202,7 @@ function QuestionForm(props) {
         return {};
     }
   };
-
+  // Submits the Question form
   const handleAddQuestionBtnClick = (e) => {
     e.preventDefault();
     if (question.trim().length === 0) {
@@ -230,18 +242,18 @@ function QuestionForm(props) {
       });
     }
   };
-
+  // Checks for errors for the question field
   const handleQuestionFieldChange = (e) => {
     setQuestion(e.target.value);
     if (questionFieldError) {
       setQuestionFieldError(false);
     }
   };
-
+  // Sets the points for the question
   const handlePointsChange = (e) => {
     setPoints(e.target.value);
   };
-
+  // Sets the timer for the question
   const handleTimerChange = (e) => {
     setTimer(e.target.value);
   };
@@ -258,20 +270,20 @@ function QuestionForm(props) {
           helperText={questionFieldError !== false && questionFieldError}
           onChange={handleQuestionFieldChange}
           required
-          inputProps={{ maxLength: 50 }}
+          inputProps={{ maxLength: 50, 'aria-label': 'Question Field' }}
         />
         <RadioGroup className={classes.radioGroup}>
           <FormControlLabel value="single" onClick={handleQuantityAnswerRadioGroup} checked={answerQty === 'single'} label="Single Answer" control={<Radio />} />
           <FormControlLabel value="multi" onClick={handleQuantityAnswerRadioGroup} checked={answerQty === 'multi'} label="Multi Answer" control={<Radio />} />
         </RadioGroup>
         <FormControl className={classes.timerMenu}>
-          <InputLabel htmlFor="outlined-age-native-simple">Timer (seconds)</InputLabel>
+          <InputLabel htmlFor="outlined-timer-native-simple">Timer (seconds)</InputLabel>
           <NativeSelect
-            // labelId="demo-simple-select-helper-label"
             id="demo-simple-select-helper"
             inputProps={{
               name: 'quizTimer',
-              id: 'outlined-age-native-simple',
+              id: 'outlined-timer-native-simple',
+              'aria-label': 'timer',
             }}
             className={classes.selectMenu}
             onChange={handleTimerChange}
@@ -283,14 +295,14 @@ function QuestionForm(props) {
           </NativeSelect>
         </FormControl>
         <FormControl>
-          <InputLabel htmlFor="outlined-age-native-simple" className={classes.selectMenu}>Points</InputLabel>
+          <InputLabel htmlFor="outlined-points-native-simple" className={classes.selectMenu}>Points</InputLabel>
           <NativeSelect
-            // labelId="demo-simple-select-helper-label"
             id="demo-simple-select-helper"
             className={classes.selectMenu}
             inputProps={{
-              name: 'quizTimer',
-              id: 'outlined-age-native-simple',
+              name: 'points',
+              id: 'outlined-points-native-simple',
+              'aria-label': 'points',
             }}
             onChange={handlePointsChange}
           >
@@ -315,16 +327,15 @@ function QuestionForm(props) {
                       helperText={answerFieldError !== false && answerFieldError}
                       className={classes.textField}
                       placeholder="Give an answer"
-                      inputProps={{ maxLength: 30 }}
+                      inputProps={{ maxLength: 30, 'aria-label': 'Give an answer' }}
                     />
-                    <IconButton onClick={handleAddIconClick}>
+                    <IconButton aria-label="Add Question" onClick={handleAddIconClick}>
                       <AddCircleIcon style={{ color: 'green' }} />
                     </IconButton>
                   </>
                 ) : <p>Maximum questions reached. Delete a question to add more.</p>
             }
           </div>
-          {/* <label htmlFor="answersList">Tick indicates the answer is correct</label> */}
           <List className={classes.answersList}>
             {answers.map((answer, idx) => (
               <ListItem key={answer} className={classes.answerListItem}>
@@ -344,7 +355,10 @@ function QuestionForm(props) {
         </div>
         <div>
           <h2>Add an image or Youtube link?</h2>
-          <RadioGroup className={classes.radioGroup}>
+          <RadioGroup
+            inputProps={{ 'arial-label': 'Media format' }}
+            className={classes.radioGroup}
+          >
             <FormControlLabel
               value="none"
               label="None"
@@ -391,6 +405,7 @@ function QuestionForm(props) {
             type="submit"
             onClick={handleAddQuestionBtnClick}
             style={{ backgroundColor: '#212032', color: 'white', marginRight: '1rem' }}
+            aria-label="Submit Changes"
           >
             {action === 'edit' ? 'Save Changes' : 'Add Question'}
           </Button>
@@ -398,6 +413,7 @@ function QuestionForm(props) {
             type="button"
             style={{ backgroundColor: '#af0404', color: 'white' }}
             onClick={cancel}
+            aria-label="Cancel Changes"
           >
             Cancel
           </Button>
